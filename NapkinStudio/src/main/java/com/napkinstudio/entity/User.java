@@ -6,6 +6,10 @@ import java.util.List;
 import static javax.persistence.CacheStoreMode.REFRESH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REMOVE;
+import java.util.Date;
+import com.napkinstudio.entity.Order;
+import com.napkinstudio.entity.Role;
+import com.napkinstudio.entity.Comments;;
 
 /**
  * Created by User1 on 20.07.2016.
@@ -16,20 +20,21 @@ import static javax.persistence.CascadeType.REMOVE;
 
 
 
-        @NamedQuery(name = "User.findAllByFirstName", query = "SELECT user FROM  User  user  WHERE user.firstName =:firstName"),
-        @NamedQuery(name = "User.findAllByLastName", query = "SELECT user FROM  User  user  WHERE user.lastName  =:lastName"),
+        @NamedQuery(name = "User.findAllByFirstName", query = "SELECT u FROM  User  u  WHERE u.firstName =:firstName"),
+        @NamedQuery(name = "User.findAllByLastName", query = "SELECT u FROM  User  u  WHERE u.lastName  =:lastName"),
 
-        @NamedQuery(name = "User.findByLogin", query = "SELECT user FROM  User  user  WHERE user.login   =:login"),
+        @NamedQuery(name = "User.findByLogin", query = "SELECT u FROM  User  u  WHERE u.login   =:login"),
 
 
-        @NamedQuery(name = "User.deleteById", query = "DELETE FROM User user WHERE user.userId = ?1"),
-        @NamedQuery(name = "User.deactivateById", query = "update User as u set u.enabled =0  where u.userId = ?1"),
-        @NamedQuery(name = "User.activateById", query = "update User as u set u.enabled =1  where u.userId = ?1"), })
+        @NamedQuery(name = "User.deleteById", query = "DELETE FROM User u WHERE u.userId = ?1"),
+        /*@NamedQuery(name = "User.deactivateById", query = "update User as u set u.enabled =0  where u.userId = ?1"),
+        @NamedQuery(name = "User.activateById", query = "update User as u set u.enabled =1  where u.userId = ?1"),*/ })
 
 @Table(name = "USER")
 public class User extends AbstractEntity {
 
-    /**
+ 
+	/**
      * User identification number.
      */
     @Id
@@ -37,27 +42,48 @@ public class User extends AbstractEntity {
     private Integer userId;
 
     private String login;
-
     private String firstName;
-
     private String lastName;
-
     private String password;
-
+    private String email;
     private Boolean enabled;
-
+    private Date LastSession;
+    
     @ManyToMany(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
     @JoinTable
     private List<Role> roles;
-
     public List<Role> getRoles() {
-        return roles;
-    }
-
+        return roles;    }
     public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
+        this.roles = roles;    }
 
+    @ManyToMany(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+    @JoinTable
+//  @JoinTable(name="ORDER_DETAIL",
+//  joinColumns=
+//  @JoinColumn(name="ORDER_ID", referencedColumnName="ORDER_ID"),
+//inverseJoinColumns=
+//  @JoinColumn(name="PROD_ID", referencedColumnName="PROD_ID")
+//)
+    private List<Order> orders;
+    public List<Order> getOrders() {
+        return orders;    }
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;    }
+
+    
+    
+    
+    
+    @OneToMany(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+    private List<Comments> myComments;
+    public List<Comments> getMyComments() {
+        return myComments;    }
+    public void setMyComments(List<Comments> myComments) {
+        this.myComments = myComments;    }
+    
+    
+    
     public String getPassword() {
         return password;
     }
@@ -106,4 +132,15 @@ public class User extends AbstractEntity {
         this.lastName = lastName;
     }
 
+    public String getEmail() {
+        return email;    }
+    public void setEmail(String email) {
+        this.email = email;    }
+
+	public Date getDateTime() {
+		return this.LastSession;	}
+	public void setDateTime(Date LastSession) {
+		this.LastSession = LastSession;	}
+
+    
 }

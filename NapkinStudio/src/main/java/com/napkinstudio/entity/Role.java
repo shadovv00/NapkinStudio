@@ -13,7 +13,7 @@ import static javax.persistence.CascadeType.REMOVE;
 
 @NamedQueries({
 
-        @NamedQuery(name = "Role.findByUserId", query = "SELECT r FROM  Role r  inner join r.users user WHERE user.id  =:id"), })
+        @NamedQuery(name = "Role.findByUserId", query = "SELECT r FROM  Role r  inner join r.users u WHERE u.userId  =:id"), })
 
 @Entity
 public class Role {
@@ -28,7 +28,6 @@ public class Role {
     private List<User> users;
 
     @ManyToMany(fetch = FetchType.EAGER,cascade = {MERGE,REMOVE})
-    @JoinTable
     private List<Status> status;
 
     public Integer getId() {
