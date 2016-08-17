@@ -41,7 +41,7 @@ public class MailManager {
             public void prepare(MimeMessage mimeMessage) throws Exception {
                 mimeMessage.setFrom("customerserivces@yourshop.com");
                 mimeMessage.setRecipient(Message.RecipientType.TO,
-                        new InternetAddress("alex@yahoo.com"));
+                        new InternetAddress("alexkhomenko@yahoo.com"));
                 mimeMessage.setText(message);
                 mimeMessage.setSubject("Lesyk Best!");
             }

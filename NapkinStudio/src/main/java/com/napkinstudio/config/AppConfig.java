@@ -1,7 +1,7 @@
 package com.napkinstudio.config;
 
-import com.napkinstudio.config.security.SecurityConfig;
-import com.napkinstudio.util.FTPCommunicator;
+import java.util.Properties;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -12,11 +12,16 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.oxm.castor.CastorMarshaller;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
-import java.util.Properties;
-
+import com.napkinstudio.config.security.SecurityConfig;
+import com.napkinstudio.sapcommunicationmodels.DataTransferFromSAP;
+import com.napkinstudio.sapcommunicationmodels.DataTransferToSAP;
+import com.napkinstudio.util.FTPCommunicator;
+import com.thoughtworks.xstream.XStream;
 /**
  * Created by User1 on 18.07.2016.
  */
@@ -24,7 +29,7 @@ import java.util.Properties;
 @Configuration
 @ComponentScan( { "com.napkinstudio.*" })
 @Import(value = { SecurityConfig.class })
-public class AppConfig{
+public class AppConfig extends WebMvcConfigurerAdapter{
 
     @Bean
     public InternalResourceViewResolver viewResolver() {
@@ -35,6 +40,15 @@ public class AppConfig{
         return internalResourceViewResolver;
     }
 
+    /**
+     * Configure ResourceHandlers to serve static resources like CSS/ Javascript etc...
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/**").addResourceLocations("/static/");
+    }    
+    
+    
     @Bean
     public JavaMailSender getMailSender(){
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -42,8 +56,8 @@ public class AppConfig{
         //Using gmail
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
-        mailSender.setUsername("khomenko");
-        mailSender.setPassword("10");
+        mailSender.setUsername("o.khomenko");
+        mailSender.setPassword("Blizlo10");
 
         Properties javaMailProperties = new Properties();
         javaMailProperties.put("mail.smtp.starttls.enable", "true");
@@ -70,5 +84,14 @@ public class AppConfig{
         castorMarshaller.setMappingLocation(resource);
         return castorMarshaller;
     }
-
+    
+    @Bean
+    public XStream  getXStream() {
+    	XStream xstream = new XStream();
+    	xstream.alias("DataTransferFromSAP", DataTransferFromSAP.class);
+    	xstream.alias("DataTransferToSAP", DataTransferToSAP.class);
+    	return xstream;
+    }
+    
+    
 }

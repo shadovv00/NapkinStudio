@@ -1,6 +1,8 @@
 package com.napkinstudio.entity;
 
 import javax.persistence.*;
+
+import java.util.Date;
 import java.util.List;
 import com.napkinstudio.entity.Article;
 import com.napkinstudio.entity.Customer;
@@ -42,6 +44,7 @@ public class Order {
     private String debCheckScen;
     private Boolean toDeptor;
     private Boolean deleted;
+    private Date lastUpdate;
     
     
     @OneToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
@@ -152,5 +155,10 @@ public class Order {
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;    }
 
+	public Date getUpdate() {
+		return this.lastUpdate;	}
+	public void setUpdate(Date lastUpdate) {
+		this.lastUpdate = lastUpdate;	}
 
+    
 }

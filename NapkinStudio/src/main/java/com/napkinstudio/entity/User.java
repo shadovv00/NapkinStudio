@@ -47,7 +47,7 @@ public class User extends AbstractEntity {
     private String password;
     private String email;
     private Boolean enabled;
-    private Date LastSession;
+    private Date lastSession;
     
     @ManyToMany(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
     @JoinTable
@@ -138,9 +138,9 @@ public class User extends AbstractEntity {
         this.email = email;    }
 
 	public Date getDateTime() {
-		return this.LastSession;	}
-	public void setDateTime(Date LastSession) {
-		this.LastSession = LastSession;	}
+		return this.lastSession;	}
+	public void setDateTime(Date lastSession) {
+		this.lastSession = lastSession;	}
 
     
 }

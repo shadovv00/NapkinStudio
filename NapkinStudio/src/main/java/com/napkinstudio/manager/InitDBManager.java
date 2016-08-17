@@ -30,11 +30,12 @@ public class InitDBManager {
     @Autowired
     IStatusDao statusDao;
 
-    @PostConstruct
+//    @PostConstruct
     public void init(){
 
         List<Status> deptorStatus = new ArrayList<Status>();
         List<Status> PVIStatus = new ArrayList<Status>();
+        List<Status> ftpStatus = new ArrayList<Status>();
 
         Status s1 = new Status();
         s1.setName("proof request set up");
@@ -101,15 +102,20 @@ public class InitDBManager {
 
         Role debtorRole = new Role();
         debtorRole.setName("ROLE_DEPTOR");
-       debtorRole.setStatus(deptorStatus);
+        debtorRole.setStatus(deptorStatus);
 
         Role PVIRole = new Role();
         PVIRole.setName("ROLE_PVI");
         PVIRole.setStatus(PVIStatus);
+        
+        Role ftpRole = new Role();
+        ftpRole.setName("EXTERNALTIMER");
+        ftpRole.setStatus(ftpStatus);
 
         roleDao.save(debtorRole);
         roleDao.save(PVIRole);
-
+        roleDao.save(ftpRole);
+        
 
         User debtor = new User();
         debtor.setFirstName("Teddy");
@@ -130,9 +136,20 @@ public class InitDBManager {
         List<Role> roles2 = new ArrayList<Role>();
         roles2.add(PVIRole);
         PVI.setRoles(roles2);
+        
+        User ftpUser = new User();
+        ftpUser.setFirstName("ftp");
+        ftpUser.setLastName("expire");
+        ftpUser.setLogin("ftp");
+        ftpUser.setPassword("ftp");
+        ftpUser.setEnabled(true);
+        List<Role> roles3 = new ArrayList<Role>();
+        roles3.add(ftpRole);
+        ftpUser.setRoles(roles3);
 
         userDao.save(debtor);
-       userDao.save(PVI);
+        userDao.save(PVI);
+        userDao.save(ftpUser);
     }
 
 

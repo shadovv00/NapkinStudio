@@ -23,15 +23,13 @@ public interface IUserDao extends JpaRepository<User,Integer> {
 
     public void deleteByLogin(String login);
 
-//    public User findByPhoneNumber(@Param(value = "phoneNumber") String phoneNumber);
+    public void deleteById(Integer userId);
 
-    public void deleteById(Integer id);
-
-    @Modifying
-    public void deactivateById(Integer id);
-
-    @Modifying
-    public void activateById(Integer id);
+//    @Modifying
+//    public void deactivateById(Integer userId);
+//
+//    @Modifying
+//    public void activateById(Integer userId);
 
 //    public User findByEmail(@Param(value = "email")String email);
 }

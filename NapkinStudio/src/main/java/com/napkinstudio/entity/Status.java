@@ -11,7 +11,7 @@ import com.napkinstudio.entity.SAPstatus;
 
 @NamedQueries({
 
-       /* @NamedQuery(name = "Status.findByRoleId", query = "SELECT s FROM  Status s  inner join s.roles r WHERE r.id  =:id"),*/ })
+        @NamedQuery(name = "Status.findByRoleId", query = "SELECT s FROM  Status s  inner join s.roles r WHERE r.id  =:id"), })
 @Entity
 @Table(name="Status")
 public class Status {

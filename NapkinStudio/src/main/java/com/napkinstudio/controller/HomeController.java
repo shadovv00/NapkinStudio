@@ -42,7 +42,7 @@ public class HomeController {
 //         return user;
 //    }
 
-    @RequestMapping(value = "/")
+    @RequestMapping(value = "/home")
     public String home() {
         return "home";
     }
