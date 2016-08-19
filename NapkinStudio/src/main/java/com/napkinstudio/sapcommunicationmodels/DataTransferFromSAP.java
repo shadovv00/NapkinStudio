@@ -2,6 +2,7 @@ package com.napkinstudio.sapcommunicationmodels;
 
 public class DataTransferFromSAP {
 	private String field;
+	private String ff;
 
 	public String getField() {
 		return field;
