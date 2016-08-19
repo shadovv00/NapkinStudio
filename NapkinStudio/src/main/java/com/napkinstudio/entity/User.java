@@ -142,5 +142,48 @@ public class User extends AbstractEntity {
 	public void setDateTime(Date lastSession) {
 		this.lastSession = lastSession;	}
 
+	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
+		result = prime * result + ((login == null) ? 0 : login.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof User))
+			return false;
+		User other = (User) obj;
+		if (userId == null) {
+			if (other.userId != null)
+				return false;
+		} else if (!userId.equals(other.userId))
+			return false;
+		if (login == null) {
+			if (other.login != null)
+				return false;
+		} else if (!login.equals(other.login))
+			return false;
+		return true;
+	}
+
+	/*
+	 * DO-NOT-INCLUDE passwords in toString function.
+	 * It is done here just for convenience purpose.
+	 */
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", login=" + login + ", password=" + password
+				+ ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", email=" + email + "]";
+	}	
     
 }
