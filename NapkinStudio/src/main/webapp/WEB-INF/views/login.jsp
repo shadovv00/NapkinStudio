@@ -37,11 +37,11 @@
 									<p>${error}</p>
 								</div>
 							</c:if>
-							<c:if test="${not empty message}">
-								<div class="alert alert-danger">
-									<p>${message}</p>
-								</div>
-							</c:if>
+<%-- 							<c:if test="${not empty message}"> --%>
+<!-- 								<div class="alert alert-danger"> -->
+<%-- 									<p>${message}</p> --%>
+<!-- 								</div> -->
+<%-- 							</c:if> --%>
 							<c:if test="${param.logout != null}">
 								<div class="alert alert-success">
 									<p>You have been logged out successfully.</p>
