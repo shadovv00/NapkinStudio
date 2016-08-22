@@ -7,6 +7,7 @@ import com.napkinstudio.entity.Role;
 import com.napkinstudio.entity.Status;
 import com.napkinstudio.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +31,11 @@ public class InitDBManager {
     @Autowired
     IStatusDao statusDao;
 
-//    @PostConstruct
+    private BCryptPasswordEncoder encoder;
+
+   @PostConstruct
     public void init(){
+       encoder = new BCryptPasswordEncoder();
 
         List<Status> deptorStatus = new ArrayList<Status>();
         List<Status> PVIStatus = new ArrayList<Status>();
@@ -121,7 +125,7 @@ public class InitDBManager {
         debtor.setFirstName("Teddy");
         debtor.setLastName("Test");
         debtor.setLogin("deptor1");
-        debtor.setPassword("deptor1");
+        debtor.setPassword(encoder.encode("deptor1"));
         debtor.setEnabled(true);
         List<Role> roles = new ArrayList<Role>();
         roles.add(debtorRole);
@@ -131,7 +135,7 @@ public class InitDBManager {
         PVI.setFirstName("Mark");
         PVI.setLastName("Cool");
         PVI.setLogin("PVI1");
-        PVI.setPassword("PVI1");
+        PVI.setPassword(encoder.encode("PVI1"));
         PVI.setEnabled(true);
         List<Role> roles2 = new ArrayList<Role>();
         roles2.add(PVIRole);
@@ -141,7 +145,7 @@ public class InitDBManager {
         ftpUser.setFirstName("ftp");
         ftpUser.setLastName("expire");
         ftpUser.setLogin("ftp");
-        ftpUser.setPassword("ftp");
+        ftpUser.setPassword(encoder.encode("ftp"));
         ftpUser.setEnabled(true);
         List<Role> roles3 = new ArrayList<Role>();
         roles3.add(ftpRole);
