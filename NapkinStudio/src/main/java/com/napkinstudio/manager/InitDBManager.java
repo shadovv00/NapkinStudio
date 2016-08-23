@@ -38,7 +38,7 @@ public class InitDBManager {
 
     private BCryptPasswordEncoder encoder;
 
-    @PostConstruct
+//    @PostConstruct
     public void init() {
         encoder = new BCryptPasswordEncoder();
 

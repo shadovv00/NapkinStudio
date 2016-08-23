@@ -16,7 +16,7 @@ public class SAPSynchrinizerController {
 	@Autowired
 	FTPManager ftpManager;
 	
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.HEAD)
     public String trigger(@RequestParam(value = "user", defaultValue = "") String user) {
 		System.out.println("user = " + user);
 		System.out.println("herehereherehereherehere");
@@ -34,4 +34,5 @@ public class SAPSynchrinizerController {
 			return "trigger failed";
 		}
     }
+	
 }
