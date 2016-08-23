@@ -19,7 +19,7 @@ import javax.persistence.*;
  */
 @Entity
 
-@Table(name = "Comments")
+@Table(name = "comments")
 public class Comments implements Serializable {
 
 	   

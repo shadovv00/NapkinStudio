@@ -30,7 +30,7 @@ import com.napkinstudio.entity.Comments;;
         /*@NamedQuery(name = "User.deactivateById", query = "update User as u set u.enabled =0  where u.userId = ?1"),
         @NamedQuery(name = "User.activateById", query = "update User as u set u.enabled =1  where u.userId = ?1"),*/ })
 
-@Table(name = "USER")
+@Table(name = "users")
 public class User extends AbstractEntity {
 
  

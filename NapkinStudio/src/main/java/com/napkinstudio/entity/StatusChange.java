@@ -16,7 +16,7 @@ import javax.persistence.*;
  *
  */
 @Entity
-@Table(name="StatusChange")
+@Table(name="status_changes")
 
 public class StatusChange implements Serializable {
 

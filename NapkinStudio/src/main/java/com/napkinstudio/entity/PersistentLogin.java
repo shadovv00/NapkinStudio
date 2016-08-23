@@ -26,7 +26,7 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "User.activateById", query = "update User as u set u.enabled =1  where u.userId = ?1"),*/ })
 
 
-@Table(name="PERSISTENT_LOGINS")
+@Table(name="persistent_logins")
 public class PersistentLogin implements Serializable{
 
 	@Id

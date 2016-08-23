@@ -16,6 +16,7 @@ import static javax.persistence.CascadeType.REMOVE;
         @NamedQuery(name = "Role.findByUserId", query = "SELECT r FROM  Role r  inner join r.users u WHERE u.userId  =:id"), })
 
 @Entity
+@Table(name="roles")
 public class Role {
 
     @Id

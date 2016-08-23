@@ -16,7 +16,7 @@ import java.util.List;
 
         /*@NamedQuery(name = "Status.findByRoleId", query = "SELECT s FROM  Status s  inner join s.roles r WHERE r.id  =:id"), */})
 @Entity
-@Table(name="SAPstatus")
+@Table(name="sap_statuses")
 public class SAPstatus {
     @Id
     @GeneratedValue

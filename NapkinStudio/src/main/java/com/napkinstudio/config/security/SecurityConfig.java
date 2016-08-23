@@ -76,9 +76,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		System.out.println("auth1");
         auth.jdbcAuthentication()
                 .dataSource(dataSource)
-                .usersByUsernameQuery("select login,password,enabled from user where login = ?")
-                .authoritiesByUsernameQuery("select user.Login, role.name from user " +
-                        "join user_role on user.userId = user_role.users_userId join role on user_role.roles_id = role.id where user.login = ?");
+                .usersByUsernameQuery("select login,password,enabled from users where login = ?")
+                .authoritiesByUsernameQuery("select users.Login, roles.name from users " +
+                        "join users_roles on users.userId = users_roles.users_userId join roles on users_roles.roles_id = roles.id where users.login = ?");
 		System.out.println(auth);
 		System.out.println("auth2");
 		auth.userDetailsService(userDetailsService);
@@ -87,7 +87,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		System.out.println("auth3");
     }
 
-    
+
 	@Autowired
 	@Qualifier("customUserDetailsService")
 	UserDetailsService userDetailsService;

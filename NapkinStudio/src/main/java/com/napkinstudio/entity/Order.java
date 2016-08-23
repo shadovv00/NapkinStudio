@@ -24,7 +24,7 @@ import static javax.persistence.CascadeType.REMOVE;
         /*@NamedQuery(name = "User.deactivateById", query = "update User as u set u.enabled =0  where u.userId = ?1"),
         @NamedQuery(name = "User.activateById", query = "update User as u set u.enabled =1  where u.userId = ?1"),*/ })
 
-@Table(name = "ORDERS")
+@Table(name = "orders")
 public class Order {
 
  
