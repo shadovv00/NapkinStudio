@@ -19,5 +19,8 @@ private IOrderDao orderDao;
 //    public List<Comments> findByRoleId(Integer id) {
 //        return statusDao.findByRoleId(id);
 //    }
-
+@Transactional
+public List<Order> findByUserId(Integer id) {
+    return orderDao.findByUserId(id);
+}
 }

@@ -1,13 +1,7 @@
 package com.napkinstudio.manager;
 
-import com.napkinstudio.dao.IRoleDao;
-import com.napkinstudio.dao.ISAPstatusDao;
-import com.napkinstudio.dao.IStatusDao;
-import com.napkinstudio.dao.IUserDao;
-import com.napkinstudio.entity.Role;
-import com.napkinstudio.entity.SAPstatus;
-import com.napkinstudio.entity.Status;
-import com.napkinstudio.entity.User;
+import com.napkinstudio.dao.*;
+import com.napkinstudio.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,10 +30,28 @@ public class InitDBManager {
     @Autowired
     ISAPstatusDao sapStatusDao;
 
+    @Autowired
+    IArticleDao articleDao;
+
+    @Autowired
+    private IOrderDao orderDao;
+
     private BCryptPasswordEncoder encoder;
+
 
     @PostConstruct
     public void init() {
+
+        Article article1 = new Article();
+        Article article2 = new Article();
+        articleDao.save(article1);
+        articleDao.save(article2);
+
+
+
+
+
+
         encoder = new BCryptPasswordEncoder();
 
         List<SAPstatus> portalSAPStatuses1 = new ArrayList<SAPstatus>();
@@ -245,6 +257,18 @@ public class InitDBManager {
         userDao.save(debtor);
         userDao.save(PVI);
         userDao.save(ftpUser);
+
+        Order order1 = new Order();
+
+        order1.setArticle(article1);
+        List<User> users = new ArrayList<>();
+        users.add(PVI);
+        users.add(debtor);
+        order1.setUsers(users);
+        order1.setSAPstatus(SAPStatus);
+        orderDao.save(order1);
+
+
     }
 
 

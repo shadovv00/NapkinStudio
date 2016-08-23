@@ -1,11 +1,6 @@
 package com.napkinstudio.entity;
 
 import javax.persistence.*;
-import com.napkinstudio.entity.Status;
-
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.REMOVE;
-
 import java.util.List;
 
 /**
@@ -24,8 +19,9 @@ public class SAPstatus {
 
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+    @ManyToMany(mappedBy = "sapStatuses")
     private List<Status> statuses;
+
     public List<Status> getStatuses() {
         return statuses;    }
     public void setStatuses(List<Status> statuses) {

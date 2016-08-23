@@ -5,6 +5,9 @@ import java.util.List;
 import com.napkinstudio.entity.Role;
 import com.napkinstudio.entity.SAPstatus;
 
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.REMOVE;
+
 /**
  * Created by User1 on 29.07.2016.
  */
@@ -24,7 +27,8 @@ public class Status {
     @ManyToMany(mappedBy = "status")
     private List<Role> roles;
 
-    @ManyToMany(mappedBy = "statuses")
+
+    @ManyToMany(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
     private List<SAPstatus> sapStatuses;
 
     

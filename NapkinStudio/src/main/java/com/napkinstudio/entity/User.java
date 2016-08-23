@@ -66,14 +66,14 @@ public class User extends AbstractEntity {
 //  @JoinColumn(name="PROD_ID", referencedColumnName="PROD_ID")
 //)
     private List<Order> orders;
+
     public List<Order> getOrders() {
         return orders;    }
     public void setOrders(List<Order> orders) {
         this.orders = orders;    }
 
-    
-    
-    
+
+
     
     @OneToMany(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
     private List<Comments> myComments;

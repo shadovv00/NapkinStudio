@@ -4,6 +4,7 @@ import com.napkinstudio.dao.IUserDao;
 import com.napkinstudio.entity.User;
 import com.napkinstudio.util.FTPCommunicator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,11 +20,17 @@ public class UserManager {
     @Autowired
     private IUserDao IUserDao;
 
+
+
     @Autowired
     private FTPCommunicator communicator;
 
     @Transactional
     public void save(User user) {
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setPassword(encoder.encode(user.getPassword()));
+
         IUserDao.save(user);
     }
 
