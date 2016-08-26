@@ -26,6 +26,7 @@ public class SAPSynchrinizerController {
 	@RequestMapping(method = RequestMethod.POST)
     public String postTrigger(@RequestParam(value = "token", defaultValue = "") String token) {
 		System.out.println();
+		System.out.println("token = " + token);
 		if(token.equals("LJDFGHUYOI*$(**(GSLSJGHJSFHIOIGUHIYHGEOIJFHDSGUIJERHOIUFSGHSIOUDGRHGIUSHFGUDSFH")) {
 			System.out.println("next actions!");
 			return ftpManager.handle();

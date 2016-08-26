@@ -41,6 +41,7 @@ public class Comments implements Serializable {
     
 	private String commText;
 	private Date dateTime;
+	private Boolean deleted;
 	private static final long serialVersionUID = 1L;
 
 	public Comments() {
@@ -81,5 +82,12 @@ public class Comments implements Serializable {
 	public void setDateTime(Date dateTime) {
 		this.dateTime = dateTime;
 	}
-   
+
+	public Boolean getDeleted() {
+		return deleted;    }
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;    }
+
+
+
 }
