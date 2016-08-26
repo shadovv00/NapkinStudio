@@ -1,7 +1,7 @@
 package com.napkinstudio.entity;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Created by User1 on 29.07.2016.
@@ -19,13 +19,24 @@ public class SAPstatus {
 
     private String name;
 
-    @ManyToMany(mappedBy = "sapStatuses")
-    private List<Status> statuses;
+    @OneToMany(mappedBy = "SAPStatus",
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    private Set<StatusSAPStatusRole> statusSAPStatuseRoles;
 
-    public List<Status> getStatuses() {
-        return statuses;    }
-    public void setStatuses(List<Status> statuses) {
-        this.statuses = statuses;    }
+    public Set<StatusSAPStatusRole> getUserGroups() {
+        return statusSAPStatuseRoles;
+    }
+
+    public Set<StatusSAPStatusRole> getStatusSAPStatuseRoles() {
+        return statusSAPStatuseRoles;
+    }
+    //    @ManyToMany(mappedBy = "sapStatuses")
+//    private List<Status> statuses;
+
+//    public List<Status> getStatuses() {
+//        return statuses;    }
+//    public void setStatuses(List<Status> statuses) {
+//        this.statuses = statuses;    }
 
     public Integer getId() {
         return id;    }

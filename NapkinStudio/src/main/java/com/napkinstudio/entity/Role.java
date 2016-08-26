@@ -1,7 +1,9 @@
 package com.napkinstudio.entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REMOVE;
@@ -16,6 +18,7 @@ import static javax.persistence.CascadeType.REMOVE;
         @NamedQuery(name = "Role.findByUserId", query = "SELECT r FROM  Role r  inner join r.users u WHERE u.userId  =:id"), })
 
 @Entity
+@Table(name="Role")
 public class Role {
 
     @Id
@@ -27,8 +30,21 @@ public class Role {
     @ManyToMany(mappedBy = "roles")
     private List<User> users;
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = {MERGE,REMOVE})
-    private List<Status> status;
+    @OneToMany(mappedBy = "role",
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    private Set<StatusSAPStatusRole> statusSAPStatuseRoles;
+
+    public Set<StatusSAPStatusRole> getUserGroups() {
+        return statusSAPStatuseRoles;
+    }
+
+    public Set<StatusSAPStatusRole> getStatusSAPStatuseRoles() {
+        return statusSAPStatuseRoles;
+    }
+
+
+//    @ManyToMany(fetch = FetchType.EAGER,cascade = {MERGE,REMOVE})
+//    private List<Status> status;
 
     public Integer getId() {
         return id;
@@ -55,11 +71,11 @@ public class Role {
     }
 
 
-    public List<Status> getStatus() {
-        return status;
-    }
-
-    public void setStatus(List<Status> status) {
-        this.status = status;
-    }
+//    public List<Status> getStatus() {
+//        return status;
+//    }
+//
+//    public void setStatus(List<Status> status) {
+//        this.status = status;
+//    }
 }

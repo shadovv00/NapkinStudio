@@ -1,28 +1,24 @@
 package com.napkinstudio.entity;
 
 import javax.persistence.*;
-
 import java.util.Date;
 import java.util.List;
-import com.napkinstudio.entity.Article;
-import com.napkinstudio.entity.Customer;
-import com.napkinstudio.entity.User;
-import com.napkinstudio.entity.StatusChange;
-import com.napkinstudio.entity.SAPstatus;
 
-import static javax.persistence.CacheStoreMode.REFRESH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REMOVE;
 
 @Entity
 
 @NamedQueries({
+        @NamedQuery(name = "Order.findByUserId", query = "SELECT o FROM  Order o  inner join o.users u inner join o.sapStatus WHERE u.userId  =:id")
 //        @NamedQuery(name = "User.findAllByFirstName", query = "SELECT u FROM  User  u  WHERE u.firstName =:firstName"),
 //        @NamedQuery(name = "User.findAllByLastName", query = "SELECT u FROM  User  u  WHERE u.lastName  =:lastName"),
 //        @NamedQuery(name = "User.findByLogin", query = "SELECT u FROM  User  u  WHERE u.login   =:login"),
 //        @NamedQuery(name = "User.deleteById", query = "DELETE FROM User u WHERE u.userId = ?1"),
         /*@NamedQuery(name = "User.deactivateById", query = "update User as u set u.enabled =0  where u.userId = ?1"),
         @NamedQuery(name = "User.activateById", query = "update User as u set u.enabled =1  where u.userId = ?1"),*/ })
+
+
 
 @Table(name = "ORDERS")
 public class Order {
@@ -82,7 +78,7 @@ public class Order {
     public void setStatusChanges(List<StatusChange> statusChanges) {
         this.statusChanges = statusChanges;    }
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+    @ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE,REMOVE})
     private SAPstatus sapStatus;
     public SAPstatus getSAPstatus() {
         return sapStatus;    }
@@ -160,5 +156,5 @@ public class Order {
 	public void setUpdate(Date lastUpdate) {
 		this.lastUpdate = lastUpdate;	}
 
-    
+
 }
