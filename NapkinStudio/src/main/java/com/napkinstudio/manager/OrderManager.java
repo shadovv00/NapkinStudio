@@ -15,6 +15,13 @@ public class OrderManager {
 @Autowired
 private IOrderDao orderDao;
 
+
+    @Transactional
+    public void save(Order order) {
+        orderDao.save(order);
+    }
+
+
 //    @Transactional
 //    public List<Comments> findByRoleId(Integer id) {
 //        return statusDao.findByRoleId(id);

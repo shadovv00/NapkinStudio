@@ -57,19 +57,25 @@ public class User extends AbstractEntity {
     public void setRoles(List<Role> roles) {
         this.roles = roles;    }
 
-    @ManyToMany(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
-    @JoinTable
-//  @JoinTable(name="ORDER_DETAIL",
-//  joinColumns=
-//  @JoinColumn(name="ORDER_ID", referencedColumnName="ORDER_ID"),
-//inverseJoinColumns=
-//  @JoinColumn(name="PROD_ID", referencedColumnName="PROD_ID")
-//)
-    private List<Order> orders;
-    public List<Order> getOrders() {
-        return orders;    }
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;    }
+//    @ManyToMany(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+//    @JoinTable
+////  @JoinTable(name="ORDER_DETAIL",
+////  joinColumns=
+////  @JoinColumn(name="ORDER_ID", referencedColumnName="ORDER_ID"),
+////inverseJoinColumns=
+////  @JoinColumn(name="PROD_ID", referencedColumnName="PROD_ID")
+////)
+//    private List<Order> orders;
+//    public List<Order> getOrders() {
+//        return orders;    }
+//    public void setOrders(List<Order> orders) {
+//        this.orders = orders;    }
+    @OneToMany(mappedBy="order", fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+    private List<User_orders> myOrders;
+    public List<User_orders> getMyOrders() {
+        return myOrders;    }
+    public void setMyOrders(List<User_orders> myOrders) {
+        this.myOrders = myOrders;    }
 
     
     

@@ -1,9 +1,9 @@
 package com.napkinstudio.manager;
 
+import com.napkinstudio.dao.IUserDao;
 import com.napkinstudio.dao.IRoleDao;
 import com.napkinstudio.dao.ISAPstatusDao;
 import com.napkinstudio.dao.IStatusDao;
-import com.napkinstudio.dao.IUserDao;
 import com.napkinstudio.entity.Role;
 import com.napkinstudio.entity.SAPstatus;
 import com.napkinstudio.entity.Status;
@@ -13,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 

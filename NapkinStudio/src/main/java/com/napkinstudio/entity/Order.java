@@ -13,6 +13,9 @@ import com.napkinstudio.entity.SAPstatus;
 import static javax.persistence.CacheStoreMode.REFRESH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REMOVE;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
+
 
 @Entity
 
@@ -25,11 +28,12 @@ import static javax.persistence.CascadeType.REMOVE;
         @NamedQuery(name = "User.activateById", query = "update User as u set u.enabled =1  where u.userId = ?1"),*/ })
 
 @Table(name = "orders")
+@XStreamAlias("order")
 public class Order {
 
  
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer orderId;
     private String debNum;
     private String debOrderNum;
@@ -38,8 +42,21 @@ public class Order {
     private String debCont;
     private String delivAddr;
     private String delivAddrCont;
-    private String unloadTimes;
     private String delivInstruct;
+    private String unloadTimes;
+
+    private String itemNum;
+    private String debItemNum;
+    private String size;
+    private String material;
+    private String foldingMeth;
+    private String napkinCol;
+    private String color1;
+    private String color2;
+    private String color3;
+    private String color4;
+    private String version;
+
     private String pVIcheckScen;
     private String debCheckScen;
     private Boolean toDeptor;
@@ -47,12 +64,12 @@ public class Order {
     private Date lastUpdate;
     
     
-    @OneToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
-    private Article article;
-    public Article getArticle() {
-        return article;    }
-    public void setArticle(Article article) {
-        this.article = article;    }
+//    @OneToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+//    private Article article;
+//    public Article getArticle() {
+//        return article;    }
+//    public void setArticle(Article article) {
+//        this.article = article;    }
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
     private Customer customer;
@@ -61,12 +78,19 @@ public class Order {
     public void setCustomer(Customer customer) {
         this.customer = customer;    }
        
-    @ManyToMany(mappedBy="orders",fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
-    private List<User> users;
-    public List<User> getUsers() {
-        return users;    }
-    public void setUsers(List<User> users) {
-        this.users = users;    }
+//    @ManyToMany(mappedBy="orders",fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+//    private List<User> users;
+//    public List<User> getUsers() {
+//        return users;    }
+//    public void setUsers(List<User> users) {
+//        this.users = users;    }
+    @OneToMany(mappedBy="order",fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+    private List<User_orders> itsUsers;
+    public List<User_orders> getItsUsers() {
+        return itsUsers;    }
+    public void setItsUsers(List<User_orders> itsUsers) {
+        this.itsUsers = itsUsers;    }
+
 
     @OneToMany(mappedBy="order",fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
     private List<Comments> comments;
@@ -88,8 +112,13 @@ public class Order {
         return sapStatus;    }
     public void setSAPstatus(SAPstatus sapStatus) {
         this.sapStatus = sapStatus;    }
-       
-    
+
+
+    public Integer getOrderId() {
+        return orderId;    }
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;    }
+
     public String getDebNum() {
         return debNum;    }   
     public void setDebNum(String debNum) {
@@ -135,6 +164,66 @@ public class Order {
     public void setDelivInstruct(String delivInstruct) {
         this.delivInstruct = delivInstruct;    }
 
+
+
+    public String getItemNum() {
+        return itemNum;    }
+    public void setItemNum(String itemNum) {
+        this.itemNum = itemNum;    }
+
+    public String getDebItemNum() {
+        return debItemNum;    }
+    public void setDebItemNum(String debItemNum) {
+        this.debItemNum = debItemNum;    }
+
+    public String getSize() {
+        return size;    }
+    public void setSize(String size) {
+        this.size = size;    }
+
+    public String getMaterial() {
+        return material;    }
+    public void setMaterial(String material) {
+        this.material = material;    }
+
+    public String getFoldingMeth() {
+        return foldingMeth;    }
+    public void setFoldingMeth(String foldingMeth) {
+        this.foldingMeth = foldingMeth;    }
+
+    public String getNapkinCol() {
+        return napkinCol;    }
+    public void setNapkinCol(String napkinCol) {
+        this.napkinCol = napkinCol;    }
+
+    public String getColor1() {
+        return color1;    }
+    public void setColor1(String color1) {
+        this.color1 = color1;    }
+
+    public String getColor2() {
+        return color2;    }
+    public void setColor2(String color2) {
+        this.color2 = color2;    }
+
+    public String getColor3() {
+        return color3;    }
+    public void setColor3(String color3) {
+        this.color3 = color3;    }
+
+    public String getColor4() {
+        return color4;    }
+    public void setColor4(String color4) {
+        this.color4 = color4;    }
+
+    public String getVersion() {
+        return version;    }
+    public void setVersion(String version) {
+        this.version = version;    }
+
+
+
+
     public String getPVIcheckScen() {
         return pVIcheckScen;    }   
     public void setPVIcheckScen(String pVIcheckScen) {
@@ -142,7 +231,7 @@ public class Order {
 
     public String getDebCheckScen() {
         return debCheckScen;    }   
-    public void sebDebCheckScen(String debCheckScen) {
+    public void setDebCheckScen(String debCheckScen) {
         this.debCheckScen = debCheckScen;    }
 
     public Boolean getToDeptor() {

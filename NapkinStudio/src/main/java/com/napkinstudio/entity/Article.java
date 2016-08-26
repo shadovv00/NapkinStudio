@@ -39,16 +39,7 @@ public class Article {
     private Boolean deleted;
     
     
-//    @ManyToMany(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
-//    @JoinTable
-//    private List<Role> roles;
-//
-//    public List<Role> getRoles() {
-//        return roles;    }
-//    public void setRoles(List<Role> roles) {
-//        this.roles = roles;    }
-    
-    
+
     public String getItemNum() {
         return itemNum;    }   
     public void setItemNum(String itemNum) {

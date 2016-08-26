@@ -1,7 +1,7 @@
 package com.napkinstudio.manager;
 
-import com.napkinstudio.dao.IUserDao;
 import com.napkinstudio.entity.User;
+import com.napkinstudio.dao.IUserDao;
 import com.napkinstudio.util.FTPCommunicator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
