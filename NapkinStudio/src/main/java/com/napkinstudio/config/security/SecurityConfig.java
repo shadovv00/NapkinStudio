@@ -64,30 +64,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //		.rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository)
 //		.tokenValiditySeconds(86400).and().csrf().and().exceptionHandling().accessDeniedPage("/Access_Denied");
 
-        
-        
-        
-    }
 
+
+    }
 
     @Autowired
-    public void configureGlobal(DataSource dataSource, AuthenticationManagerBuilder auth) throws Exception {
-		System.out.println("auth0");
-		System.out.println(auth);
-		System.out.println("auth1");
-        auth.jdbcAuthentication()
-                .dataSource(dataSource)
-                .usersByUsernameQuery("select login,password,enabled from users where login = ?")
-                .authoritiesByUsernameQuery("select users.Login, roles.name from users " +
-                        "join users_roles on users.userId = users_roles.users_userId join roles on users_roles.roles_id = roles.id where users.login = ?");
-		System.out.println(auth);
-		System.out.println("auth2");
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+
 		auth.userDetailsService(userDetailsService);
 		auth.authenticationProvider(authenticationProvider());
-		System.out.println(auth);
-		System.out.println("auth3");
-    }
 
+    }
 
 	@Autowired
 	@Qualifier("customUserDetailsService")
@@ -126,9 +113,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public AuthenticationTrustResolver getAuthenticationTrustResolver() {
 		return new AuthenticationTrustResolverImpl();
 	}
-    
-    
-    
-    
-    
-}
+
+    }
