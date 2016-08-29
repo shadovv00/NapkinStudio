@@ -5,6 +5,12 @@ import javax.persistence.*;
 /**
  * Created by User1 on 25.08.2016.
  */
+
+@NamedQueries(
+        @NamedQuery(name = "StatusSAPStatusRole.findStatusByRoleIdAndSAPStatusId",query = "select statusSAPStatusRole from StatusSAPStatusRole statusSAPStatusRole " +
+                "inner join statusSAPStatusRole.role r " +
+                "inner join statusSAPStatusRole.SAPStatus ss where r.id =:roleId and ss.id =:sapStatusId ")
+)
 @Entity
 @Table(name = "STATUS_SAPSTATUS_ROLE")
 
@@ -48,23 +54,23 @@ public class StatusSAPStatusRole {
 
     @Id
     @GeneratedValue
-    private Long id;
-    @ManyToOne(cascade = CascadeType.ALL)
+    private Integer id;
+    @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     @JoinColumn(name = "STATUS_ID")
     private Status status;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     @JoinColumn(name = "SAPSTATUS_ID")
     private SAPstatus SAPStatus;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     @JoinColumn(name = "ROLE_ID")
     private Role role;
 
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -84,7 +90,6 @@ public class StatusSAPStatusRole {
     public void setSAPStatus(SAPstatus SAPStatus) {
         this.SAPStatus = SAPStatus;
     }
-
 
     public Role getRole() {
         return role;

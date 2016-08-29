@@ -1,7 +1,9 @@
 package com.napkinstudio.entity;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by User1 on 29.07.2016.
@@ -11,6 +13,7 @@ import java.util.Set;
 
         /*@NamedQuery(name = "Status.findByRoleId", query = "SELECT s FROM  Status s  inner join s.roles r WHERE r.id  =:id"), */})
 @Entity
+@XStreamAlias("sapStatus")
 @Table(name="SAPstatus")
 public class SAPstatus {
     @Id
@@ -21,13 +24,17 @@ public class SAPstatus {
 
     @OneToMany(mappedBy = "SAPStatus",
             cascade = {CascadeType.MERGE, CascadeType.REMOVE})
-    private Set<StatusSAPStatusRole> statusSAPStatuseRoles;
+    private List<StatusSAPStatusRole> statusSAPStatuseRoles;
 
-    public Set<StatusSAPStatusRole> getUserGroups() {
+    public List<StatusSAPStatusRole> getUserGroups() {
         return statusSAPStatuseRoles;
     }
 
-    public Set<StatusSAPStatusRole> getStatusSAPStatuseRoles() {
+    public void setStatusSAPStatuseRoles(List<StatusSAPStatusRole> statusSAPStatuseRoles) {
+        this.statusSAPStatuseRoles = statusSAPStatuseRoles;
+    }
+
+    public List<StatusSAPStatusRole> getStatusSAPStatuseRoles() {
         return statusSAPStatuseRoles;
     }
     //    @ManyToMany(mappedBy = "sapStatuses")

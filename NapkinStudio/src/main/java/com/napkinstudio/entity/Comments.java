@@ -1,9 +1,5 @@
 package com.napkinstudio.entity;
 
-import com.napkinstudio.entity.Order;
-import com.napkinstudio.entity.User;
-import com.napkinstudio.entity.Role;
-
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REMOVE;
 

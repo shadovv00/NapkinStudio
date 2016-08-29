@@ -1,20 +1,13 @@
 package com.napkinstudio.entity;
 
-import javax.persistence.*;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-import com.napkinstudio.entity.Article;
-import com.napkinstudio.entity.Customer;
-import com.napkinstudio.entity.User;
-import com.napkinstudio.entity.StatusChange;
-import com.napkinstudio.entity.SAPstatus;
 
-import static javax.persistence.CacheStoreMode.REFRESH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REMOVE;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 
 @Entity
@@ -85,10 +78,10 @@ public class Order {
 //    public void setUsers(List<User> users) {
 //        this.users = users;    }
     @OneToMany(mappedBy="order",fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
-    private List<User_orders> itsUsers;
-    public List<User_orders> getItsUsers() {
+    private List<UserOrder> itsUsers;
+    public List<UserOrder> getItsUsers() {
         return itsUsers;    }
-    public void setItsUsers(List<User_orders> itsUsers) {
+    public void setItsUsers(List<UserOrder> itsUsers) {
         this.itsUsers = itsUsers;    }
 
 
@@ -106,7 +99,7 @@ public class Order {
     public void setStatusChanges(List<StatusChange> statusChanges) {
         this.statusChanges = statusChanges;    }
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+    @ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE,REMOVE})
     private SAPstatus sapStatus;
     public SAPstatus getSAPstatus() {
         return sapStatus;    }

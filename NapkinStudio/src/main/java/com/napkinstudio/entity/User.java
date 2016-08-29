@@ -3,13 +3,10 @@ package com.napkinstudio.entity;
 import javax.persistence.*;
 import java.util.List;
 
-import static javax.persistence.CacheStoreMode.REFRESH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REMOVE;
 import java.util.Date;
-import com.napkinstudio.entity.Order;
-import com.napkinstudio.entity.Role;
-import com.napkinstudio.entity.Comments;;
+;
 
 /**
  * Created by User1 on 20.07.2016.
@@ -71,10 +68,10 @@ public class User extends AbstractEntity {
 //    public void setOrders(List<Order> orders) {
 //        this.orders = orders;    }
     @OneToMany(mappedBy="order", fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
-    private List<User_orders> myOrders;
-    public List<User_orders> getMyOrders() {
+    private List<UserOrder> myOrders;
+    public List<UserOrder> getMyOrders() {
         return myOrders;    }
-    public void setMyOrders(List<User_orders> myOrders) {
+    public void setMyOrders(List<UserOrder> myOrders) {
         this.myOrders = myOrders;    }
 
     
