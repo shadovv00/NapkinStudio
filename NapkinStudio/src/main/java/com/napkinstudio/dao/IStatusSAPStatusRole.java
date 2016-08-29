@@ -2,6 +2,7 @@ package com.napkinstudio.dao;
 
 import com.napkinstudio.entity.StatusSAPStatusRole;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,4 +11,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IStatusSAPStatusRole extends JpaRepository<StatusSAPStatusRole,Integer> {
 
+    public StatusSAPStatusRole findStatusByRoleIdAndSAPStatusId(@Param("roleId") Integer roleId,@Param("sapStatusId") Integer sapStatusId);
 }

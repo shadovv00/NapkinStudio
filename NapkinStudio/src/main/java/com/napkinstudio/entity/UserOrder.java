@@ -8,18 +8,21 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REMOVE;
 
 
+@NamedQueries(
+        @NamedQuery(name="UserOrder.findOrdersByUserId",query = "SELECT userOrder from UserOrder userOrder  inner join userOrder.user user where user.id =:id")
+)
+
 @Entity
 
 @Table(name = "users_orders")
-public class User_orders{
+public class UserOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer Id;
 
     private Date lastLook;
 
-
-    @ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+    @ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE,REMOVE})
     private Order order;
     public Order getOrder() {
         return this.order;	}
