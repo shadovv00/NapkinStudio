@@ -119,10 +119,11 @@
         </td>
     </tr>
 </table>
-<%--<div>--%>
-    <%--${user.roles[0].id}--%>
+<div>
+    ${user.roles[0].name}
+    ${theOrder.sapStatus.name}
 
-<%--</div>--%>
+</div>
 <%--<ul style="list-style-type:none">--%>
     <%--<c:forEach items="${userOrders}" var="userOrder">--%>
         <%--<li>--%>

@@ -56,7 +56,7 @@ public class OrderPageController {
 
         StatusSAPStatusRole statusSAPStatusRole =  statusSAPStatusRoleManager.findStatusByRoleIdAndSAPStatusId(roleId,SSId);
 
-        System.out.println(statusSAPStatusRole.getStatus().getName());
+//        System.out.println(statusSAPStatusRole.getStatus().getName());
         List<StatusSAPStatusRole> statusSAPStatusRolesList = new ArrayList<>();
         statusSAPStatusRolesList.add(statusSAPStatusRole);
         userOrders.get(0).getOrder().getSAPstatus().setStatusSAPStatuseRoles(statusSAPStatusRolesList);

@@ -17,7 +17,7 @@ import java.util.List;
 public interface IOrderDao extends JpaRepository<Order,Integer> {
 //    public List<Status> findByRoleId(@Param("id")Integer id);
 
-public LinkedList<Order> getUpdatedOrders(@Param("lastUpdate")Date lastUpdate);
+public LinkedList<Order> getUpdatedOrders(@Param("lastModifiedDate")Date lastModifiedDate);
 
 
 }

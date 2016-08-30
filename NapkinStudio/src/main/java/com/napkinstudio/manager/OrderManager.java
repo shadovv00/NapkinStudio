@@ -31,8 +31,8 @@ private IOrderDao orderDao;
     }
 
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public LinkedList<Order> getUpdatedOrders(Date lastUpdate) {
-        return orderDao.getUpdatedOrders(lastUpdate);
+    public LinkedList<Order> getUpdatedOrders(Date lastModifiedDate) {
+        return orderDao.getUpdatedOrders(lastModifiedDate);
     }
 
 
