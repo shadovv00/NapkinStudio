@@ -40,12 +40,12 @@
         <th>Print name</th>
         <th>Delivery date</td>
         <th>Last modification</th>
+        <th>Go to orers</th>
 
     </tr>
     <c:forEach items="${userOrders}" var="userOrder">
         <tr>
-            <c:set var="orderId" value="${userOrder.order.orderId}"></c:set>
-            <a href="<spring:url value="/orders/${orderId}"/>"/>
+
             <td>
             <c:out value="${userOrder.order.orderId}" />
             </td>
@@ -66,6 +66,14 @@
             </td>
             <td>
                 <c:out value="${userOrder.order.lastModifiedDate}" />
+            </td>
+            <td>
+                <%--<c:set var="orderId" value=""></c:set>--%>
+                <a href="<spring:url value="/orders/{orderId}">
+                    <spring:param name="orderId" value ="${userOrder.order.orderId}"/>
+                </spring:url>
+
+">GO</a>
             </td>
         </tr>
     </c:forEach>
