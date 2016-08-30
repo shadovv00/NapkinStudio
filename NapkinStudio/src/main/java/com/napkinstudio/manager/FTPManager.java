@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 
 import com.napkinstudio.entity.Order;
 import com.napkinstudio.entity.SAPstatus;
@@ -210,7 +211,7 @@ public class FTPManager {
 //									System.out.println(field);
 //									if (field.get()!=null){}
 //								}
-								order.setUpdate(new Date());
+//								order.setUpdate(new Date());
 								orderManager.save(order);
 							}
                             //set date of the "fromSAP" file read
@@ -235,22 +236,29 @@ public class FTPManager {
 //			                us.setLogin("trdd");
 //			                dtts.setUser(us);
 			                //read from db
-                            LinkedList<Order> outOrders = new LinkedList<Order>();
+							System.out.print("/////////////////////////orderManager///////////////////////////");
 
-                            Order s_order = new Order();
-                            s_order.setOrderId(123);
-                            s_order.setDebItemNum("123");
-                            s_order.setApprovalBy("123");
-							SAPstatus s_sapstatus= new SAPstatus();
-							s_sapstatus.setId(1);
-							s_sapstatus.setName("test status name");
-							s_order.setSAPstatus(s_sapstatus);
-                            outOrders.add(s_order);
-                            Order s_order1 = new Order();
-                            s_order1.setOrderId(890);
-                            s_order1.setDebItemNum("890");
-                            s_order1.setApprovalBy("890");
-                            outOrders.add(s_order1);
+							LinkedList<Order> outOrders = orderManager.getUpdatedOrders(synchroData.getDateToSAP());
+//                            LinkedList<Order> outOrders = new LinkedList<Order>();
+							System.out.print(outOrders);
+							if (outOrders!=null){
+								System.out.print(outOrders.size());
+							}
+
+//                            Order s_order = new Order();
+//                            s_order.setOrderId(123);
+//                            s_order.setDebItemNum("123");
+//                            s_order.setApprovalBy("123");
+//							SAPstatus s_sapstatus= new SAPstatus();
+//							s_sapstatus.setId(1);
+//							s_sapstatus.setName("test status name");
+//							s_order.setSAPstatus(s_sapstatus);
+//                            outOrders.add(s_order);
+//                            Order s_order1 = new Order();
+//                            s_order1.setOrderId(890);
+//                            s_order1.setDebItemNum("890");
+//                            s_order1.setApprovalBy("890");
+//                            outOrders.add(s_order1);
 			                dtts.setOrders(outOrders);
                             xstream.processAnnotations(DataTransferToSAP.class);
 			                xstream.toXML(dtts, os2);

@@ -17,7 +17,7 @@ import static javax.persistence.CascadeType.REMOVE;
 //        @NamedQuery(name = "User.findAllByLastName", query = "SELECT u FROM  User  u  WHERE u.lastName  =:lastName"),
 //        @NamedQuery(name = "User.findByLogin", query = "SELECT u FROM  User  u  WHERE u.login   =:login"),
 //        @NamedQuery(name = "User.deleteById", query = "DELETE FROM User u WHERE u.userId = ?1"),
-        @NamedQuery(name = "Order.getUpdatedOrders", query = "SELECT o FROM  Order  o  WHERE o.lastUpdate >=:lastUpdate")})
+        @NamedQuery(name = "Order.getUpdatedOrders", query = "SELECT o FROM  Order  o  WHERE o.lastModifiedDate >=:lastModifiedDate")})
 
 @Table(name = "orders")
 @XStreamAlias("order")

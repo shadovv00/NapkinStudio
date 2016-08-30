@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,6 +30,10 @@ private IOrderDao orderDao;
         return orderDao.findOne(id);
     }
 
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public LinkedList<Order> getUpdatedOrders(Date lastModifiedDate) {
+        return orderDao.getUpdatedOrders(lastModifiedDate);
+    }
 
 
 
