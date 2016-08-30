@@ -17,14 +17,12 @@ import static javax.persistence.CascadeType.REMOVE;
 //        @NamedQuery(name = "User.findAllByLastName", query = "SELECT u FROM  User  u  WHERE u.lastName  =:lastName"),
 //        @NamedQuery(name = "User.findByLogin", query = "SELECT u FROM  User  u  WHERE u.login   =:login"),
 //        @NamedQuery(name = "User.deleteById", query = "DELETE FROM User u WHERE u.userId = ?1"),
-        /*@NamedQuery(name = "User.deactivateById", query = "update User as u set u.enabled =0  where u.userId = ?1"),
-        @NamedQuery(name = "User.activateById", query = "update User as u set u.enabled =1  where u.userId = ?1"),*/ })
+        @NamedQuery(name = "Order.getUpdatedOrders", query = "SELECT o FROM  Order  o  WHERE o.lastUpdate >=:lastUpdate")})
 
 @Table(name = "orders")
 @XStreamAlias("order")
-public class Order {
+public class Order extends  AbstractEntity{
 
- 
     @Id
 //    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer orderId;
@@ -37,6 +35,8 @@ public class Order {
     private String delivAddrCont;
     private String delivInstruct;
     private String unloadTimes;
+    private Date deliveryDate;
+    private String printName;
 
     private String itemNum;
     private String debItemNum;
@@ -54,7 +54,7 @@ public class Order {
     private String debCheckScen;
     private Boolean toDeptor;
     private Boolean deleted;
-    private Date lastUpdate;
+
     
     
 //    @OneToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
@@ -237,10 +237,35 @@ public class Order {
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;    }
 
-	public Date getUpdate() {
-		return this.lastUpdate;	}
-	public void setUpdate(Date lastUpdate) {
-		this.lastUpdate = lastUpdate;	}
+    public Date getDeliveryDate() {
+        return deliveryDate;
+    }
 
-    
+    public void setDeliveryDate(Date deliveryDate) {
+        this.deliveryDate = deliveryDate;
+    }
+
+    public String getPrintName() {
+        return printName;
+    }
+
+    public void setPrintName(String printName) {
+        this.printName = printName;
+    }
+
+    public String getpVIcheckScen() {
+        return pVIcheckScen;
+    }
+
+    public void setpVIcheckScen(String pVIcheckScen) {
+        this.pVIcheckScen = pVIcheckScen;
+    }
+
+    public SAPstatus getSapStatus() {
+        return sapStatus;
+    }
+
+    public void setSapStatus(SAPstatus sapStatus) {
+        this.sapStatus = sapStatus;
+    }
 }

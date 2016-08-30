@@ -9,10 +9,12 @@ import com.napkinstudio.manager.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -46,23 +48,33 @@ public class OrderController {
         String login = principal.getName();
         User user = userManager.findByLogin(login);
 
-    List<Role> roles = roleManager.findByUserId(user.getUserId());
-//      List<Order> orders = orderManager.findByUserId(user.getUserId());
-        List<UserOrder> userOrders = userOrderManager.findOrdersByUserId(user.getUserId());
-//        orders.get(0).getOrder().getSAPstatus().getStatusSAPStatuseRoles()
+        List<Role> roles = roleManager.findByUserId(user.getUserId());
         Integer roleId =roles.get(0).getId();
-        Integer SSId = userOrders.get(0).getOrder().getSAPstatus().getId();
-        System.out.println(roleId + " " + SSId);
+
+        List<UserOrder> userOrders = userOrderManager.findOrdersByUserId(user.getUserId());
+
+        for (Iterator<UserOrder> iterator = userOrders.iterator(); iterator.hasNext();) {
+            UserOrder userOrder = iterator.next();
+            Integer SSId = userOrder.getOrder().getSAPstatus().getId();
+            System.out.println(roleId + " " + SSId);
+            StatusSAPStatusRole statusSAPStatusRole;
+            try{
+                statusSAPStatusRole =  statusSAPStatusRoleManager.findStatusByRoleIdAndSAPStatusId(roleId,SSId);
+                System.out.println(statusSAPStatusRole.getStatus().getName());
+                List<StatusSAPStatusRole> statusSAPStatusRolesList = new ArrayList<>();
+                statusSAPStatusRolesList.add(statusSAPStatusRole);
+                userOrder.getOrder().getSAPstatus().setStatusSAPStatuseRoles(statusSAPStatusRolesList);
+            }catch (NullPointerException e) {
+                e.printStackTrace(System.out);
+                iterator.remove();
+
+            }
 
 
-        StatusSAPStatusRole statusSAPStatusRole =  statusSAPStatusRoleManager.findStatusByRoleIdAndSAPStatusId(roleId,SSId);
-
-        System.out.println(statusSAPStatusRole.getStatus().getName());
-        List<StatusSAPStatusRole> statusSAPStatusRolesList = new ArrayList<>();
-        statusSAPStatusRolesList.add(statusSAPStatusRole);
-        userOrders.get(0).getOrder().getSAPstatus().setStatusSAPStatuseRoles(statusSAPStatusRolesList);
+        }
 
 
+//        orders.get(0).getOrder().getSAPstatus().getStatusSAPStatuseRoles()
 //
 //    List<Status> statusList = statusManager.findByRoleAndSAPStatusId(roles.get(0).getId(), orders.get(0).getSAPstatus().getId());
 //       System.out.println(orders.get(0).getSAPstatus().getName());
@@ -81,5 +93,12 @@ public class OrderController {
 //        model.addAttribute("statusList", statusList);
         return "orders";
     }
+
+    @RequestMapping("/orders/${orderId}")
+    public String orderReview(Model model, @PathVariable int orderId, Principal principal) {
+        model.addAttribute("orderId",orderId);
+        return "orderReview";
+    }
+
 
 }
