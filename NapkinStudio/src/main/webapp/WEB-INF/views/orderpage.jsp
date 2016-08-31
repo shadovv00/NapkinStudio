@@ -8,9 +8,13 @@
 <html>
 <head>
     <title>NapkinStudio</title>
+    <link href="<c:url value='/static/css/bootstrap.css' />"  rel="stylesheet"></link>
+    <link href="<c:url value='/static/css/app.css' />" rel="stylesheet"></link>
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.css" />
+
     <nav display="inline">
         <a href="<c:url value="/orders"/>" style="width: 70%"> back </a>
-        <a > ${theOrder.orderId} order id </a>
+        <span style="margin-left: 100px"> ${theOrder.orderId} order id </span>
         <%--<p display="inline">You are logged in as ${user.roles[0].name}</p>--%>
         <a href="<c:url value="/logout"/>"> Logout </a>
     </nav>
@@ -107,9 +111,8 @@
                 </div>
             <input type="checkbox" name="check0" value="a2">Drukproef eerst door PVI laten controleren.<Br>
             <div display="inline" style="margin-bottom: 10px">
-                <button type="submit" style="color:white; background : blue; border-radius:  5px;">Drukproef aanvragen</button>
-                <button type="submit" style="color:white; background : grey; border-radius:  5px;">Annuleren</button>
-                <input type="submit" name="approve" value="approve" />
+                <a href="<c:url value='/changestatus/yes' />" class="btn btn-success  custom-width">Approve</a>
+                <a href="<c:url value='/changestatus/no' />" class="btn btn-danger custom-width">Discard</a>
 
             </div>
 
@@ -119,11 +122,11 @@
         </td>
     </tr>
 </table>
-<div>
-    ${user.roles[0].name}
-    ${theOrder.sapStatus.name}
+<%--<div>--%>
+    <%--${user.roles[0].name}--%>
+    <%--${theOrder.sapStatus.name}--%>
 
-</div>
+<%--</div>--%>
 <%--<ul style="list-style-type:none">--%>
     <%--<c:forEach items="${userOrders}" var="userOrder">--%>
         <%--<li>--%>

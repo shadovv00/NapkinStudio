@@ -15,6 +15,10 @@
 <html>
 <head>
     <title>Title</title>
+    <link href="<c:url value='/static/css/bootstrap.css' />"  rel="stylesheet"></link>
+    <link href="<c:url value='/static/css/app.css' />" rel="stylesheet"></link>
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.css" />
+
     <style>
         table, th, td {
             border: 1px solid black;
@@ -73,7 +77,7 @@
                     <spring:param name="orderId" value ="${userOrder.order.orderId}"/>
                 </spring:url>
 
-">GO</a>
+" class="btn btn-primary  custom-width">GO</a>
             </td>
         </tr>
     </c:forEach>

@@ -94,12 +94,12 @@ public class OrderController {
         return "orders";
     }
 
-    @RequestMapping("/orders/{orderId}")
-    public String orderReview(Model model, @PathVariable int orderId, Principal principal) {
-
-            model.addAttribute("orderId",orderId);
-        return "orderReview";
-    }
+//    @RequestMapping("/orders/{orderId}")
+//    public String orderReview(Model model, @PathVariable int orderId, Principal principal) {
+//
+//            model.addAttribute("orderId",orderId);
+//        return "orderReview";
+//    }
 
 
 }

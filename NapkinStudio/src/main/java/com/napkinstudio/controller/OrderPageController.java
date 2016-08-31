@@ -6,6 +6,7 @@ import com.napkinstudio.manager.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
@@ -36,16 +37,22 @@ public class OrderPageController {
     private StatusSAPStatusRoleManager statusSAPStatusRoleManager;
 
 
-    @RequestMapping(value = "/orderpage")
-    public String goToOrders(Model model, Principal principal) {
+    @RequestMapping(value = "/orders/{orderId}")
+    public String goToOrders(Model model,@PathVariable int orderId, Principal principal) {
         String login = principal.getName();
         System.out.println("/////////////////orderpage/////////////////");
         System.out.println(principal);
         System.out.println(login);
         User user = userManager.findByLogin(login);
-        Order theOrder =orderManager.findById(1);
+        System.out.println("/////////////////user/////////////////");
+        System.out.println(user.toString());
+        Order theOrder =orderManager.findById(orderId);
+        System.out.println("/////////////////theOrder/////////////////");
+        System.out.println(theOrder.toString());
 
         List<Role> roles = roleManager.findByUserId(user.getUserId());
+        System.out.println("/////////////////roles/////////////////");
+        System.out.println(roles.toString());
 //      List<Order> orders = orderManager.findByUserId(user.getUserId());
         List<UserOrder> userOrders = userOrderManager.findOrdersByUserId(user.getUserId());
 //        orders.get(0).getOrder().getSAPstatus().getStatusSAPStatuseRoles()
@@ -68,11 +75,11 @@ public class OrderPageController {
         return "orderpage";
     }
 
-    @RequestMapping(value = "/changestatus")
-    public String changeOrderStatus(Model model, Principal principal) {
+    @RequestMapping(value = "/changestatus/{answer}")
+    public String changeOrderStatus(Model model, @PathVariable String answer, Principal principal) {
         String login = principal.getName();
         System.out.println("/////////////////changestatus/////////////////");
-        System.out.println(principal);
+        System.out.println(answer);
         System.out.println(login);
         User user = userManager.findByLogin(login);
         Order theOrder =orderManager.findById(1);
