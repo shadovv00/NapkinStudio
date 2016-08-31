@@ -13,11 +13,17 @@
     <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.css" />
 
     <nav display="inline">
-        <a href="<c:url value="/orders"/>" style="width: 70%"> back </a>
-        <span style="margin-left: 100px"> ${theOrder.orderId} order id </span>
+        <a href="<c:url value="/orders"/>"   class="btn btn-primary custom-width"> to orders </a>
+        <span style="margin-left: 100px">  order id ${theOrder.orderId}</span>
         <%--<p display="inline">You are logged in as ${user.roles[0].name}</p>--%>
-        <a href="<c:url value="/logout"/>"> Logout </a>
+        <a href="<c:url value="/logout"/>" class="btn btn-danger custom-width"> Logout </a>
     </nav>
+    <%--<nav display="inline">--%>
+        <%--<a href="<c:url value="/orders"/>"  btn btn-primary> to orders </a>--%>
+        <%--<span style="margin-left: 100px"> ${theOrder.orderId} order id </span>--%>
+        <%--&lt;%&ndash;<p display="inline">You are logged in as ${user.roles[0].name}</p>&ndash;%&gt;--%>
+        <%--<a href="<c:url value="/logout"/>"> Logout </a>--%>
+    <%--</nav>--%>
 </head>
 <body>
 <table width="100%" border="0">
@@ -25,6 +31,12 @@
         <td width="10%">
         </td>
         <td width="65%" align="left">
+<div style="margin-bottom: 10px">
+    <%--stautus                 <c:out value="${theOrder.SAPstatus.statusSAPStatuseRoles[0].status.name}" />--%>
+
+
+</div>
+
 
             <table width="100%" border="0" style="margin-bottom: 10px">
                 <tr valign="top">
@@ -111,8 +123,27 @@
                 </div>
             <input type="checkbox" name="check0" value="a2">Drukproef eerst door PVI laten controleren.<Br>
             <div display="inline" style="margin-bottom: 10px">
-                <a href="<c:url value='/changestatus/yes' />" class="btn btn-success  custom-width">Approve</a>
-                <a href="<c:url value='/changestatus/no' />" class="btn btn-danger custom-width">Discard</a>
+                <a href="<c:url value='/changestatus/${theOrder.orderId}/yes' />"  class="btn btn-success custom-width">Approve</a>
+                <a href="<c:url value='/changestatus/${theOrder.orderId}/no' />"  class="btn btn-danger custom-width">Discard</a>
+                <%--<c:url value='/changestatus/' var="statuschange1">--%>
+                   <%--<c:param name="orderId" value="${theOrder.orderId}"/>--%>
+                   <%--<c:param name="answer" value="yes"/>--%>
+                <%--</c:url>--%>
+                <%--<c:import url='${statuschange1}'/>--%>
+                <%--<c:out value="<c:import url='${statuschange1}'/>" />--%>
+
+                <%--<a href="<c:import url='${statuschange1}'/>" class="btn btn-success custom-width">Approve</a>--%>
+
+                <%--<a href="<c:url value='/changestatus/' var="statuschange1">--%>
+                           <%--<c:param name="orderId" value="${theOrder.orderId}"/>--%>
+                           <%--<c:param name="answer" value="yes"/>--%>
+                         <%--</c:url>" class="btn btn-success custom-width">Approve</a>--%>
+                <%--<a href="<c:url value='/changestatus/' var="statuschange0">--%>
+                           <%--<c:param name="orderId" value="${theOrder.orderId}"/>--%>
+                           <%--<c:param name="answer" value="no"/>--%>
+                         <%--</c:url>" class="btn btn-danger custom-width">Discard</a>--%>
+
+
 
             </div>
 
