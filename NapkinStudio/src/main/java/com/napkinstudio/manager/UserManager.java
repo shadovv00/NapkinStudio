@@ -1,9 +1,10 @@
 package com.napkinstudio.manager;
 
-import com.napkinstudio.entity.User;
 import com.napkinstudio.dao.IUserDao;
+import com.napkinstudio.entity.User;
 import com.napkinstudio.util.FTPCommunicator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,10 @@ public class UserManager {
 
     @Transactional
     public void save(User user) {
+        user.setEnabled(true);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setPassword(encoder.encode(user.getPassword()));
+
         IUserDao.save(user);
     }
 
@@ -38,11 +43,16 @@ public class UserManager {
         return IUserDao.findByLogin(login);
     }
 
+
     public void upload(User user) throws IOException {
         communicator.convertToXMLAndUpload(user);
     }
 
     public User downlaod () throws IOException {
         return (User) communicator.convertToObjectAndDownload();
+    }
+
+    public User findByEmail(String email) {
+        return IUserDao.findByEmail(email);
     }
 }
