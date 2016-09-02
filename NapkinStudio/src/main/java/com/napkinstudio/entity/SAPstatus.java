@@ -4,6 +4,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by User1 on 29.07.2016.
@@ -37,6 +38,29 @@ public class SAPstatus {
     public List<StatusSAPStatusRole> getStatusSAPStatuseRoles() {
         return statusSAPStatuseRoles;
     }
+
+    @OneToMany(mappedBy = "SAPStatus",
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    private List<ProgresBarFields> progresBarFieldses;
+    public List<ProgresBarFields> getProgresBarFieldses() {
+        return progresBarFieldses;
+    }
+    public void setProgresBarFieldses(List<ProgresBarFields> progresBarFieldses) {
+        this.progresBarFieldses = progresBarFieldses;
+    }
+
+    @OneToMany(mappedBy = "SAPStatus",
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    private List<StatusChange> statusChanges;
+    public List<StatusChange> getStatusChangees() {
+        return statusChanges;
+    }
+    public void setStatusChangees(List<StatusChange> statusChanges) {
+        this.statusChanges = statusChanges;
+    }
+
+
+
     //    @ManyToMany(mappedBy = "sapStatuses")
 //    private List<Status> statuses;
 
