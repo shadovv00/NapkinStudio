@@ -1,5 +1,7 @@
 package com.napkinstudio.entity;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -28,6 +30,7 @@ import java.util.Date;
         /*@NamedQuery(name = "User.deactivateById", query = "update User as u set u.enabled =0  where u.userId = ?1"),
         @NamedQuery(name = "User.activateById", query = "update User as u set u.enabled =1  where u.userId = ?1"),*/ })
 
+@XStreamAlias("user")
 @Table(name = "users")
 public class User extends AbstractEntity {
 

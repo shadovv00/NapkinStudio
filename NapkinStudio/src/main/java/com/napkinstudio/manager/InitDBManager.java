@@ -43,6 +43,10 @@ public class InitDBManager {
     @Autowired
     private IStatusSAPStatusRole statusSAPStatusRoleDao;
 
+    @Autowired
+    private IProgresBarFieldsDao progresBarFieldsDao ;
+
+
     private BCryptPasswordEncoder encoder;
 
 //    @PostConstruct
@@ -426,6 +430,8 @@ public class InitDBManager {
         order1.setPrintName("Crowne Plaza 24 standaard");
         order1.setOrderId(1402130001);
         order1.setDeliveryDate(new Date());
+        order1.setPVIcheckScen(false);
+        order1.setRejected(false);
         orderDao.save(order1);
 
         UserOrder user1Order = new UserOrder();
@@ -456,6 +462,8 @@ public class InitDBManager {
         order3.setPrintName("Crowne Plaza 24 standaard");
         order3.setOrderId(1402130003);
         order3.setDeliveryDate(new Date());
+        order3.setPVIcheckScen(true);
+        order1.setRejected(false);
         orderDao.save(order3);
 
         UserOrder user1Order3 = new UserOrder();
@@ -486,6 +494,8 @@ public class InitDBManager {
         order2.setPrintName("Crowne Plaza 24 standaard");
         order2.setOrderId(1402130002);
         order2.setDeliveryDate(new Date());
+        order2.setPVIcheckScen(false);
+        order1.setRejected(false);
         orderDao.save(order2);
 
         UserOrder user1Order2 = new UserOrder();
@@ -510,8 +520,744 @@ public class InitDBManager {
         userOrderDao.save(userO3rder2);
 
 
+// setting Fields for Progress Bar
+        ////////PVI//////////////////////////////////////////////no pvi check, no rej
+        Status status99 = new Status();
+        status99.setName("Stamps received");
+        statusDao.save(status99);
+
+        Status status98 = new Status();
+        status98.setName("Planned");
+        statusDao.save(status98);
 
 
+        ProgresBarFields proofRequestSetUp = new ProgresBarFields();
+        proofRequestSetUp.setStatus(status1);
+        proofRequestSetUp.setSAPStatus(SAPStatus1);
+        proofRequestSetUp.setRole(PVIRole);
+        proofRequestSetUp.setRejected(false);
+        proofRequestSetUp.setPVIcheckScen(false);
+        progresBarFieldsDao.save(proofRequestSetUp);
+
+        ProgresBarFields proofRequest = new ProgresBarFields();
+        proofRequest.setStatus(status2);
+        proofRequest.setSAPStatus(SAPStatus2);
+        proofRequest.setRole(PVIRole);
+        proofRequest.setRejected(false);
+        proofRequest.setPVIcheckScen(false);
+        progresBarFieldsDao.save(proofRequest);
+
+        ProgresBarFields waitForAppr = new ProgresBarFields();
+        waitForAppr.setStatus(status4);
+        waitForAppr.setSAPStatus(SAPStatus4);
+        waitForAppr.setRole(PVIRole);
+        waitForAppr.setRejected(false);
+        waitForAppr.setPVIcheckScen(false);
+        progresBarFieldsDao.save(waitForAppr);
+
+        ProgresBarFields appr = new ProgresBarFields();
+        appr.setStatus(status5);
+        appr.setSAPStatus(SAPStatus5);
+        appr.setRole(PVIRole);
+        appr.setRejected(false);
+        appr.setPVIcheckScen(false);
+        progresBarFieldsDao.save(appr);
+
+        ProgresBarFields stordr = new ProgresBarFields();
+        stordr.setStatus(status7);
+        stordr.setSAPStatus(SAPStatus7);
+        stordr.setRole(PVIRole);
+        stordr.setRejected(false);
+        stordr.setPVIcheckScen(false);
+        progresBarFieldsDao.save(stordr);
+
+        ProgresBarFields stres = new ProgresBarFields();
+        stres.setStatus(status99);
+        stres.setSAPStatus(SAPStatus8);
+        stres.setRole(PVIRole);
+        stres.setRejected(false);
+        stres.setPVIcheckScen(false);
+        progresBarFieldsDao.save(stres);
+
+        ProgresBarFields stres1 = new ProgresBarFields();
+        stres1.setStatus(status99);
+        stres1.setSAPStatus(SAPStatus11);
+        stres1.setRole(PVIRole);
+        stres1.setRejected(false);
+        stres1.setPVIcheckScen(false);
+        progresBarFieldsDao.save(stres1);
+
+        ProgresBarFields onhold = new ProgresBarFields();
+        onhold.setStatus(status9);
+        onhold.setSAPStatus(SAPStatus9);
+        onhold.setRole(PVIRole);
+        onhold.setRejected(false);
+        onhold.setPVIcheckScen(false);
+        progresBarFieldsDao.save(onhold);
+
+        ProgresBarFields orddel = new ProgresBarFields();
+        orddel.setStatus(status10);
+        orddel.setSAPStatus(SAPStatus10);
+        orddel.setRole(PVIRole);
+        orddel.setRejected(false);
+        orddel.setPVIcheckScen(false);
+        progresBarFieldsDao.save(orddel);
+////////PVI//////////////////////////////////////////////no pvi check, rej
+        proofRequestSetUp = new ProgresBarFields();
+        proofRequestSetUp.setStatus(status1);
+        proofRequestSetUp.setSAPStatus(SAPStatus1);
+        proofRequestSetUp.setRole(PVIRole);
+        proofRequestSetUp.setRejected(true);
+        proofRequestSetUp.setPVIcheckScen(false);
+        progresBarFieldsDao.save(proofRequestSetUp);
+
+        proofRequest = new ProgresBarFields();
+        proofRequest.setStatus(status2);
+        proofRequest.setSAPStatus(SAPStatus2);
+        proofRequest.setRole(PVIRole);
+        proofRequest.setRejected(true);
+        proofRequest.setPVIcheckScen(false);
+        progresBarFieldsDao.save(proofRequest);
+
+        waitForAppr = new ProgresBarFields();
+        waitForAppr.setStatus(status4);
+        waitForAppr.setSAPStatus(SAPStatus4);
+        waitForAppr.setRole(PVIRole);
+        waitForAppr.setRejected(true);
+        waitForAppr.setPVIcheckScen(false);
+        progresBarFieldsDao.save(waitForAppr);
+
+        ProgresBarFields rej = new ProgresBarFields();
+        rej.setStatus(status6);
+        rej.setSAPStatus(SAPStatus6);
+        rej.setRole(PVIRole);
+        rej.setRejected(true);
+        rej.setPVIcheckScen(false);
+        progresBarFieldsDao.save(rej);
+
+        onhold = new ProgresBarFields();
+        onhold.setStatus(status9);
+        onhold.setSAPStatus(SAPStatus9);
+        onhold.setRole(PVIRole);
+        onhold.setRejected(true);
+        onhold.setPVIcheckScen(false);
+        progresBarFieldsDao.save(onhold);
+
+        ////////PVI////////////////////////////////////////////// pvi check, no rej
+         proofRequestSetUp = new ProgresBarFields();
+        proofRequestSetUp.setStatus(status1);
+        proofRequestSetUp.setSAPStatus(SAPStatus1);
+        proofRequestSetUp.setRole(PVIRole);
+        proofRequestSetUp.setRejected(false);
+        proofRequestSetUp.setPVIcheckScen(true);
+        progresBarFieldsDao.save(proofRequestSetUp);
+
+         proofRequest = new ProgresBarFields();
+        proofRequest.setStatus(status2);
+        proofRequest.setSAPStatus(SAPStatus2);
+        proofRequest.setRole(PVIRole);
+        proofRequest.setRejected(false);
+        proofRequest.setPVIcheckScen(true);
+        progresBarFieldsDao.save(proofRequest);
+
+        ProgresBarFields checkPvi = new ProgresBarFields();
+        checkPvi.setStatus(status3);
+        checkPvi.setSAPStatus(SAPStatus3);
+        checkPvi.setRole(PVIRole);
+        checkPvi.setRejected(false);
+        checkPvi.setPVIcheckScen(true);
+        progresBarFieldsDao.save(checkPvi);
+
+         waitForAppr = new ProgresBarFields();
+        waitForAppr.setStatus(status4);
+        waitForAppr.setSAPStatus(SAPStatus4);
+        waitForAppr.setRole(PVIRole);
+        waitForAppr.setRejected(false);
+        waitForAppr.setPVIcheckScen(true);
+        progresBarFieldsDao.save(waitForAppr);
+
+         appr = new ProgresBarFields();
+        appr.setStatus(status5);
+        appr.setSAPStatus(SAPStatus5);
+        appr.setRole(PVIRole);
+        appr.setRejected(false);
+        appr.setPVIcheckScen(true);
+        progresBarFieldsDao.save(appr);
+
+         stordr = new ProgresBarFields();
+        stordr.setStatus(status7);
+        stordr.setSAPStatus(SAPStatus7);
+        stordr.setRole(PVIRole);
+        stordr.setRejected(false);
+        stordr.setPVIcheckScen(true);
+        progresBarFieldsDao.save(stordr);
+
+         stres = new ProgresBarFields();
+        stres.setStatus(status99);
+        stres.setSAPStatus(SAPStatus8);
+        stres.setRole(PVIRole);
+        stres.setRejected(false);
+        stres.setPVIcheckScen(true);
+        progresBarFieldsDao.save(stres);
+
+         stres1 = new ProgresBarFields();
+        stres1.setStatus(status99);
+        stres1.setSAPStatus(SAPStatus11);
+        stres1.setRole(PVIRole);
+        stres1.setRejected(false);
+        stres1.setPVIcheckScen(true);
+        progresBarFieldsDao.save(stres1);
+
+         onhold = new ProgresBarFields();
+        onhold.setStatus(status9);
+        onhold.setSAPStatus(SAPStatus9);
+        onhold.setRole(PVIRole);
+        onhold.setRejected(false);
+        onhold.setPVIcheckScen(true);
+        progresBarFieldsDao.save(onhold);
+
+        orddel = new ProgresBarFields();
+        orddel.setStatus(status10);
+        orddel.setSAPStatus(SAPStatus10);
+        orddel.setRole(PVIRole);
+        orddel.setRejected(false);
+        orddel.setPVIcheckScen(true);
+        progresBarFieldsDao.save(orddel);
+////////PVI////////////////////////////////////////////// pvi check, rej
+        proofRequestSetUp = new ProgresBarFields();
+        proofRequestSetUp.setStatus(status1);
+        proofRequestSetUp.setSAPStatus(SAPStatus1);
+        proofRequestSetUp.setRole(PVIRole);
+        proofRequestSetUp.setRejected(true);
+        proofRequestSetUp.setPVIcheckScen(true);
+        progresBarFieldsDao.save(proofRequestSetUp);
+
+        proofRequest = new ProgresBarFields();
+        proofRequest.setStatus(status2);
+        proofRequest.setSAPStatus(SAPStatus2);
+        proofRequest.setRole(PVIRole);
+        proofRequest.setRejected(true);
+        proofRequest.setPVIcheckScen(true);
+        progresBarFieldsDao.save(proofRequest);
+
+        checkPvi = new ProgresBarFields();
+        checkPvi.setStatus(status3);
+        checkPvi.setSAPStatus(SAPStatus3);
+        checkPvi.setRole(PVIRole);
+        checkPvi.setRejected(true);
+        checkPvi.setPVIcheckScen(true);
+        progresBarFieldsDao.save(checkPvi);
+
+        waitForAppr = new ProgresBarFields();
+        waitForAppr.setStatus(status4);
+        waitForAppr.setSAPStatus(SAPStatus4);
+        waitForAppr.setRole(PVIRole);
+        waitForAppr.setRejected(true);
+        waitForAppr.setPVIcheckScen(true);
+        progresBarFieldsDao.save(waitForAppr);
+
+         rej = new ProgresBarFields();
+        rej.setStatus(status6);
+        rej.setSAPStatus(SAPStatus6);
+        rej.setRole(PVIRole);
+        rej.setRejected(true);
+        rej.setPVIcheckScen(true);
+        progresBarFieldsDao.save(rej);
+
+        onhold = new ProgresBarFields();
+        onhold.setStatus(status9);
+        onhold.setSAPStatus(SAPStatus9);
+        onhold.setRole(PVIRole);
+        onhold.setRejected(true);
+        onhold.setPVIcheckScen(true);
+        progresBarFieldsDao.save(onhold);
+
+
+        ////////Debtor//////////////////////////////////////////////no pvi check, no rej
+         proofRequestSetUp = new ProgresBarFields();
+        proofRequestSetUp.setStatus(status2);
+        proofRequestSetUp.setSAPStatus(SAPStatus1);
+        proofRequestSetUp.setRole(debtorRole);
+        proofRequestSetUp.setRejected(false);
+        proofRequestSetUp.setPVIcheckScen(false);
+        progresBarFieldsDao.save(proofRequestSetUp);
+
+         proofRequest = new ProgresBarFields();
+        proofRequest.setStatus(status2);
+        proofRequest.setSAPStatus(SAPStatus2);
+        proofRequest.setRole(debtorRole);
+        proofRequest.setRejected(false);
+        proofRequest.setPVIcheckScen(false);
+        progresBarFieldsDao.save(proofRequest);
+
+         waitForAppr = new ProgresBarFields();
+        waitForAppr.setStatus(status4);
+        waitForAppr.setSAPStatus(SAPStatus4);
+        waitForAppr.setRole(debtorRole);
+        waitForAppr.setRejected(false);
+        waitForAppr.setPVIcheckScen(false);
+        progresBarFieldsDao.save(waitForAppr);
+
+         appr = new ProgresBarFields();
+        appr.setStatus(status5);
+        appr.setSAPStatus(SAPStatus5);
+        appr.setRole(debtorRole);
+        appr.setRejected(false);
+        appr.setPVIcheckScen(false);
+        progresBarFieldsDao.save(appr);
+
+         stordr = new ProgresBarFields();
+        stordr.setStatus(status98);
+        stordr.setSAPStatus(SAPStatus7);
+        stordr.setRole(debtorRole);
+        stordr.setRejected(false);
+        stordr.setPVIcheckScen(false);
+        progresBarFieldsDao.save(stordr);
+
+         stres = new ProgresBarFields();
+        stres.setStatus(status98);
+        stres.setSAPStatus(SAPStatus8);
+        stres.setRole(debtorRole);
+        stres.setRejected(false);
+        stres.setPVIcheckScen(false);
+        progresBarFieldsDao.save(stres);
+
+        stres1 = new ProgresBarFields();
+        stres1.setStatus(status98);
+        stres1.setSAPStatus(SAPStatus11);
+        stres1.setRole(debtorRole);
+        stres1.setRejected(false);
+        stres1.setPVIcheckScen(false);
+        progresBarFieldsDao.save(stres1);
+
+        onhold = new ProgresBarFields();
+        onhold.setStatus(status9);
+        onhold.setSAPStatus(SAPStatus9);
+        onhold.setRole(debtorRole);
+        onhold.setRejected(false);
+        onhold.setPVIcheckScen(false);
+        progresBarFieldsDao.save(onhold);
+
+        orddel = new ProgresBarFields();
+        orddel.setStatus(status10);
+        orddel.setSAPStatus(SAPStatus10);
+        orddel.setRole(debtorRole);
+        orddel.setRejected(false);
+        orddel.setPVIcheckScen(false);
+        progresBarFieldsDao.save(orddel);
+////////Debtor//////////////////////////////////////////////no pvi check, rej
+        proofRequestSetUp = new ProgresBarFields();
+        proofRequestSetUp.setStatus(status2);
+        proofRequestSetUp.setSAPStatus(SAPStatus1);
+        proofRequestSetUp.setRole(debtorRole);
+        proofRequestSetUp.setRejected(true);
+        proofRequestSetUp.setPVIcheckScen(false);
+        progresBarFieldsDao.save(proofRequestSetUp);
+
+        proofRequest = new ProgresBarFields();
+        proofRequest.setStatus(status2);
+        proofRequest.setSAPStatus(SAPStatus2);
+        proofRequest.setRole(debtorRole);
+        proofRequest.setRejected(true);
+        proofRequest.setPVIcheckScen(false);
+        progresBarFieldsDao.save(proofRequest);
+
+        waitForAppr = new ProgresBarFields();
+        waitForAppr.setStatus(status4);
+        waitForAppr.setSAPStatus(SAPStatus4);
+        waitForAppr.setRole(debtorRole);
+        waitForAppr.setRejected(true);
+        waitForAppr.setPVIcheckScen(false);
+        progresBarFieldsDao.save(waitForAppr);
+
+        rej = new ProgresBarFields();
+        rej.setStatus(status6);
+        rej.setSAPStatus(SAPStatus6);
+        rej.setRole(debtorRole);
+        rej.setRejected(true);
+        rej.setPVIcheckScen(false);
+        progresBarFieldsDao.save(rej);
+
+        onhold = new ProgresBarFields();
+        onhold.setStatus(status9);
+        onhold.setSAPStatus(SAPStatus9);
+        onhold.setRole(debtorRole);
+        onhold.setRejected(true);
+        onhold.setPVIcheckScen(false);
+        progresBarFieldsDao.save(onhold);
+
+        ////////Debtor////////////////////////////////////////////// pvi check, no rej
+        proofRequestSetUp = new ProgresBarFields();
+        proofRequestSetUp.setStatus(status2);
+        proofRequestSetUp.setSAPStatus(SAPStatus1);
+        proofRequestSetUp.setRole(debtorRole);
+        proofRequestSetUp.setRejected(false);
+        proofRequestSetUp.setPVIcheckScen(true);
+        progresBarFieldsDao.save(proofRequestSetUp);
+
+        proofRequest = new ProgresBarFields();
+        proofRequest.setStatus(status2);
+        proofRequest.setSAPStatus(SAPStatus2);
+        proofRequest.setRole(debtorRole);
+        proofRequest.setRejected(false);
+        proofRequest.setPVIcheckScen(true);
+        progresBarFieldsDao.save(proofRequest);
+
+        checkPvi = new ProgresBarFields();
+        checkPvi.setStatus(status2);
+        checkPvi.setSAPStatus(SAPStatus3);
+        checkPvi.setRole(debtorRole);
+        checkPvi.setRejected(false);
+        checkPvi.setPVIcheckScen(true);
+        progresBarFieldsDao.save(checkPvi);
+
+        waitForAppr = new ProgresBarFields();
+        waitForAppr.setStatus(status4);
+        waitForAppr.setSAPStatus(SAPStatus4);
+        waitForAppr.setRole(debtorRole);
+        waitForAppr.setRejected(false);
+        waitForAppr.setPVIcheckScen(true);
+        progresBarFieldsDao.save(waitForAppr);
+
+        appr = new ProgresBarFields();
+        appr.setStatus(status5);
+        appr.setSAPStatus(SAPStatus5);
+        appr.setRole(debtorRole);
+        appr.setRejected(false);
+        appr.setPVIcheckScen(true);
+        progresBarFieldsDao.save(appr);
+
+        stordr = new ProgresBarFields();
+        stordr.setStatus(status98);
+        stordr.setSAPStatus(SAPStatus7);
+        stordr.setRole(debtorRole);
+        stordr.setRejected(false);
+        stordr.setPVIcheckScen(true);
+        progresBarFieldsDao.save(stordr);
+
+        stres = new ProgresBarFields();
+        stres.setStatus(status98);
+        stres.setSAPStatus(SAPStatus8);
+        stres.setRole(debtorRole);
+        stres.setRejected(false);
+        stres.setPVIcheckScen(true);
+        progresBarFieldsDao.save(stres);
+
+        stres1 = new ProgresBarFields();
+        stres1.setStatus(status98);
+        stres1.setSAPStatus(SAPStatus11);
+        stres1.setRole(debtorRole);
+        stres1.setRejected(false);
+        stres1.setPVIcheckScen(true);
+        progresBarFieldsDao.save(stres1);
+
+        onhold = new ProgresBarFields();
+        onhold.setStatus(status9);
+        onhold.setSAPStatus(SAPStatus9);
+        onhold.setRole(debtorRole);
+        onhold.setRejected(false);
+        onhold.setPVIcheckScen(true);
+        progresBarFieldsDao.save(onhold);
+
+        orddel = new ProgresBarFields();
+        orddel.setStatus(status10);
+        orddel.setSAPStatus(SAPStatus10);
+        orddel.setRole(debtorRole);
+        orddel.setRejected(false);
+        orddel.setPVIcheckScen(true);
+        progresBarFieldsDao.save(orddel);
+////////Debtor////////////////////////////////////////////// pvi check, rej
+        proofRequestSetUp = new ProgresBarFields();
+        proofRequestSetUp.setStatus(status2);
+        proofRequestSetUp.setSAPStatus(SAPStatus1);
+        proofRequestSetUp.setRole(debtorRole);
+        proofRequestSetUp.setRejected(true);
+        proofRequestSetUp.setPVIcheckScen(true);
+        progresBarFieldsDao.save(proofRequestSetUp);
+
+        proofRequest = new ProgresBarFields();
+        proofRequest.setStatus(status2);
+        proofRequest.setSAPStatus(SAPStatus2);
+        proofRequest.setRole(debtorRole);
+        proofRequest.setRejected(true);
+        proofRequest.setPVIcheckScen(true);
+        progresBarFieldsDao.save(proofRequest);
+
+        checkPvi = new ProgresBarFields();
+        checkPvi.setStatus(status2);
+        checkPvi.setSAPStatus(SAPStatus3);
+        checkPvi.setRole(debtorRole);
+        checkPvi.setRejected(true);
+        checkPvi.setPVIcheckScen(true);
+        progresBarFieldsDao.save(checkPvi);
+
+        waitForAppr = new ProgresBarFields();
+        waitForAppr.setStatus(status4);
+        waitForAppr.setSAPStatus(SAPStatus4);
+        waitForAppr.setRole(debtorRole);
+        waitForAppr.setRejected(true);
+        waitForAppr.setPVIcheckScen(true);
+        progresBarFieldsDao.save(waitForAppr);
+
+        rej = new ProgresBarFields();
+        rej.setStatus(status6);
+        rej.setSAPStatus(SAPStatus6);
+        rej.setRole(debtorRole);
+        rej.setRejected(true);
+        rej.setPVIcheckScen(true);
+        progresBarFieldsDao.save(rej);
+
+        onhold = new ProgresBarFields();
+        onhold.setStatus(status9);
+        onhold.setSAPStatus(SAPStatus9);
+        onhold.setRole(debtorRole);
+        onhold.setRejected(true);
+        onhold.setPVIcheckScen(true);
+        progresBarFieldsDao.save(onhold);
+
+
+ ////////DTP//////////////////////////////////////////////no pvi check, no rej
+        proofRequestSetUp = new ProgresBarFields();
+        proofRequestSetUp.setStatus(status2);
+        proofRequestSetUp.setSAPStatus(SAPStatus1);
+        proofRequestSetUp.setRole(DTPRole);
+        proofRequestSetUp.setRejected(false);
+        proofRequestSetUp.setPVIcheckScen(false);
+        progresBarFieldsDao.save(proofRequestSetUp);
+
+        proofRequest = new ProgresBarFields();
+        proofRequest.setStatus(status2);
+        proofRequest.setSAPStatus(SAPStatus2);
+        proofRequest.setRole(DTPRole);
+        proofRequest.setRejected(false);
+        proofRequest.setPVIcheckScen(false);
+        progresBarFieldsDao.save(proofRequest);
+
+        waitForAppr = new ProgresBarFields();
+        waitForAppr.setStatus(status4);
+        waitForAppr.setSAPStatus(SAPStatus4);
+        waitForAppr.setRole(DTPRole);
+        waitForAppr.setRejected(false);
+        waitForAppr.setPVIcheckScen(false);
+        progresBarFieldsDao.save(waitForAppr);
+
+        appr = new ProgresBarFields();
+        appr.setStatus(status5);
+        appr.setSAPStatus(SAPStatus5);
+        appr.setRole(DTPRole);
+        appr.setRejected(false);
+        appr.setPVIcheckScen(false);
+        progresBarFieldsDao.save(appr);
+
+        stordr = new ProgresBarFields();
+        stordr.setStatus(status7);
+        stordr.setSAPStatus(SAPStatus7);
+        stordr.setRole(DTPRole);
+        stordr.setRejected(false);
+        stordr.setPVIcheckScen(false);
+        progresBarFieldsDao.save(stordr);
+
+        stres = new ProgresBarFields();
+        stres.setStatus(status7);
+        stres.setSAPStatus(SAPStatus8);
+        stres.setRole(DTPRole);
+        stres.setRejected(false);
+        stres.setPVIcheckScen(false);
+        progresBarFieldsDao.save(stres);
+
+        onhold = new ProgresBarFields();
+        onhold.setStatus(status9);
+        onhold.setSAPStatus(SAPStatus9);
+        onhold.setRole(DTPRole);
+        onhold.setRejected(false);
+        onhold.setPVIcheckScen(false);
+        progresBarFieldsDao.save(onhold);
+
+        orddel = new ProgresBarFields();
+        orddel.setStatus(status7);
+        orddel.setSAPStatus(SAPStatus10);
+        orddel.setRole(DTPRole);
+        orddel.setRejected(false);
+        orddel.setPVIcheckScen(false);
+        progresBarFieldsDao.save(orddel);
+////////DTP//////////////////////////////////////////////no pvi check, rej
+        proofRequestSetUp = new ProgresBarFields();
+        proofRequestSetUp.setStatus(status2);
+        proofRequestSetUp.setSAPStatus(SAPStatus1);
+        proofRequestSetUp.setRole(DTPRole);
+        proofRequestSetUp.setRejected(true);
+        proofRequestSetUp.setPVIcheckScen(false);
+        progresBarFieldsDao.save(proofRequestSetUp);
+
+        proofRequest = new ProgresBarFields();
+        proofRequest.setStatus(status2);
+        proofRequest.setSAPStatus(SAPStatus2);
+        proofRequest.setRole(DTPRole);
+        proofRequest.setRejected(true);
+        proofRequest.setPVIcheckScen(false);
+        progresBarFieldsDao.save(proofRequest);
+
+        waitForAppr = new ProgresBarFields();
+        waitForAppr.setStatus(status4);
+        waitForAppr.setSAPStatus(SAPStatus4);
+        waitForAppr.setRole(DTPRole);
+        waitForAppr.setRejected(true);
+        waitForAppr.setPVIcheckScen(false);
+        progresBarFieldsDao.save(waitForAppr);
+
+        rej = new ProgresBarFields();
+        rej.setStatus(status6);
+        rej.setSAPStatus(SAPStatus6);
+        rej.setRole(DTPRole);
+        rej.setRejected(true);
+        rej.setPVIcheckScen(false);
+        progresBarFieldsDao.save(rej);
+
+        onhold = new ProgresBarFields();
+        onhold.setStatus(status9);
+        onhold.setSAPStatus(SAPStatus9);
+        onhold.setRole(DTPRole);
+        onhold.setRejected(true);
+        onhold.setPVIcheckScen(false);
+        progresBarFieldsDao.save(onhold);
+
+        ////////DTP////////////////////////////////////////////// pvi check, no rej
+        proofRequestSetUp = new ProgresBarFields();
+        proofRequestSetUp.setStatus(status2);
+        proofRequestSetUp.setSAPStatus(SAPStatus1);
+        proofRequestSetUp.setRole(DTPRole);
+        proofRequestSetUp.setRejected(false);
+        proofRequestSetUp.setPVIcheckScen(true);
+        progresBarFieldsDao.save(proofRequestSetUp);
+
+        proofRequest = new ProgresBarFields();
+        proofRequest.setStatus(status2);
+        proofRequest.setSAPStatus(SAPStatus2);
+        proofRequest.setRole(DTPRole);
+        proofRequest.setRejected(false);
+        proofRequest.setPVIcheckScen(true);
+        progresBarFieldsDao.save(proofRequest);
+
+        checkPvi = new ProgresBarFields();
+        checkPvi.setStatus(status3);
+        checkPvi.setSAPStatus(SAPStatus3);
+        checkPvi.setRole(DTPRole);
+        checkPvi.setRejected(false);
+        checkPvi.setPVIcheckScen(true);
+        progresBarFieldsDao.save(checkPvi);
+
+        waitForAppr = new ProgresBarFields();
+        waitForAppr.setStatus(status4);
+        waitForAppr.setSAPStatus(SAPStatus4);
+        waitForAppr.setRole(DTPRole);
+        waitForAppr.setRejected(false);
+        waitForAppr.setPVIcheckScen(true);
+        progresBarFieldsDao.save(waitForAppr);
+
+        appr = new ProgresBarFields();
+        appr.setStatus(status5);
+        appr.setSAPStatus(SAPStatus5);
+        appr.setRole(DTPRole);
+        appr.setRejected(false);
+        appr.setPVIcheckScen(true);
+        progresBarFieldsDao.save(appr);
+
+        stordr = new ProgresBarFields();
+        stordr.setStatus(status7);
+        stordr.setSAPStatus(SAPStatus7);
+        stordr.setRole(DTPRole);
+        stordr.setRejected(false);
+        stordr.setPVIcheckScen(true);
+        progresBarFieldsDao.save(stordr);
+
+        stres = new ProgresBarFields();
+        stres.setStatus(status7);
+        stres.setSAPStatus(SAPStatus8);
+        stres.setRole(DTPRole);
+        stres.setRejected(false);
+        stres.setPVIcheckScen(true);
+        progresBarFieldsDao.save(stres);
+
+        onhold = new ProgresBarFields();
+        onhold.setStatus(status9);
+        onhold.setSAPStatus(SAPStatus9);
+        onhold.setRole(DTPRole);
+        onhold.setRejected(false);
+        onhold.setPVIcheckScen(true);
+        progresBarFieldsDao.save(onhold);
+
+        orddel = new ProgresBarFields();
+        orddel.setStatus(status7);
+        orddel.setSAPStatus(SAPStatus10);
+        orddel.setRole(DTPRole);
+        orddel.setRejected(false);
+        orddel.setPVIcheckScen(true);
+        progresBarFieldsDao.save(orddel);
+////////DTP////////////////////////////////////////////// pvi check, rej
+        proofRequestSetUp = new ProgresBarFields();
+        proofRequestSetUp.setStatus(status2);
+        proofRequestSetUp.setSAPStatus(SAPStatus1);
+        proofRequestSetUp.setRole(DTPRole);
+        proofRequestSetUp.setRejected(true);
+        proofRequestSetUp.setPVIcheckScen(true);
+        progresBarFieldsDao.save(proofRequestSetUp);
+
+        proofRequest = new ProgresBarFields();
+        proofRequest.setStatus(status2);
+        proofRequest.setSAPStatus(SAPStatus2);
+        proofRequest.setRole(DTPRole);
+        proofRequest.setRejected(true);
+        proofRequest.setPVIcheckScen(true);
+        progresBarFieldsDao.save(proofRequest);
+
+        checkPvi = new ProgresBarFields();
+        checkPvi.setStatus(status3);
+        checkPvi.setSAPStatus(SAPStatus3);
+        checkPvi.setRole(DTPRole);
+        checkPvi.setRejected(true);
+        checkPvi.setPVIcheckScen(true);
+        progresBarFieldsDao.save(checkPvi);
+
+        waitForAppr = new ProgresBarFields();
+        waitForAppr.setStatus(status4);
+        waitForAppr.setSAPStatus(SAPStatus4);
+        waitForAppr.setRole(DTPRole);
+        waitForAppr.setRejected(true);
+        waitForAppr.setPVIcheckScen(true);
+        progresBarFieldsDao.save(waitForAppr);
+
+        rej = new ProgresBarFields();
+        rej.setStatus(status6);
+        rej.setSAPStatus(SAPStatus6);
+        rej.setRole(DTPRole);
+        rej.setRejected(true);
+        rej.setPVIcheckScen(true);
+        progresBarFieldsDao.save(rej);
+
+        onhold = new ProgresBarFields();
+        onhold.setStatus(status9);
+        onhold.setSAPStatus(SAPStatus9);
+        onhold.setRole(DTPRole);
+        onhold.setRejected(true);
+        onhold.setPVIcheckScen(true);
+        progresBarFieldsDao.save(onhold);
+
+
+
+
+//        ProgresBarFields proofRequest = new ProgresBarFields();
+//        proofRequest.setName("proof request set up");
+//        List<SAPstatus> prSAPList = new ArrayList<SAPstatus>();
+//        prSAPList.add(SAPStatus1);
+//        prSAPList.add(SAPStatus2);
+//        proofRequest.setSAPstatus(prSAPList);
+//        proofRequest.setRoles(roles2);
+//        progresBarFieldsDao.save(proofRequest);
+
+
+
+
+//        proof request set up  (1) > proof requested (2) > waiting for approval (4) > approved  (5) > stamps ordered (7) > stamps received (8, 11) > order delivered (10)
 
     }
 

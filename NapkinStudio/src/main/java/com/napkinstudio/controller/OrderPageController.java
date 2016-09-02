@@ -42,6 +42,9 @@ public class OrderPageController {
     private SAPstatusManager sapStatusManager;
 
     @Autowired
+    private ProgresBarFieldsManager progresBarFieldsManager;
+
+    @Autowired
     private StatusChangeManager statusChangeManager;
 
 
@@ -67,9 +70,23 @@ public class OrderPageController {
             e.printStackTrace(System.out);
         }
         user.setRoles(roles);
+
+//        List<ProgresBarFields> barFields = progresBarFieldsManager.findAll();
+        List<Object[]> barFields = progresBarFieldsManager.findBarByRolePVICheckReject(roleId,false,false);
+        System.out.println(barFields);
+        System.out.println(barFields.toString());
+
+        for (Object[] object: barFields) {
+            System.out.println(object.toString());
+
+            System.out.println(object[0]+"; "+object[1]);
+        }
+
+
         model.addAttribute("user",user);
         model.addAttribute("userOrders",userOrders);
         model.addAttribute("theOrder",theOrder);
+        model.addAttribute("barFields",barFields);
         return "orderpage";
     }
 

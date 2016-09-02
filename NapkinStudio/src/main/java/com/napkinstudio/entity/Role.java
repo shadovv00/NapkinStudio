@@ -42,6 +42,16 @@ public class Role {
         return statusSAPStatuseRoles;
     }
 
+    @OneToMany(mappedBy = "role",
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    private Set<ProgresBarFields> progresBarFieldses;
+    public Set<ProgresBarFields> getProgresBarFieldses() {
+        return progresBarFieldses;
+    }
+    public void setProgresBarFieldses(Set<ProgresBarFields> progresBarFieldses) {
+        this.progresBarFieldses = progresBarFieldses;
+    }
+
 
 //    @ManyToMany(fetch = FetchType.EAGER,cascade = {MERGE,REMOVE})
 //    private List<Status> status;

@@ -38,6 +38,48 @@
 </div>
 
 
+     <table width="100%" border="0" style="margin-bottom: 10px">
+            <tr valign="top">
+                <th >
+                    <b>Status</b>
+                </th>
+                <th >
+                    <b>Date</b>
+                </th>
+            </tr>
+
+        <c:forEach items="${barFields}" var="barFields">
+            <tr>
+                <td>
+                    <c:out value="${barFields[0]}" />
+                </td>
+                <td>
+                    <c:out value="${barFields[1]}" />
+                </td>
+             </tr>
+        </c:forEach>
+     </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <table width="100%" border="0" style="margin-bottom: 10px">
                 <tr valign="top">
                     <th width="50%" colspan="2">

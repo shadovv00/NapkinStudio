@@ -1,6 +1,7 @@
 package com.napkinstudio.entity;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -50,8 +51,9 @@ public class Order extends  AbstractEntity{
     private String color4;
     private String version;
 
-    private String pVIcheckScen;
-    private String debCheckScen;
+    private Boolean rejected;
+    private Boolean pVIcheckScen;
+    private Boolean debCheckScen;
     private Boolean toDeptor;
     private Boolean deleted;
 
@@ -78,6 +80,7 @@ public class Order extends  AbstractEntity{
 //    public void setUsers(List<User> users) {
 //        this.users = users;    }
     @OneToMany(mappedBy="order",fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+    @XStreamImplicit
     private List<UserOrder> itsUsers;
     public List<UserOrder> getItsUsers() {
         return itsUsers;    }
@@ -217,14 +220,20 @@ public class Order extends  AbstractEntity{
 
 
 
-    public String getPVIcheckScen() {
-        return pVIcheckScen;    }   
-    public void setPVIcheckScen(String pVIcheckScen) {
+
+    public Boolean getRejected() {
+        return rejected;    }
+    public void setRejected(Boolean rejected) {
+        this.rejected = rejected;    }
+
+    public Boolean getPVIcheckScen() {
+        return pVIcheckScen;    }
+    public void setPVIcheckScen(Boolean pVIcheckScen) {
         this.pVIcheckScen = pVIcheckScen;    }
 
-    public String getDebCheckScen() {
+    public Boolean getDebCheckScen() {
         return debCheckScen;    }   
-    public void setDebCheckScen(String debCheckScen) {
+    public void setDebCheckScen(Boolean debCheckScen) {
         this.debCheckScen = debCheckScen;    }
 
     public Boolean getToDeptor() {
@@ -251,14 +260,6 @@ public class Order extends  AbstractEntity{
 
     public void setPrintName(String printName) {
         this.printName = printName;
-    }
-
-    public String getpVIcheckScen() {
-        return pVIcheckScen;
-    }
-
-    public void setpVIcheckScen(String pVIcheckScen) {
-        this.pVIcheckScen = pVIcheckScen;
     }
 
     public SAPstatus getSapStatus() {

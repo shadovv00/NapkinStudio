@@ -1,5 +1,7 @@
 package com.napkinstudio.entity;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 import javax.persistence.*;
 
 import java.util.Date;
@@ -13,6 +15,7 @@ import static javax.persistence.CascadeType.REMOVE;
 )
 
 @Entity
+@XStreamAlias("itsUsers")
 
 @Table(name = "users_orders")
 public class UserOrder {
