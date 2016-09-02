@@ -6,11 +6,13 @@ import com.napkinstudio.manager.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -36,74 +38,78 @@ public class OrderPageController {
     @Autowired
     private StatusSAPStatusRoleManager statusSAPStatusRoleManager;
 
+    @Autowired
+    private SAPstatusManager sapStatusManager;
+
+    @Autowired
+    private StatusChangeManager statusChangeManager;
+
 
     @RequestMapping(value = "/orders/{orderId}")
     public String goToOrders(Model model,@PathVariable int orderId, Principal principal) {
         String login = principal.getName();
-        System.out.println("/////////////////orderpage/////////////////");
-        System.out.println(principal);
-        System.out.println(login);
         User user = userManager.findByLogin(login);
-        System.out.println("/////////////////user/////////////////");
-        System.out.println(user.toString());
         Order theOrder =orderManager.findById(orderId);
-        System.out.println("/////////////////theOrder/////////////////");
-        System.out.println(theOrder.toString());
 
         List<Role> roles = roleManager.findByUserId(user.getUserId());
-        System.out.println("/////////////////roles/////////////////");
-        System.out.println(roles.toString());
-//      List<Order> orders = orderManager.findByUserId(user.getUserId());
         List<UserOrder> userOrders = userOrderManager.findOrdersByUserId(user.getUserId());
-//        orders.get(0).getOrder().getSAPstatus().getStatusSAPStatuseRoles()
         Integer roleId =roles.get(0).getId();
-        Integer SSId = userOrders.get(0).getOrder().getSAPstatus().getId();
-        System.out.println(roleId + " " + SSId);
-
-
-        StatusSAPStatusRole statusSAPStatusRole =  statusSAPStatusRoleManager.findStatusByRoleIdAndSAPStatusId(roleId,SSId);
-
-//        System.out.println(statusSAPStatusRole.getStatus().getName());
-        List<StatusSAPStatusRole> statusSAPStatusRolesList = new ArrayList<>();
-        statusSAPStatusRolesList.add(statusSAPStatusRole);
-        userOrders.get(0).getOrder().getSAPstatus().setStatusSAPStatuseRoles(statusSAPStatusRolesList);
-//        user.setRoles(roles);
-        model.addAttribute("user",user);
-        model.addAttribute("userOrders",userOrders);
-        model.addAttribute("theOrder",theOrder);
-//        model.addAttribute("statusList", statusList);
-        return "orderpage";
-    }
-
-    @RequestMapping(value = "/changestatus/{answer}")
-    public String changeOrderStatus(Model model, @PathVariable String answer, Principal principal) {
-        String login = principal.getName();
-        System.out.println("/////////////////changestatus/////////////////");
-        System.out.println(answer);
-        System.out.println(login);
-        User user = userManager.findByLogin(login);
-        Order theOrder =orderManager.findById(1);
-
-        List<Role> roles = roleManager.findByUserId(user.getUserId());
-//      List<Order> orders = orderManager.findByUserId(user.getUserId());
-        List<UserOrder> userOrders = userOrderManager.findOrdersByUserId(user.getUserId());
-//        orders.get(0).getOrder().getSAPstatus().getStatusSAPStatuseRoles()
-        Integer roleId =roles.get(0).getId();
-        Integer SSId = userOrders.get(0).getOrder().getSAPstatus().getId();
-        System.out.println(roleId + " " + SSId);
-
-
-        StatusSAPStatusRole statusSAPStatusRole =  statusSAPStatusRoleManager.findStatusByRoleIdAndSAPStatusId(roleId,SSId);
-
-        System.out.println(statusSAPStatusRole.getStatus().getName());
-        List<StatusSAPStatusRole> statusSAPStatusRolesList = new ArrayList<>();
-        statusSAPStatusRolesList.add(statusSAPStatusRole);
-        userOrders.get(0).getOrder().getSAPstatus().setStatusSAPStatuseRoles(statusSAPStatusRolesList);
+        Integer SSId = theOrder.getSAPstatus().getId();
+        System.out.println("role="+roleId + "; SSId=" + SSId);
+        StatusSAPStatusRole statusSAPStatusRole;
+        try{
+            statusSAPStatusRole =  statusSAPStatusRoleManager.findStatusByRoleIdAndSAPStatusId(roleId,SSId);
+            System.out.println(statusSAPStatusRole.getStatus().getName());
+            List<StatusSAPStatusRole> statusSAPStatusRolesList = new ArrayList<>();
+            statusSAPStatusRolesList.add(statusSAPStatusRole);
+            theOrder.getSAPstatus().setStatusSAPStatuseRoles(statusSAPStatusRolesList);
+        }catch (NullPointerException e) {
+            e.printStackTrace(System.out);
+        }
         user.setRoles(roles);
         model.addAttribute("user",user);
         model.addAttribute("userOrders",userOrders);
         model.addAttribute("theOrder",theOrder);
-//        model.addAttribute("statusList", statusList);
+        return "orderpage";
+    }
+
+
+//    @RequestMapping(value = "/changestatus/{orderId}/{answer}")
+//    public String changeOrderStatus(Model model, @PathVariable int orderId, @PathVariable String answer, Principal principal) {
+    @RequestMapping(value = "/changestatus/{orderId}/{answer}")
+    public String changeOrderStatus(Model model, @PathVariable int orderId, @PathVariable String answer, Principal principal) {
+
+        String login = principal.getName();
+        System.out.println("/////////////////changestatus/////////////////");
+        System.out.println(orderId);
+        System.out.println(answer);
+        User user = userManager.findByLogin(login);
+        Order theOrder =orderManager.findById(orderId);
+        SAPstatus newSAPStatus;
+        StatusChange statusChange =new StatusChange();
+        statusChange.setDateTime(new Date());
+        System.out.println(theOrder.getOrderId());
+        if (answer.equals("yes")){
+            int prevSapStatusId=theOrder.getSAPstatus().getId();
+            if (prevSapStatusId<11){
+                newSAPStatus=sapStatusManager.findById(prevSapStatusId+1);
+                theOrder.setSAPstatus(newSAPStatus);
+                orderManager.save(theOrder);
+//                statusChange.setOrder(theOrder);
+//                statusChange.setSAPstatus(newSAPStatus);
+//                statusChangeManager.save(statusChange);
+            }
+        }else if (answer.equals("no")){
+            newSAPStatus=sapStatusManager.findById(6);
+            System.out.println(newSAPStatus.toString());
+            theOrder.setSAPstatus(newSAPStatus);
+            orderManager.save(theOrder);
+//            statusChange.setOrder(theOrder);
+//            statusChange.setSAPstatus(newSAPStatus);
+//            statusChangeManager.save(statusChange);
+        }
+
+        model.addAttribute("theOrder",theOrder);
         return "orderpage";
     }
 

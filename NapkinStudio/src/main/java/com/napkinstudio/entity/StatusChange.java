@@ -18,6 +18,7 @@ public class StatusChange implements Serializable {
 
 	   
 	@Id
+	@GeneratedValue
 	private Integer Id;
 	
     @ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
