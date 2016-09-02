@@ -8,10 +8,11 @@
 <%--<link href="<c:url value='/static/css/bootstrap.css' />"  rel="stylesheet"></link>--%>
 <%--<link href="<c:url value='/static/css/app.css' />" rel="stylesheet"></link>--%>
 <%--<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.css" />--%>
-	<%--<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"/>--%>
+	<script src="//code.jquery.com/jquery-3.1.0.min.js"></script>
+	<script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
 </head>
 <body>
-<a href="/">Back</a>
+<a class="btn btn-primary custom-width" href="/">Back</a>
 <div class="row">
 <div class = "col-md-offset-4 col-md-5">
 <div class="row text-center">
@@ -92,75 +93,75 @@
 </div>
 </body>
 </html>
-<%--<script type="text/javascript">--%>
-	<%--$(document).ready(function() {--%>
-		<%--$(".registrationForm").validate({--%>
-			<%--rules : {--%>
-				<%--login : {--%>
-					<%--required : true,--%>
-					<%--minlength : 3,--%>
-					<%--remote : {--%>
-						<%--url : "<c:url value='/register/availableLogin'/>",--%>
-						<%--type : "POST",--%>
-						<%--data : {--%>
-							<%--login : function() {--%>
-								<%--return $("#login").val();--%>
-							<%--}--%>
-						<%--}--%>
-					<%--}--%>
-				<%--},--%>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".registrationForm").validate({
+			rules : {
+				login : {
+					required : true,
+					minlength : 3,
+					remote : {
+						url : "<c:url value='/register/availableLogin'/>",
+						type : "POST",
+						data : {
+							login : function() {
+								return $("#login").val();
+							}
+						}
+					}
+				},
 
-				<%--email : {--%>
-					<%--required : true,--%>
-					<%--email : true,--%>
-					<%--remote : {--%>
-						<%--url : "<c:url value='/register/availableEmail'/>",--%>
-						<%--type : "POST",--%>
-						<%--data : {--%>
-							<%--login : function() {--%>
-								<%--return $("#email").val();--%>
-							<%--}--%>
-						<%--}--%>
-					<%--}--%>
-				<%--},--%>
-				<%--password : {--%>
-					<%--required : true,--%>
-					<%--minlength : 4--%>
-				<%--},--%>
+				email : {
+					required : true,
+					email : true,
+					remote : {
+						url : "<c:url value='/register/availableEmail'/>",
+						type : "POST",
+						data : {
+							login : function() {
+								return $("#email").val();
+							}
+						}
+					}
+				},
+				password : {
+					required : true,
+					minlength : 4
+				},
 
-				<%--password_again : {--%>
-					<%--required : true,--%>
-					<%--equalTo : "#password"--%>
-				<%--}--%>
-			<%--},--%>
-			<%--messages : {--%>
-				<%--login : {--%>
-					<%--required: "This field is required!",--%>
-					<%--minlength: "min length is 3",--%>
-					<%--remote:"User with such login already exist"--%>
-				<%--},--%>
+				password_again : {
+					required : true,
+					equalTo : "#password"
+				}
+			},
+			messages : {
+				login : {
+					required: "This field is required!",
+					minlength: "min length is 3",
+					remote:"User with such login already exist"
+				},
 
-				<%--email : {--%>
-					<%--required: "This field is required!",--%>
-					<%--email : "please put correct email",--%>
-					<%--remote: "User with such email already exist"--%>
-				<%--},--%>
-				<%--password : {--%>
-					<%--minlength :"min length is 4",--%>
-					<%--required : "This field is required!",--%>
-				<%--},--%>
-				<%--password_again : {--%>
-					<%--equalTo : "Passwords don't macth",--%>
-					<%--required :"This field is required!",--%>
-				<%--}--%>
+				email : {
+					required: "This field is required!",
+					email : "please put correct email",
+					remote: "User with such email already exist"
+				},
+				password : {
+					minlength :"min length is 4",
+					required : "This field is required!",
+				},
+				password_again : {
+					equalTo : "Passwords don't macth",
+					required :"This field is required!",
+				}
 
-			<%--},--%>
-			<%--highlight: function(element) {--%>
-				<%--$(element).closest('.form-group').removeClass('has-success').addClass('has-error');--%>
-			<%--},--%>
-			<%--unhighlight: function(element) {--%>
-				<%--$(element).closest('.form-group').removeClass('has-error').addClass('has-success');--%>
-			<%--}--%>
-		<%--});--%>
-	<%--});--%>
-<%--</script>--%>
+			},
+//			highlight: function(element) {
+//				$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+//			},
+//			unhighlight: function(element) {
+//				$(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+//			}
+		});
+	});
+</script>

@@ -5,10 +5,7 @@ import com.napkinstudio.manager.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by User1 on 31.08.2016.
@@ -39,6 +36,13 @@ public class UserController {
 
         userManager.save(user);
         return "redirect:/login.html?success=true";
+    }
+
+    @RequestMapping("/register/avaliable")
+    @ResponseBody
+    public String avaliable(@RequestParam String username) {
+        Boolean correct = userManager.findByLogin(username) == null;
+        return correct.toString();
     }
 
     @RequestMapping("/register/availableLogin")
