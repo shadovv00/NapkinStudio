@@ -1,7 +1,10 @@
 package com.napkinstudio.config;
 
-import java.util.Properties;
-
+import com.napkinstudio.config.security.SecurityConfig;
+import com.napkinstudio.sapcommunicationmodels.DataTransferFromSAP;
+import com.napkinstudio.sapcommunicationmodels.DataTransferToSAP;
+import com.napkinstudio.util.FTPCommunicator;
+import com.thoughtworks.xstream.XStream;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -11,17 +14,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.oxm.castor.CastorMarshaller;
+import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
-import com.napkinstudio.config.security.SecurityConfig;
-import com.napkinstudio.sapcommunicationmodels.DataTransferFromSAP;
-import com.napkinstudio.sapcommunicationmodels.DataTransferToSAP;
-import com.napkinstudio.util.FTPCommunicator;
-import com.thoughtworks.xstream.XStream;
+import java.util.Properties;
 /**
  * Created by User1 on 18.07.2016.
  */
@@ -56,8 +56,8 @@ public class AppConfig extends WebMvcConfigurerAdapter{
         //Using gmail
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
-        mailSender.setUsername("o.khomenko");
-        mailSender.setPassword("Blizlo10");
+        mailSender.setUsername("khomenkotest1");
+        mailSender.setPassword("napkinstudio2016");
 
         Properties javaMailProperties = new Properties();
         javaMailProperties.put("mail.smtp.starttls.enable", "true");
@@ -68,6 +68,14 @@ public class AppConfig extends WebMvcConfigurerAdapter{
         mailSender.setJavaMailProperties(javaMailProperties);
         return mailSender;
     }
+
+    @Bean
+    public FreeMarkerConfigurationFactoryBean getFreeMarkerConfiguration() {
+        FreeMarkerConfigurationFactoryBean bean = new FreeMarkerConfigurationFactoryBean();
+        bean.setTemplateLoaderPath("classpath:/fmtemplates/");
+        return bean;
+    }
+
 
     @Bean
     public FTPCommunicator getHandler(){

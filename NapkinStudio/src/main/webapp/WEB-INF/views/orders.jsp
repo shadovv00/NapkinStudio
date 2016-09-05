@@ -58,9 +58,9 @@
                 </td>
                 <th>Last modification</th>
                 <th>Go to orers</th>
-
+                <th>Send email</th>
             </tr>
-            <c:forEach items="${userOrders}" var="userOrder">
+            <c:forEach items="${userOrders}" var="userOrder"  varStatus="loop">
                 <tr>
 
                     <td>
@@ -92,6 +92,15 @@
 
 " class="btn btn-primary  custom-width">GO</a>
                     </td>
+
+                    <td>
+                            <%--<c:set var="orderId" value=""></c:set>--%>
+                 <a href="<spring:url value="orders/sendEmail/{index}">
+                    <spring:param name="index" value ="${loop.index}"/>
+                </spring:url>
+
+" class="btn btn-primary  custom-width">GO</a>
+                    </td>
                 </tr>
             </c:forEach>
 
@@ -99,7 +108,7 @@
         </table>
     </aside>
 </div>
-
+<a></a>
 
 </body>
 </html>

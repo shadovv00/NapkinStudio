@@ -10,9 +10,10 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REMOVE;
 
 
-@NamedQueries(
-        @NamedQuery(name="UserOrder.findOrdersByUserId",query = "SELECT userOrder from UserOrder userOrder  inner join userOrder.user user where user.id =:id")
-)
+@NamedQueries({
+        @NamedQuery(name="UserOrder.findOrdersByUserId",query = "SELECT userOrder from UserOrder userOrder  inner join userOrder.user user where user.id =:id"),
+        @NamedQuery(name="UserOrder.findUserOrdersByOrderId",query = "SELECT userOrder from UserOrder userOrder  inner join userOrder.order o where o.orderId =:id")
+})
 
 @Entity
 @XStreamAlias("itsUsers")
@@ -32,7 +33,7 @@ public class UserOrder {
     public void setOrder(Order order) {
         this.order = order;	}
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+    @ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE,REMOVE})
     private User user;
     public User getUser() {
         return this.user;	}
@@ -48,8 +49,11 @@ public class UserOrder {
     }
 
 
+    public Integer getId() {
+        return Id;
+    }
 
-
-
-
+    public void setId(Integer id) {
+        Id = id;
+    }
 }

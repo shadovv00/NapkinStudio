@@ -22,6 +22,10 @@ public class UserOrderManager {
       public List<UserOrder> findOrdersByUserId(Integer userId) {
         return userOrderDao.findOrdersByUserId(userId);
     }
+
+    public List<UserOrder> findUserOrdersByOrderId(Integer orderId) {
+        return userOrderDao.findUserOrdersByOrderId(orderId);
+    }
 }
 
 

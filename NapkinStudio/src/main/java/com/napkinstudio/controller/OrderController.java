@@ -1,14 +1,11 @@
 package com.napkinstudio.controller;
 
 
-import com.napkinstudio.entity.Role;
-import com.napkinstudio.entity.StatusSAPStatusRole;
-import com.napkinstudio.entity.User;
-import com.napkinstudio.entity.UserOrder;
+import com.napkinstudio.entity.*;
 import com.napkinstudio.manager.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -42,9 +39,24 @@ public class OrderController {
     @Autowired
     private StatusSAPStatusRoleManager statusSAPStatusRoleManager;
 
+    @Autowired
+    private MailManager mailManager;
 
-    @RequestMapping(value = "/orders")
-    public String goToOrders(Model model, Principal principal) {
+
+    @ModelAttribute("user")
+    public User user(Principal principal){
+        String login = principal.getName();
+        User user = userManager.findByLogin(login);
+
+        List<Role> roles = roleManager.findByUserId(user.getUserId());
+        user.setRoles(roles);
+        return user;
+    }
+
+    @ModelAttribute("userOrders")
+    List<UserOrder> UserOrders(Principal principal) {
+
+
         String login = principal.getName();
         User user = userManager.findByLogin(login);
 
@@ -56,7 +68,6 @@ public class OrderController {
         for (Iterator<UserOrder> iterator = userOrders.iterator(); iterator.hasNext();) {
             UserOrder userOrder = iterator.next();
             Integer SSId = userOrder.getOrder().getSAPstatus().getId();
-            System.out.println(roleId + " " + SSId);
             StatusSAPStatusRole statusSAPStatusRole;
             try{
                 statusSAPStatusRole =  statusSAPStatusRoleManager.findStatusByRoleIdAndSAPStatusId(roleId,SSId);
@@ -72,26 +83,27 @@ public class OrderController {
 
 
         }
+        return userOrders;
+    }
 
 
-//        orders.get(0).getOrder().getSAPstatus().getStatusSAPStatuseRoles()
-//
-//    List<Status> statusList = statusManager.findByRoleAndSAPStatusId(roles.get(0).getId(), orders.get(0).getSAPstatus().getId());
-//       System.out.println(orders.get(0).getSAPstatus().getName());
-//
-//        for(Status status: statusList
-//             ) {
-//            System.out.println(status.getName());
-//
-//        }
-////        System.out.println(orders.get(0).getSAPstatus().getStatuses().get(0).getName());
-////        user.setOrders(orders);
-         user.setRoles(roles);
+    @RequestMapping("orders/sendEmail/{index}")
+    public String sentMail(@ModelAttribute("userOrders") UserOrder userOrders, @PathVariable("index") int index ){
+        System.out.println(index);
 
-        model.addAttribute("user",user);
-        model.addAttribute("userOrders",userOrders);
-//        model.addAttribute("statusList", statusList);
-        return "orders";
+        System.out.println(userOrders.getOrder().getOrderId());
+          Order order =  userOrders.getOrder();
+        List<UserOrder> userOrderList = userOrderManager.findUserOrdersByOrderId(order.getOrderId());
+        order.setItsUsers(userOrderList);
+
+        System.out.println(order.getItsUsers().get(0).getUser().getEmail());
+         mailManager.sendEmail(order);
+        return "redirect:/orders";
+    }
+
+    @RequestMapping(value = "/orders")
+    public String goToOrders() {
+              return "orders";
     }
 
 //    @RequestMapping("/orders/{orderId}")
