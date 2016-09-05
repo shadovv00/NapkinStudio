@@ -11,4 +11,6 @@ import java.util.List;
 public interface IUserOrderDao extends JpaRepository<UserOrder,Integer> {
 
         List<UserOrder> findOrdersByUserId(@Param("id") Integer userId);
+
+    List<UserOrder> findUserOrdersByOrderId(@Param("id") Integer orderId);
 }

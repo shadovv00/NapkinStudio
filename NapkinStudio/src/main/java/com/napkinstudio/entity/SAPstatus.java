@@ -4,7 +4,6 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by User1 on 29.07.2016.
@@ -49,7 +48,7 @@ public class SAPstatus {
         this.progresBarFieldses = progresBarFieldses;
     }
 
-    @OneToMany(mappedBy = "SAPStatus",
+    @OneToMany(mappedBy = "sapStatus",
             cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private List<StatusChange> statusChanges;
     public List<StatusChange> getStatusChangees() {
