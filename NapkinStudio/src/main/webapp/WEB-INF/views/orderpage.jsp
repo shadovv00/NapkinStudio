@@ -37,8 +37,8 @@
 
 </div>
 
-
-     <table width="100%" border="0" style="margin-bottom: 10px">
+<%--6.3 Progressbar/////////////////////////////////////////////////--%>
+     <table border="0" style="margin-bottom: 10px">
             <tr valign="top">
                 <th >
                     <b>Status</b>
@@ -46,6 +46,7 @@
                 <th >
                     <b>Date</b>
                 </th>
+
             </tr>
 
         <c:forEach items="${barFields}" var="barFields">
@@ -56,30 +57,14 @@
                 <td>
                     <c:out value="${barFields[1]}" />
                 </td>
+                <%--<td>--%>
+                    <%--<c:out value="${barFields[2]}" />--%>
+                <%--</td>--%>
              </tr>
         </c:forEach>
      </table>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<%--6.4-5 Order and Article info/////////////////////////////////////////////////--%>
             <table width="100%" border="0" style="margin-bottom: 10px">
                 <tr valign="top">
                     <th width="50%" colspan="2">
@@ -114,6 +99,8 @@
                 <tr > <td >                     </td><td >                  </td>       <td >Print colour 4</td><td >${theOrder.color4}</td></tr>
                 <tr > <td >                     </td><td >                  </td>       <td >Print colour 4</td><td >${theOrder.color4}</td></tr>
             </table>
+
+<%--6.7 Print proof/////////////////////////////////////////////////--%>
             <%--TODO: Change condition--%>
             <c:if test="${theOrder.debNum==1}">
                 <div width="100%" style="margin-bottom: 10px">
@@ -121,6 +108,7 @@
                 </div>
             </c:if>
 
+<%--6.6 Comments/////////////////////////////////////////////////--%>
             <div width="100%" style="margin-bottom: 10px">
                 <b>Opmerkingen</b>
                 <ul width="100%" style="list-style-type:none">
@@ -165,6 +153,32 @@
                 </div>
             <input type="checkbox" name="check0" value="a2">Drukproef eerst door PVI laten controleren.<Br>
             <div display="inline" style="margin-bottom: 10px">
+
+                <%--TODO: Change&check conditions--%>
+                    <c:if test="${(theOrder.SAPstatus.id==3&&user.roles[0].id==4&&theOrder.pVIcheckScen)||
+                              (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.approvalBy=='Deptor')||
+                              (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.debCheckScen)||
+                              (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.toDeptor)||
+                              (theOrder.SAPstatus.id==4&&user.roles[0].id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
+                              (theOrder.SAPstatus.id==4&&user.roles[0].id==5&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&!theOrder.toDeptor)
+                }">
+                    <a href="<c:url value='/changestatus/${theOrder.orderId}/yes' />"  class="btn btn-success custom-width">Approve</a>
+
+               </c:if>
+                    <%--${theOrder.SAPstatus.id}--%>
+                    <%--${user.roles[0].id}--%>
+                <%--<c:if test="${(theOrder.SAPstatus.id==3&&theOrder.pVIcheckScen&&user.roles[0].id==4)}">--%>
+                <c:if test="${(theOrder.SAPstatus.id==3&&user.roles[0].id==4&&theOrder.pVIcheckScen)||
+                              (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.approvalBy=='Deptor')||
+                              (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.debCheckScen)||
+                              (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.toDeptor)||
+                              (theOrder.SAPstatus.id==4&&user.roles[0].id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
+                              (theOrder.SAPstatus.id==4&&user.roles[0].id==5&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&!theOrder.toDeptor)
+                }">
+                    <a href="<c:url value='/changestatus/${theOrder.orderId}/no' />"  class="btn btn-danger custom-width">Discard</a>
+                </c:if>
+
+                Testing:
                 <a href="<c:url value='/changestatus/${theOrder.orderId}/yes' />"  class="btn btn-success custom-width">Approve</a>
                 <a href="<c:url value='/changestatus/${theOrder.orderId}/no' />"  class="btn btn-danger custom-width">Discard</a>
                 <%--<c:url value='/changestatus/' var="statuschange1">--%>

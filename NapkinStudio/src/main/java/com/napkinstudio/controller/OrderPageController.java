@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -72,15 +73,45 @@ public class OrderPageController {
         user.setRoles(roles);
 
 //        List<ProgresBarFields> barFields = progresBarFieldsManager.findAll();
-        List<Object[]> barFields = progresBarFieldsManager.findBarByRolePVICheckReject(roleId,false,false);
-        System.out.println(barFields);
-        System.out.println(barFields.toString());
+        List<Object[]> barFields = progresBarFieldsManager.findBarByRolePVICheckReject(theOrder.getOrderId(),roleId,theOrder.getPVIcheckScen(),theOrder.getRejected());
+//        System.out.println(barFields);
+//        System.out.println(barFields.toString());
+//        System.out.println(barFields.size());
+            Date initDate=new Date();
+            Date dateToComp=new Date();
 
-        for (Object[] object: barFields) {
-            System.out.println(object.toString());
 
+        for (Iterator<Object[]> iterator = barFields.iterator(); iterator.hasNext();) {
+            Object[] object = iterator.next();
             System.out.println(object[0]+"; "+object[1]);
+////            get real initialization date
+            if ((object[0]!=null)&&((object[0].equals("Proof requested"))||(object[0].equals("Proof request set up")))){
+                if (object[1] instanceof java.util.Date) {
+                    initDate = (java.util.Date) object[1];
+                }
+            }
+//////            remove old data from orevious rounds
+            if (object[1] instanceof java.util.Date) {
+                dateToComp = (java.util.Date) object[1];
+            }
+            System.out.println(dateToComp+" compare to "+initDate);
+            if(dateToComp.before(initDate)){
+                object[1]=null;
+            }
+////            correcting progresbar according to onhold
+            if (theOrder.getSAPstatus().getId()==9){
+//                System.out.println(object[1]);
+                if (object[1]==null){
+                    iterator.remove();
+                }
+            }else {
+                if (object[0].equals("On hold")){
+//                    System.out.println("rem");
+                    iterator.remove();
+                }
+            }
         }
+
 
 
         model.addAttribute("user",user);
@@ -111,23 +142,25 @@ public class OrderPageController {
             if (prevSapStatusId<11){
                 newSAPStatus=sapStatusManager.findById(prevSapStatusId+1);
                 theOrder.setSAPstatus(newSAPStatus);
+                theOrder.setRejected(false);
                 orderManager.save(theOrder);
-//                statusChange.setOrder(theOrder);
-//                statusChange.setSAPstatus(newSAPStatus);
-//                statusChangeManager.save(statusChange);
+                statusChange.setOrder(theOrder);
+                statusChange.setSAPstatus(newSAPStatus);
+                statusChangeManager.save(statusChange);
             }
         }else if (answer.equals("no")){
             newSAPStatus=sapStatusManager.findById(6);
             System.out.println(newSAPStatus.toString());
             theOrder.setSAPstatus(newSAPStatus);
+            theOrder.setRejected(true);
             orderManager.save(theOrder);
-//            statusChange.setOrder(theOrder);
-//            statusChange.setSAPstatus(newSAPStatus);
-//            statusChangeManager.save(statusChange);
+            statusChange.setOrder(theOrder);
+            statusChange.setSAPstatus(newSAPStatus);
+            statusChangeManager.save(statusChange);
         }
 
         model.addAttribute("theOrder",theOrder);
-        return "orderpage";
+        return "redirect:/orders/{orderId}";
     }
 
 

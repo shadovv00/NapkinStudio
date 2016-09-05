@@ -1,23 +1,30 @@
 package com.napkinstudio.entity;
 
 import javax.persistence.*;
+import com.napkinstudio.entity.StatusChange;
 import java.util.List;
 
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REMOVE;
 
-@NamedQueries(
-        @NamedQuery(name = "ProgresBarFields.findBarByRolePVICheckReject",
-                    query = "select s.name, ss.name  from ProgresBarFields pbf " +
-                            "inner join pbf.role r " +
-                            "inner join pbf.status s " +
-                            "inner join pbf.SAPStatus ss "+
-                            "inner join pbf.SAPStatus ss "+
-                            "left join ss.statusChanges sc "+
+//@NamedQueries(
+@NamedNativeQuery(name = "ProgresBarFields.findBarByRolePVICheckReject",
+        query = "SELECT s.name as name, MAX(sc.dateTime) as date " +
+                        "FROM progresbar_fields AS pbf " +
+                        "INNER JOIN role AS r ON pbf.ROLE_ID = r.id " +
+                        "INNER JOIN status AS s ON s.id = pbf.STATUS_ID " +
+                        "INNER JOIN sapstatus AS ss ON ss.id = pbf.SAPSTATUS_ID " +
+                        "LEFT JOIN status_changes AS sc ON ss.id = sc.sapStatus_id " +
+                        "LEFT JOIN orders AS o  ON o.orderId = sc.order_orderId " +
+                        "WHERE r.id = :roleId AND pbf.pVIcheckScen =:pVIcheckScen AND pbf.rejected =:rejected and o.orderId =:orderId " +
+                        "GROUP BY s.name order by pbf.id "
+//        , resultClass = Object[].class
 
-                                "where r.id =:roleId "+
-                                    " and pbf.pVIcheckScen =:pVIcheckScen and pbf.rejected =:rejected ")
-)
+
+
+        )
+
+
 
 @Entity
 @Table(name = "progresbar_fields")

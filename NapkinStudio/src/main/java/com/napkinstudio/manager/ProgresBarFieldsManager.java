@@ -2,6 +2,7 @@ package com.napkinstudio.manager;
 
 
 import com.napkinstudio.dao.IProgresBarFieldsDao;
+import com.napkinstudio.entity.Order;
 import com.napkinstudio.entity.ProgresBarFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,8 +27,8 @@ public class ProgresBarFieldsManager {
         return progresBarFieldsDao.findAll();
     }
 
-    public  List<Object[]> findBarByRolePVICheckReject(Integer roleId, Boolean pVIcheckScen, Boolean rejected) {
-        return progresBarFieldsDao.findBarByRolePVICheckReject(roleId, pVIcheckScen, rejected);
+    public  List<Object[]> findBarByRolePVICheckReject(Integer orderId, Integer roleId, Boolean pVIcheckScen, Boolean rejected) {
+        return progresBarFieldsDao.findBarByRolePVICheckReject(orderId, roleId, pVIcheckScen, rejected);
     }
 
 
