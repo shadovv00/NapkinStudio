@@ -133,6 +133,12 @@
             <version>1.4.7</version>
         </dependency>
 
+		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+			<version>2.3.23</version>
+		</dependency>
+
         <!-- spring oxm -->
         <dependency>
             <groupId>org.springframework</groupId>
