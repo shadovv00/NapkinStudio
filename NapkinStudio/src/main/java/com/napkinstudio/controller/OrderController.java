@@ -54,15 +54,9 @@ public class OrderController {
     }
 
     @ModelAttribute("userOrders")
-    List<UserOrder> UserOrders(Principal principal) {
+    List<UserOrder> UserOrders(@ModelAttribute("user") User user) {
 
-
-        String login = principal.getName();
-        User user = userManager.findByLogin(login);
-
-        List<Role> roles = roleManager.findByUserId(user.getUserId());
-        Integer roleId =roles.get(0).getId();
-
+        Integer roleId = user.getRoles().get(0).getId();
         List<UserOrder> userOrders = userOrderManager.findOrdersByUserId(user.getUserId());
 
         for (Iterator<UserOrder> iterator = userOrders.iterator(); iterator.hasNext();) {
@@ -80,8 +74,6 @@ public class OrderController {
                 iterator.remove();
 
             }
-
-
         }
         return userOrders;
     }
