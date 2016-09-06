@@ -9,14 +9,18 @@ import static javax.persistence.CascadeType.REMOVE;
 
 //@NamedQueries(
 @NamedNativeQuery(name = "ProgresBarFields.findBarByRolePVICheckReject",
-        query = "SELECT s.name as name, MAX(sc.dateTime) as date " +
+                query = "SELECT s.name as name, MAX(tm.lastdate) as date " +
                         "FROM progresbar_fields AS pbf " +
                         "INNER JOIN role AS r ON pbf.ROLE_ID = r.id " +
                         "INNER JOIN status AS s ON s.id = pbf.STATUS_ID " +
-                        "INNER JOIN sapstatus AS ss ON ss.id = pbf.SAPSTATUS_ID " +
-                        "LEFT JOIN status_changes AS sc ON ss.id = sc.sapStatus_id " +
-                        "LEFT JOIN orders AS o  ON o.orderId = sc.order_orderId " +
-                        "WHERE r.id = :roleId AND pbf.pVIcheckScen =:pVIcheckScen AND pbf.rejected =:rejected and o.orderId =:orderId " +
+                        "INNER JOIN sapstatus ss ON ss.id = pbf.SAPSTATUS_ID " +
+                        "LEFT JOIN " +
+                            "(SELECT sc.sapStatus_id AS reid, sc.dateTime AS lastdate " +
+                            "FROM status_changes AS sc " +
+                            "INNER JOIN orders AS o ON o.orderId = sc.order_orderId " +
+                            "WHERE o.orderId =:orderId " +
+                            ") tm ON ss.id = tm.reid " +
+                        "WHERE r.id = :roleId AND pbf.pVIcheckScen =:pVIcheckScen AND pbf.rejected =:rejected " +
                         "GROUP BY s.name order by pbf.id "
 //        , resultClass = Object[].class
 
