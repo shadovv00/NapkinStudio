@@ -55,6 +55,7 @@ public class Order extends  AbstractEntity{
     private Boolean pVIcheckScen;
     private Boolean debCheckScen;
     private Boolean toDeptor;
+    private Boolean toDtp;
     private Boolean deleted;
 
     
@@ -240,6 +241,11 @@ public class Order extends  AbstractEntity{
         return toDeptor;    }
     public void setToDeptor(Boolean toDeptor) {
         this.toDeptor = toDeptor;    }
+
+    public Boolean getToDtp() {
+        return toDtp;    }
+    public void setToDtp(Boolean toDtp) {
+        this.toDtp = toDtp;    }
 
     public Boolean getDeleted() {
         return deleted;    }

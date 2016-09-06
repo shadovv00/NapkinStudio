@@ -155,25 +155,35 @@
             <div display="inline" style="margin-bottom: 10px">
 
                 <%--TODO: Change&check conditions--%>
-                    <c:if test="${(theOrder.SAPstatus.id==3&&user.roles[0].id==4&&theOrder.pVIcheckScen)||
-                              (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.approvalBy=='Deptor')||
-                              (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.debCheckScen)||
-                              (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.toDeptor)||
-                              (theOrder.SAPstatus.id==4&&user.roles[0].id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
-                              (theOrder.SAPstatus.id==4&&user.roles[0].id==5&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&!theOrder.toDeptor)
-                }">
+                <c:if test="${
+                            (theOrder.SAPstatus.id==1&&user.roles[0].id==2)||
+                            (theOrder.SAPstatus.id==2&&user.roles[0].id==4)||
+                            (theOrder.SAPstatus.id==3&&user.roles[0].id==2&&theOrder.pVIcheckScen)||
+                            (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.approvalBy=='Deptor')||
+                            (theOrder.SAPstatus.id==4&&user.roles[0].id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
+                            (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen)||
+                            (theOrder.SAPstatus.id==4&&user.roles[0].id==5&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&!theOrder.toDeptor)||
+                            (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.approvalBy=='Customer'&&theOrder.toDeptor)||
+                            (theOrder.SAPstatus.id==6&&user.roles[0].id==2)||
+                            (theOrder.SAPstatus.id==5&&user.roles[0].id==2&&!theOrder.toDeptor)||
+                            (theOrder.SAPstatus.id==5&&user.roles[0].id==4&&theOrder.toDeptor)
+                 }">
                     <a href="<c:url value='/changestatus/${theOrder.orderId}/yes' />"  class="btn btn-success custom-width">Approve</a>
 
                </c:if>
                     <%--${theOrder.SAPstatus.id}--%>
                     <%--${user.roles[0].id}--%>
                 <%--<c:if test="${(theOrder.SAPstatus.id==3&&theOrder.pVIcheckScen&&user.roles[0].id==4)}">--%>
-                <c:if test="${(theOrder.SAPstatus.id==3&&user.roles[0].id==4&&theOrder.pVIcheckScen)||
-                              (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.approvalBy=='Deptor')||
-                              (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.debCheckScen)||
-                              (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.toDeptor)||
-                              (theOrder.SAPstatus.id==4&&user.roles[0].id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
-                              (theOrder.SAPstatus.id==4&&user.roles[0].id==5&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&!theOrder.toDeptor)
+                <c:if test="${
+                            (theOrder.SAPstatus.id==1&&user.roles[0].id==2)||
+                            (theOrder.SAPstatus.id==2&&user.roles[0].id==4)||
+                            (theOrder.SAPstatus.id==3&&user.roles[0].id==2&&theOrder.pVIcheckScen)||
+                            (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.approvalBy=='Deptor')||
+                            (theOrder.SAPstatus.id==4&&user.roles[0].id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
+                            (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen)||
+                            (theOrder.SAPstatus.id==4&&user.roles[0].id==5&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&!theOrder.toDeptor)||
+                            (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.approvalBy=='Customer'&&theOrder.toDeptor)||
+                            (theOrder.SAPstatus.id==6&&user.roles[0].id==2)
                 }">
                     <a href="<c:url value='/changestatus/${theOrder.orderId}/no' />"  class="btn btn-danger custom-width">Discard</a>
                 </c:if>

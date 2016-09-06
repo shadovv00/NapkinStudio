@@ -163,17 +163,21 @@ public class InitDBManager {
 
 
         Role DTPRole = new Role();
-        DTPRole.setName("DTP_DEPTOR");
+        DTPRole.setName("ROLE_DTP");
 //        debtorRole.setStatus(deptorStatus);
 
         Role ftpRole = new Role();
         ftpRole.setName("EXTERNALTIMER");
 //        ftpRole.setStatus(ftpStatus);
 
+        Role CustomRole = new Role();
+        CustomRole.setName("ROLE_CUSTOMER");
+
         roleDao.save(debtorRole);
         roleDao.save(PVIRole);
         roleDao.save(ftpRole);
         roleDao.save(DTPRole);
+        roleDao.save(CustomRole);
 
             // PVI
 
@@ -418,10 +422,22 @@ public class InitDBManager {
         roles4.add(ftpRole);
         ftpUser.setRoles(roles4);
 
+        User CustomUser = new User();
+        CustomUser.setFirstName("Customer");
+        CustomUser.setLastName("Customer");
+        CustomUser.setLogin("Customer");
+        CustomUser.setPassword(encoder.encode("Customer"));
+        CustomUser.setEnabled(true);
+        List<Role> roles5 = new ArrayList<Role>();
+        roles5.add(CustomRole);
+        CustomUser.setRoles(roles5);
+
+
         userDao.save(debtor);
         userDao.save(PVI);
         userDao.save(ftpUser);
         userDao.save(DTP);
+        userDao.save(CustomUser);
 
         Order order1 = new Order();
         order1.setSAPstatus(SAPStatus7);
@@ -432,6 +448,7 @@ public class InitDBManager {
         order1.setDeliveryDate(new Date());
         order1.setPVIcheckScen(false);
         order1.setRejected(false);
+        order1.setApprovalBy("Deptor");
         orderDao.save(order1);
 
         UserOrder user1Order = new UserOrder();
@@ -444,16 +461,21 @@ public class InitDBManager {
         user2Order.setOrder(order1);
         user2Order.setLastLook(new Date());
 
-
         UserOrder user3Order = new UserOrder();
         user3Order.setUser(DTP);
         user3Order.setOrder(order1);
         user3Order.setLastLook(new Date());
 
+        UserOrder user5Order = new UserOrder();
+        user5Order.setUser(CustomUser);
+        user5Order.setOrder(order1);
+        user5Order.setLastLook(new Date());
+
 
         userOrderDao.save(user1Order);
         userOrderDao.save(user2Order);
         userOrderDao.save(user3Order);
+        userOrderDao.save(user5Order);
 
         Order order3 = new Order();
         order3.setSAPstatus(SAPStatus11);
@@ -463,7 +485,7 @@ public class InitDBManager {
         order3.setOrderId(1402130003);
         order3.setDeliveryDate(new Date());
         order3.setPVIcheckScen(true);
-        order1.setRejected(false);
+        order3.setRejected(false);
         orderDao.save(order3);
 
         UserOrder user1Order3 = new UserOrder();
@@ -495,7 +517,7 @@ public class InitDBManager {
         order2.setOrderId(1402130002);
         order2.setDeliveryDate(new Date());
         order2.setPVIcheckScen(false);
-        order1.setRejected(false);
+        order2.setRejected(false);
         orderDao.save(order2);
 
         UserOrder user1Order2 = new UserOrder();

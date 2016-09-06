@@ -73,7 +73,7 @@ public class OrderPageController {
         user.setRoles(roles);
 
 //        List<ProgresBarFields> barFields = progresBarFieldsManager.findAll();
-        List<Object[]> barFields = progresBarFieldsManager.findBarByRolePVICheckReject(theOrder.getOrderId(),roleId,theOrder.getPVIcheckScen(),theOrder.getRejected());
+        List<Object[]> barFields = progresBarFieldsManager.findBarByRolePVICheckReject(orderId,roleId,theOrder.getPVIcheckScen(),theOrder.getRejected());
 //        System.out.println(barFields);
 //        System.out.println(barFields.toString());
 //        System.out.println(barFields.size());
@@ -132,32 +132,116 @@ public class OrderPageController {
         System.out.println(orderId);
         System.out.println(answer);
         User user = userManager.findByLogin(login);
+        List<Role> roles = roleManager.findByUserId(user.getUserId());
+//        user.setRoles(roles);
         Order theOrder =orderManager.findById(orderId);
         SAPstatus newSAPStatus;
         StatusChange statusChange =new StatusChange();
         statusChange.setDateTime(new Date());
         System.out.println(theOrder.getOrderId());
-        if (answer.equals("yes")){
-            int prevSapStatusId=theOrder.getSAPstatus().getId();
-            if (prevSapStatusId<11){
-                newSAPStatus=sapStatusManager.findById(prevSapStatusId+1);
+//__1
+        if (theOrder.getSapStatus().getId()==1&&roles.get(0).getId()==2){
+            if (answer.equals("yes")){
+                    newSAPStatus=sapStatusManager.findById(2);
+                    theOrder.setSAPstatus(newSAPStatus);
+                    theOrder.setRejected(false);
+                    orderManager.save(theOrder);
+                    statusChange.setOrder(theOrder);
+                    statusChange.setSAPstatus(newSAPStatus);
+                    statusChangeManager.save(statusChange);
+            }
+        }
+//__2
+        if (theOrder.getSapStatus().getId()==2&&user.getRoles().get(0).getId()==4){
+            if (answer.equals("yes")){
+                if (theOrder.getPVIcheckScen()){
+                    newSAPStatus=sapStatusManager.findById(3);
+                } else{
+                    newSAPStatus=sapStatusManager.findById(4);
+                }
+                theOrder.setSAPstatus(newSAPStatus);
+                orderManager.save(theOrder);
+                statusChange.setOrder(theOrder);
+                statusChange.setSAPstatus(newSAPStatus);
+                statusChangeManager.save(statusChange);
+            }
+        }
+//__3
+        if (theOrder.getSapStatus().getId()==3&&user.getRoles().get(0).getId()==2&&theOrder.getPVIcheckScen()){
+            if (answer.equals("yes")){
+                newSAPStatus=sapStatusManager.findById(4);
                 theOrder.setSAPstatus(newSAPStatus);
                 theOrder.setRejected(false);
                 orderManager.save(theOrder);
                 statusChange.setOrder(theOrder);
                 statusChange.setSAPstatus(newSAPStatus);
                 statusChangeManager.save(statusChange);
+            } else if (answer.equals("no")){
+                newSAPStatus=sapStatusManager.findById(6);
+                theOrder.setSAPstatus(newSAPStatus);
+                theOrder.setRejected(true);
+                orderManager.save(theOrder);
+                statusChange.setOrder(theOrder);
+                statusChange.setSAPstatus(newSAPStatus);
+                statusChangeManager.save(statusChange);
             }
-        }else if (answer.equals("no")){
-            newSAPStatus=sapStatusManager.findById(6);
-            System.out.println(newSAPStatus.toString());
-            theOrder.setSAPstatus(newSAPStatus);
-            theOrder.setRejected(true);
-            orderManager.save(theOrder);
-            statusChange.setOrder(theOrder);
-            statusChange.setSAPstatus(newSAPStatus);
-            statusChangeManager.save(statusChange);
+
         }
+//__4
+        if (theOrder.getSapStatus().getId()==4&&user.getRoles().get(0).getId()==1&&theOrder.getApprovalBy()=="Deptor"){
+            if (answer.equals("yes")){
+                newSAPStatus=sapStatusManager.findById(7);
+                theOrder.setSAPstatus(newSAPStatus);
+                orderManager.save(theOrder);
+                statusChange.setOrder(theOrder);
+                statusChange.setSAPstatus(newSAPStatus);
+                statusChangeManager.save(statusChange);
+            } else if (answer.equals("no")){
+                newSAPStatus=sapStatusManager.findById(6);
+                theOrder.setSAPstatus(newSAPStatus);
+                theOrder.setRejected(true);
+                orderManager.save(theOrder);
+                statusChange.setOrder(theOrder);
+                statusChange.setSAPstatus(newSAPStatus);
+                statusChangeManager.save(statusChange);
+            }
+
+        }
+
+//                (theOrder.getSapStatus().getId()==1&&user.getRoles().get(0).getId()==2)||
+//                (theOrder.getSapStatus().getId()==2&&user.getRoles().get(0).getId()==4)||
+//                (theOrder.getSapStatus().getId()==3&&user.getRoles().get(0).getId()==2&&theOrder.getPVIcheckScen())||
+//                (theOrder.getSapStatus().getId()==4&&user.getRoles().get(0).getId()==1&&theOrder.getApprovalBy()=='Deptor')||
+//                (theOrder.getSapStatus().getId()==4&&user.getRoles().get(0).getId()==5&&theOrder.getApprovalBy()=='Customer'&&!theOrder.getDebCheckScen())||
+//                (theOrder.getSapStatus().getId()==4&&user.getRoles().get(0).getId()==1&&theOrder.getApprovalBy()=='Customer'&&theOrder.getDebCheckScen())||
+//                (theOrder.getSapStatus().getId()==4&&user.getRoles().get(0).getId()==5&&theOrder.getApprovalBy()=='Customer'&&theOrder.getDebCheckScen()&&!theOrder.getToDeptor())||
+//                (theOrder.getSapStatus().getId()==4&&user.getRoles().get(0).getId()==1&&theOrder.getApprovalBy()=='Customer'&&theOrder.getToDeptor())||
+//                (theOrder.getSapStatus().getId()==6&&user.getRoles().get(0).getId()==2)||
+//                (theOrder.getSapStatus().getId()==5&&user.getRoles().get(0).getId()==2&&!theOrder.getToDeptor())||
+//                (theOrder.getSapStatus().getId()==5&&user.getRoles().get(0).getId()==4&&theOrder.getToDeptor())
+
+
+//        if (answer.equals("yes")){
+//            int prevSapStatusId=theOrder.getSAPstatus().getId();
+//            if (prevSapStatusId<11){
+//                newSAPStatus=sapStatusManager.findById(prevSapStatusId+1);
+//                theOrder.setSAPstatus(newSAPStatus);
+//                theOrder.setRejected(false);
+//                orderManager.save(theOrder);
+//                statusChange.setOrder(theOrder);
+//                statusChange.setSAPstatus(newSAPStatus);
+//                statusChangeManager.save(statusChange);
+//            }
+//        }else if (answer.equals("no")){
+//            newSAPStatus=sapStatusManager.findById(6);
+//            System.out.println(newSAPStatus.toString());
+//            theOrder.setSAPstatus(newSAPStatus);
+//            theOrder.setRejected(true);
+//            orderManager.save(theOrder);
+//            statusChange.setOrder(theOrder);
+//            statusChange.setSAPstatus(newSAPStatus);
+//            statusChangeManager.save(statusChange);
+//        }
 
         model.addAttribute("theOrder",theOrder);
         return "redirect:/orders/{orderId}";
