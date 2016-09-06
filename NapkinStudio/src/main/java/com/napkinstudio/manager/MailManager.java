@@ -52,8 +52,11 @@ public class MailManager {
                 helper.setFrom("khomenkotest1@gmail.com");
                 helper.setTo(order.getItsUsers().get(0).getUser().getEmail());
 
+
                 Map<String, Object> model = new HashMap<String, Object>();
                 model.put("order", order);
+                String link = "http://10.4.0.66:8080/changestatus/"+order.getOrderId().toString()+"/yes";
+                model.put("link",link);
 
                 String text = getFreeMarkerTemplateContent(model);//Use Freemarker or Velocity
                 System.out.println("Template content : "+text);
@@ -64,6 +67,7 @@ public class MailManager {
                 //Additionally, let's add a resource as an attachment as well.
 //                helper.addAttachment("cutie.png", new ClassPathResource("linux-icon.png"));
 
+                
             }
         };
         return preparator;
