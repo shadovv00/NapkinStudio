@@ -1,18 +1,20 @@
 package com.napkinstudio.entity;
 
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
+
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REMOVE;
-
-import java.io.Serializable;
-import java.lang.Integer;
-import java.lang.String;
-import java.util.Date;
-import javax.persistence.*;
 
 /**
  * Entity implementation class for Entity: Comments
  *
  */
+
+@NamedQueries(
+		@NamedQuery(name = "Comments.findCommentsbyOrderId", query = "select c from Comments c inner join c.order o where o.orderId =:id")
+)
 @Entity
 
 @Table(name = "comments")
@@ -20,6 +22,7 @@ public class Comments implements Serializable {
 
 	   
 	@Id
+	@GeneratedValue
 	private Integer Id;
 	
 	@ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
@@ -31,7 +34,7 @@ public class Comments implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
 	private Order order;
     
-    @OneToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+    @ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE,REMOVE})
 	private Role forRole;
     
     

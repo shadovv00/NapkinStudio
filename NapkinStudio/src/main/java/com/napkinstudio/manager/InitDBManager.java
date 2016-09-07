@@ -49,7 +49,10 @@ public class InitDBManager {
 
     private BCryptPasswordEncoder encoder;
 
-//    @PostConstruct
+    @Autowired
+    private ICommentsDao commentsDao;
+
+    @PostConstruct
 
     public void init() {
 
@@ -153,6 +156,12 @@ public class InitDBManager {
         status11.setName("Existing art.nr.");
         statusDao.save(status11);
 
+        Role stampManufacRole = new Role();
+        stampManufacRole.setName("ROLE_STAMPMANUFACTURER");
+
+        Role productionRole = new Role();
+        productionRole.setName("ROLE_PRODUCTION");
+
         Role debtorRole = new Role();
         debtorRole.setName("ROLE_DEPTOR");
 //        debtorRole.setStatus(deptorStatus);
@@ -178,6 +187,8 @@ public class InitDBManager {
         roleDao.save(ftpRole);
         roleDao.save(DTPRole);
         roleDao.save(CustomRole);
+        roleDao.save(stampManufacRole);
+        roleDao.save(productionRole);
 
             // PVI
 
@@ -439,6 +450,10 @@ public class InitDBManager {
         userDao.save(DTP);
         userDao.save(CustomUser);
 
+
+
+
+
         Order order1 = new Order();
         order1.setSAPstatus(SAPStatus7);
         order1.setDebItemNum("1234567");
@@ -449,7 +464,63 @@ public class InitDBManager {
         order1.setPVIcheckScen(false);
         order1.setRejected(false);
         order1.setApprovalBy("Deptor");
+//        order1.setComments(commentsList);
         orderDao.save(order1);
+
+
+
+
+        /////COMMENTS
+        List<Comments> commentsList = new ArrayList<>();
+
+        Comments comment = new Comments();
+        comment.setCommText("Hello NapkinStudio in PVI group");
+        comment.setForRole(PVIRole);
+        comment.setFromUser(debtor);
+
+        comment.setOrder(order1);
+        commentsDao.save(comment);
+
+        Comments comment1 = new Comments();
+        comment1.setCommText("Hello NapkinStudio  in debtor group");
+        comment1.setForRole(debtorRole);
+        comment1.setFromUser(PVI);
+
+        comment1.setOrder(order1);
+        commentsDao.save(comment1);
+
+        Comments comment2 = new Comments();
+        comment2.setCommText("Hello NapkinStudio in DTP Group");
+        comment2.setForRole(DTPRole);
+        comment2.setFromUser(PVI);
+        comment2.setOrder(order1);
+
+        commentsDao.save(comment2);
+
+        Comments commen3 = new Comments();
+        commen3.setCommText("Hello NapkinStudio in end customer group");
+        commen3.setForRole(CustomRole);
+        commen3.setFromUser(PVI);
+
+        commen3.setOrder(order1);
+        commentsDao.save(commen3);
+
+        Comments comment4 = new Comments();
+        comment4.setCommText("Hello NapkinStudio in  stamp manufacturer group");
+        comment4.setForRole(stampManufacRole);
+        comment4.setFromUser(PVI);
+
+        comment4.setOrder(order1);
+        commentsDao.save(comment4);
+
+        Comments commen5 = new Comments();
+        commen5.setCommText("Hello NapkinStudio in production group");
+        commen5.setForRole(productionRole);
+        commen5.setFromUser(PVI);
+
+        commen5.setOrder(order1);
+        commentsDao.save(commen5);
+
 
         UserOrder user1Order = new UserOrder();
         user1Order.setUser(debtor);

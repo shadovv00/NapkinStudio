@@ -15,6 +15,8 @@ import static javax.persistence.CascadeType.REMOVE;
 
 @NamedQueries({
 
+            //to display comments through roles
+//       @NamedQuery(name="Role.",query = "Select role From Role  role left join role.comments on (select comments from Comments comments inner join comments.order order where order.orderId = id)"),
         @NamedQuery(name = "Role.findByUserId", query = "SELECT r FROM  Role r  inner join r.users u WHERE u.userId  =:id"), })
 
 @Entity
@@ -29,6 +31,9 @@ public class Role {
 
     @ManyToMany(mappedBy = "roles")
     private List<User> users;
+
+    @OneToMany(mappedBy = "forRole")
+    private List<Comments> comments;
 
     @OneToMany(mappedBy = "role",
             cascade = {CascadeType.MERGE, CascadeType.REMOVE})

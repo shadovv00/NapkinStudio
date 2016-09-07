@@ -67,7 +67,7 @@ public class MailManager {
                 //Additionally, let's add a resource as an attachment as well.
 //                helper.addAttachment("cutie.png", new ClassPathResource("linux-icon.png"));
 
-                
+
             }
         };
         return preparator;
