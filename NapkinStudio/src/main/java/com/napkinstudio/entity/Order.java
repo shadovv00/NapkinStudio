@@ -54,6 +54,7 @@ public class Order extends  AbstractEntity{
     private Boolean rejected;
     private Boolean pVIcheckScen;
     private Boolean debCheckScen;
+    private byte processId;
     private Boolean toDeptor;
     private Boolean toDtp;
     private Boolean deleted;
@@ -227,10 +228,15 @@ public class Order extends  AbstractEntity{
     public void setRejected(Boolean rejected) {
         this.rejected = rejected;    }
 
+//    public Boolean getPVIcheckScen() {
+//        return pVIcheckScen;    }
+//    public void setPVIcheckScen(Boolean pVIcheckScen) {
+//        this.pVIcheckScen = pVIcheckScen;    }
     public Boolean getPVIcheckScen() {
         return pVIcheckScen;    }
     public void setPVIcheckScen(Boolean pVIcheckScen) {
         this.pVIcheckScen = pVIcheckScen;    }
+
 
     public Boolean getDebCheckScen() {
         return debCheckScen;    }   
@@ -246,6 +252,13 @@ public class Order extends  AbstractEntity{
         return toDtp;    }
     public void setToDtp(Boolean toDtp) {
         this.toDtp = toDtp;    }
+
+    public byte getProcessId() {
+        return processId;    }
+    public void setProcessId(byte processId) {
+        this.processId = processId;    }
+
+
 
     public Boolean getDeleted() {
         return deleted;    }
