@@ -5,6 +5,7 @@ import com.napkinstudio.entity.Comments;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,5 +43,8 @@ private ICommentsDao commentsDao;
 
       return   groupedComments ;
     }
-
+    @Transactional
+    public void save(Comments comment) {
+        commentsDao.save(comment);
+    }
 }

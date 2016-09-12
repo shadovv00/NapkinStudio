@@ -30,7 +30,7 @@
 		</div>
 	</div>
 </c:if>
-<form:form commandName="user"
+<form:form  method="post" commandName="user"
 	cssClass="form-horizontal registrationForm">
 
 

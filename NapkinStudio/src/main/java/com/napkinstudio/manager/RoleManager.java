@@ -15,22 +15,25 @@ import java.util.List;
 @Service
 public class RoleManager {
 
-        @Autowired
-        private IRoleDao roleDao;
+    @Autowired
+    private IRoleDao roleDao;
 
-        @Transactional
-        public void save(Role role) {
-            roleDao.save(role);
-        }
+    @Transactional
+    public void save(Role role) {
+        roleDao.save(role);
+    }
 
-        @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-        public Role findById(Integer id) {
-            return roleDao.findOne(id);
-        }
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public Role findById(Integer id) {
+        return roleDao.findOne(id);
+    }
 
-        @Transactional
-         public List<Role> findByUserId(Integer id) {
-            return roleDao.findByUserId(id);
-        }
+    @Transactional
+    public List<Role> findByUserId(Integer id) {
+        return roleDao.findByUserId(id);
+    }
 
+//    public List<Role> findCommentsByOrderId() {
+//        return roleDao.findCommentsByOrderId();
+//    }
 }
