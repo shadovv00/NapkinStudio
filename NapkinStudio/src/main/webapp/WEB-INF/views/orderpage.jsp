@@ -203,9 +203,11 @@
                                                     <form:textarea path="commText"
                                                                    cssClass="form-control"></form:textarea>
                                                     <form:hidden path="forRole.id"
-                                                                 value="${PVIComments[0].forRole.id}"/>
+                                                                 value="2"/>
                                                     <form:hidden path="order.orderId"
-                                                                 value="${PVIComments[0].order.orderId}"/>
+                                                                 value="${theOrder.orderId}"/>
+                                                    <form:hidden path="fromUser.userId"
+                                                                 value="${user.userId}"/>
                                                         <%--<input name="deleted" type="hidden" value="true"/>--%>
                                                 </div>
                                             </div>
@@ -259,9 +261,11 @@
                                                     <form:textarea path="commText"
                                                                    cssClass="form-control"></form:textarea>
                                                     <form:hidden path="forRole.id"
-                                                                 value="${DTPComments[0].forRole.id}"/>
+                                                                 value="4"/>
                                                     <form:hidden path="order.orderId"
-                                                                 value="${DTPComments[0].order.orderId}"/>
+                                                                 value="${theOrder.orderId}"/>
+                                                    <form:hidden path="fromUser.userId"
+                                                                 value="${user.userId}"/>
                                                         <%--<input name="deleted" type="hidden" value="true"/>--%>
                                                 </div>
                                             </div>
@@ -313,9 +317,10 @@
                                                     <form:textarea path="commText"
                                                                    cssClass="form-control"></form:textarea>
                                                     <form:hidden path="forRole.id"
-                                                                 value="${DeptorComments[0].forRole.id}"/>
+                                                                 value="1"/>
                                                     <form:hidden path="order.orderId"
-                                                                 value="${DeptorComments[0].order.orderId}"/>
+                                                                 value="${theOrder.orderId}"/>  <form:hidden path="fromUser.userId"
+                                                                                                             value="${user.userId}"/>
                                                         <%--<input name="deleted" type="hidden" value="true"/>--%>
                                                 </div>
                                             </div>
@@ -367,9 +372,10 @@
                                                     <form:textarea path="commText"
                                                                    cssClass="form-control"></form:textarea>
                                                     <form:hidden path="forRole.id"
-                                                                 value="${CustomerComments[0].forRole.id}"/>
+                                                                 value="5"/>
                                                     <form:hidden path="order.orderId"
-                                                                 value="${CustomerComments[0].order.orderId}"/>
+                                                                 value="${theOrder.orderId}"/>  <form:hidden path="fromUser.userId"
+                                                                                                             value="${user.userId}"/>
                                                         <%--<input name="deleted" type="hidden" value="true"/>--%>
                                                 </div>
                                             </div>
@@ -421,9 +427,10 @@
                                                     <form:textarea path="commText"
                                                                    cssClass="form-control"></form:textarea>
                                                     <form:hidden path="forRole.id"
-                                                                 value="${StampsManufacComments[0].forRole.id}"/>
+                                                                 value="6"/>
                                                     <form:hidden path="order.orderId"
-                                                                 value="${StampsManufacComments[0].order.orderId}"/>
+                                                                 value="${theOrder.orderId}"/>  <form:hidden path="fromUser.userId"
+                                                                                                             value="${user.userId}"/>
                                                         <%--<input name="deleted" type="hidden" value="true"/>--%>
                                                 </div>
                                             </div>
@@ -475,9 +482,10 @@
                                                     <form:textarea path="commText"
                                                                    cssClass="form-control"></form:textarea>
                                                     <form:hidden path="forRole.id"
-                                                                 value="${ProductionComments[0].forRole.id}"/>
+                                                                 value="7"/>
                                                     <form:hidden path="order.orderId"
-                                                                 value="${ProductionComments[0].order.orderId}"/>
+                                                                 value="${theOrder.orderId}"/>  <form:hidden path="fromUser.userId"
+                                                                                                                                value="${user.userId}"/>
                                                         <%--<input name="deleted" type="hidden" value="true"/>--%>
                                                 </div>
                                             </div>
@@ -663,18 +671,23 @@
         switch (role) {
             case "ROLE_DEPTOR":
                 $(".comments").not(".to-deptor-comments").hide();
-                    if(status !== "Waiting for approval")
-                $(".comments").not(".to-deptor-comments").find(".add-comment-btn").hide();
+                    if(status === "Waiting for approval") {
+                        $(".comments").not(".to-deptor-comments").find(".add-comment-btn").show();
+                        console.log("waiting for approval>>>");
+                    }
                 break;
             case "ROLE_CUSTOMER":
                 $(".comments").not(".to-customer-comments").hide();
-                if(status !== "Waiting for approval")
+                if(status === "Waiting for approval")
                     $(".comments").not(".to-customer-comments").find(".add-comment-btn").hide();
                 break;
             case "ROLE_PVI":
                 $("#DTP-button").show();
-//                    if(status === "Proof request set up" || status === "Proof requested" || status === "Check by PVI" || status === "Rejected")
-//                        $(".add-comment-btn").show();
+                    if(status === "Proof request set up" || status === "Proof requested" || status === "Check by PVI" || status === "Rejected") {
+                        $(".add-comment-btn").show();
+                        console.log("rejected>>>");
+                    }
+
                 break;
             case "ROLE_DTP":
                 $("#PVI-button").show();

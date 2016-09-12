@@ -13,12 +13,12 @@ import static javax.persistence.CascadeType.REMOVE;
  */
 
 @NamedQueries(
-		@NamedQuery(name = "Comments.findCommentsbyOrderId", query = "select c from Comments c inner join c.order o where o.orderId =:id")
+		@NamedQuery(name = "Comments.findCommentsbyOrderId", query = "select c from Comments c inner join c.order o where o.orderId =:id order by c.lastModifiedDate desc ")
 )
 @Entity
 
 @Table(name = "comments")
-public class Comments implements Serializable {
+public class Comments extends AbstractEntity {
 
 	   
 	@Id
