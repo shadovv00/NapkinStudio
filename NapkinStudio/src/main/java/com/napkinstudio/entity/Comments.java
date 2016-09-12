@@ -25,13 +25,13 @@ public class Comments implements Serializable {
 	@GeneratedValue
 	private Integer Id;
 	
-	@ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+	@ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE,REMOVE})
 	private User fromUser;
     
 	@ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
 	private User toUser;
     
-    @ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+    @ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE,REMOVE})
 	private Order order;
     
     @ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE,REMOVE})

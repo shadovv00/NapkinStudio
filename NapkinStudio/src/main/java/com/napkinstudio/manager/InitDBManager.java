@@ -52,11 +52,11 @@ public class InitDBManager {
     @Autowired
     private ICommentsDao commentsDao;
 
-    @PostConstruct
+//    @PostConstruct
 
     public void init() {
 
-            encoder = new BCryptPasswordEncoder();
+        encoder = new BCryptPasswordEncoder();
 
 
 
@@ -234,11 +234,6 @@ public class InitDBManager {
         statusSAPStatusRole.setStatus(status7);
         statusSAPStatusRoleDao.save(statusSAPStatusRole);
 
-        statusSAPStatusRole = new StatusSAPStatusRole();
-        statusSAPStatusRole.setRole(PVIRole);
-        statusSAPStatusRole.setSAPStatus(SAPStatus1);
-        statusSAPStatusRole.setStatus(status1);
-        statusSAPStatusRoleDao.save(statusSAPStatusRole);
 
         statusSAPStatusRole = new StatusSAPStatusRole();
         statusSAPStatusRole.setRole(PVIRole);
@@ -455,7 +450,7 @@ public class InitDBManager {
 
 
         Order order1 = new Order();
-        order1.setSAPstatus(SAPStatus7);
+        order1.setSAPstatus(SAPStatus1);
         order1.setDebItemNum("1234567");
         order1.setItemNum("1678672");
         order1.setPrintName("Crowne Plaza 24 standaard");
@@ -521,6 +516,15 @@ public class InitDBManager {
         commen5.setOrder(order1);
         commentsDao.save(commen5);
 
+        Comments commen6 = new Comments();
+        commen6.setCommText("Hello NapkinStudio in PVI Group 2");
+        commen6.setForRole(PVIRole);
+        commen6.setFromUser(PVI);
+
+        commen6.setOrder(order1);
+        commentsDao.save(commen6);
+
+
 
         UserOrder user1Order = new UserOrder();
         user1Order.setUser(debtor);
@@ -543,13 +547,14 @@ public class InitDBManager {
         user5Order.setLastLook(new Date());
 
 
+
         userOrderDao.save(user1Order);
         userOrderDao.save(user2Order);
         userOrderDao.save(user3Order);
         userOrderDao.save(user5Order);
 
         Order order3 = new Order();
-        order3.setSAPstatus(SAPStatus11);
+        order3.setSAPstatus(SAPStatus4);
         order3.setDebItemNum("063821232");
         order3.setItemNum("69784673");
         order3.setPrintName("Crowne Plaza 24 standaard");

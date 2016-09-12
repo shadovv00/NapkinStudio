@@ -13,10 +13,25 @@ import static javax.persistence.CascadeType.REMOVE;
  */
 
 
+
+//@NamedNativeQuery(name = "Role.findCommentsByOrderId",
+//
+//        query = "select * from role as r inner join comments  as c on c.forRole_id = r.id"
+////                "        LEFT JOIN" +
+////                "    (SELECT " +
+////                "        c.commText as comtext, c.forRole_id" +
+////                "    FROM" +
+////                "        comments AS c" +
+////                "    INNER JOIN orders AS o ON o.orderId = c.order_orderId" +
+////                "    WHERE" +
+////                "    o.orderId =: id) comm ON r.id = comm.forRole_id"
+//
+//)
+
 @NamedQueries({
 
             //to display comments through roles
-//       @NamedQuery(name="Role.",query = "Select role From Role  role left join role.comments on (select comments from Comments comments inner join comments.order order where order.orderId = id)"),
+//     @NamedQuery(name="Role.findCommentsByOrderId",query = "Select role From Role  role left join role.comments  c as (select comments from Comments comments inner join comments.order order where order.orderId = 1402130001)"),
         @NamedQuery(name = "Role.findByUserId", query = "SELECT r FROM  Role r  inner join r.users u WHERE u.userId  =:id"), })
 
 @Entity

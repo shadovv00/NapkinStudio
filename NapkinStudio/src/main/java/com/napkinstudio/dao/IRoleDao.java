@@ -13,6 +13,8 @@ import java.util.List;
 @Repository
 public interface IRoleDao extends JpaRepository<Role,Integer> {
 
+//    public List<Role> findCommentsByOrderId();
+
     public List<Role> findByUserId(@Param("id")Integer id);
 
 }
