@@ -29,84 +29,10 @@
     <%--<a href="<c:url value="/orders"/>"  btn btn-primary> to orders </a>--%>
     <%--<span style="margin-left: 100px"> ${theOrder.orderId} order id </span>--%>
     <%--&lt;%&ndash;<p display="inline">You are logged in as ${user.roles[0].name}</p>&ndash;%&gt;--%>
-    <%--</nav>--%>%--<a href="<c:url value="/logout"/>"> Logout </a>--%>
-    <
+    <%--</nav>%--<a href="<c:url value="/logout"/>"> Logout </a>--%>
+
 </head>
-<body>
-
-<div>
-
-    <ul style="list-style-type:none">
-        <c:forEach items="${PVIComments}" var="PVIComment">
-            <li>
-                <c:out value="${PVIComment.commText}"/>
-                    <%--<c:out value="${status.name}" />--%>
-            </li>
-        </c:forEach>
-    </ul>
-
-</div>
-
-<div>
-
-    <ul style="list-style-type:none">
-        <c:forEach items="${DeptorComments}" var="DeptorComment">
-            <li>
-                <c:out value="${DeptorComment.commText}"/>
-                    <%--<c:out value="${status.name}" />--%>
-            </li>
-        </c:forEach>
-    </ul>
-
-</div>
-<div>
-
-    <ul style="list-style-type:none">
-        <c:forEach items="${DTPComments}" var="DTPComment">
-            <li>
-                <c:out value="${DTPComment.commText}"/>
-                    <%--<c:out value="${status.name}" />--%>
-            </li>
-        </c:forEach>
-    </ul>
-
-</div>
-<div>
-
-    <ul style="list-style-type:none">
-        <c:forEach items="${CustomerComments}" var="CustomerComment">
-            <li>
-                <c:out value="${CustomerComment.commText}"/>
-                    <%--<c:out value="${status.name}" />--%>
-            </li>
-        </c:forEach>
-    </ul>
-
-</div>
-<div>
-
-    <ul style="list-style-type:none">
-        <c:forEach items="${StampsManufacComments}" var="StampsManufacComment">
-            <li>
-                <c:out value="${StampsManufacComment.commText}"/>
-                    <%--<c:out value="${status.name}" />--%>
-            </li>
-        </c:forEach>
-    </ul>
-
-</div>
-<div>
-
-    <ul style="list-style-type:none">
-        <c:forEach items="${ProductionComments}" var="ProductionComment">
-            <li>
-                <c:out value="${ProductionComment.commText}"/>
-                    <%--<c:out value="${status.name}" />--%>
-            </li>
-        </c:forEach>
-    </ul>
-</div>
-
+<body style="overflow-y: auto">
 
 <table width="100%" border="0">
     <tr valign="top">
@@ -244,34 +170,329 @@
             <div width="100%" style="margin-bottom: 10px">
                 <b>Opmerkingen</b>
                 <ul width="100%" style="list-style-type:none">
-                    <li width="100%">
+                    <li width="100%" class="comments">
                         <table width="100%">
-                            <td width="17%">
+                            <td width="17%" style="vertical-align: top">
                                 <b>Voor PVI</b>
                             </td>
+                            <td  width="3%" style="vertical-align: top">
+                            <a id="PVI-button" class="btn add-comment-btn">Add comment</a>
+                        </td>
                             <td>
                                 <ul style="list-style-type:none">
+                                    <c:forEach items="${PVIComments}" var="PVIComment">
+                                        <li>
+                                            <c:out value="${PVIComment.commText}"/>
+                                                <%--<c:out value="${status.name}" />--%>
+                                        </li>
+                                    </c:forEach>
                                     <li>
-                                        <span>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ut nisl neque. Pellentesque sollicitudin feugiat porttitor. Duis hendrerit, neque sed mattis placerat, velit massa ultrices mi, ac fermentum metus eros a quam.
-                                        </span>
-                                        <div>Bunzl - 14 maart 9:10</div>
+                                        <%--<c:if test="${param.success eq true }">--%>
+                                        <%--<div class="row text-center">--%>
+                                        <%--<div class="col-md-offset-4 col-md-5">--%>
+                                        <%--<div class="alert alert-success">--%>
+                                        <%--Comment was added--%>
+                                        <%--</div>--%>
+                                        <%--</div>--%>
+                                        <%--</div>--%>
+                                        <%--</c:if>--%>
+                                        <form:form commandName="comment" method="post" action="/addComment"
+                                                   cssClass="form-horizontal addCommentForm">
+                                            <div class="form-group">
+                                                <div class="col-sm-5">
+                                                    <form:textarea path="commText"
+                                                                   cssClass="form-control"></form:textarea>
+                                                    <form:hidden path="forRole.id"
+                                                                 value="${PVIComments[0].forRole.id}"/>
+                                                    <form:hidden path="order.orderId"
+                                                                 value="${PVIComments[0].order.orderId}"/>
+                                                        <%--<input name="deleted" type="hidden" value="true"/>--%>
+                                                </div>
+                                            </div>
+                                            <%--<div class="modal-footer col-sm-5">--%>
+                                            <div class="col-sm-5">
+                                                <input type="submit"
+                                                       value="Save"
+                                                       class="btn btn-large btn-primary" style="float: right;">
+                                            </div>
+                                            <%--</div>--%>
+                                        </form:form>
                                     </li>
                                 </ul>
+
+
                             </td>
                         </table>
                     </li>
-                    <li width="100%">
+                    <li width="100%" class="comments">
                         <table width="100%">
-                            <td width="17%">
+                            <td width="17%" style="vertical-align: top">
                                 <b>Voor DTP</b>
+                            </td>
+                            <td width="3%" style="vertical-align: top">
+                                <a id="DTP-button" class="btn add-comment-btn">Add comment</a>
+                            </td>
+                            <td>
+
+
+                                <ul style="list-style-type:none">
+                                    <c:forEach items="${DTPComments}" var="DTPComment">
+                                        <li>
+                                            <c:out value="${DTPComment.commText}"/>
+                                                <%--<c:out value="${status.name}" />--%>
+                                        </li>
+                                    </c:forEach>
+                                    <li>
+                                        <%--<c:if test="${param.success eq true }">--%>
+                                        <%--<div class="row text-center">--%>
+                                        <%--<div class="col-md-offset-4 col-md-5">--%>
+                                        <%--<div class="alert alert-success">--%>
+                                        <%--Comment was added--%>
+                                        <%--</div>--%>
+                                        <%--</div>--%>
+                                        <%--</div>--%>
+                                        <%--</c:if>--%>
+                                        <form:form commandName="comment" method="post" action="/addComment"
+                                                   cssClass="form-horizontal addCommentForm">
+                                            <div class="form-group">
+                                                <div class="col-sm-5">
+                                                    <form:textarea path="commText"
+                                                                   cssClass="form-control"></form:textarea>
+                                                    <form:hidden path="forRole.id"
+                                                                 value="${DTPComments[0].forRole.id}"/>
+                                                    <form:hidden path="order.orderId"
+                                                                 value="${DTPComments[0].order.orderId}"/>
+                                                        <%--<input name="deleted" type="hidden" value="true"/>--%>
+                                                </div>
+                                            </div>
+                                            <%--<div class="modal-footer col-sm-5">--%>
+                                            <div class="col-sm-5">
+                                                <input type="submit"
+                                                       value="Save"
+                                                       class="btn btn-large btn-primary" style="float: right;">
+                                            </div>
+                                            <%--</div>--%>
+                                        </form:form>
+                                    </li>
+                                </ul>
+
+
+                            </td>
+                        </table>
+                    </li>
+                    <li width="100%" class="comments to-deptor-comments">
+                        <table width="100%">
+                            <td width="17%" style="vertical-align: top">
+                                <b>Voor debiteur</b>
+                            </td>
+                            <td width="3%" style="vertical-align: top">
+                                <a class="btn add-comment-btn">Add comment</a>
                             </td>
                             <td>
                                 <ul style="list-style-type:none">
+                                    <c:forEach items="${DeptorComments}" var="DeptorComment">
+                                        <li>
+                                            <c:out value="${DeptorComment.commText}"/>
+                                                <%--<c:out value="${status.name}" />--%>
+                                        </li>
+                                    </c:forEach>
                                     <li>
-                                        <div>Nog geen opmerking voor DTP’er</div>
+                                        <%--<c:if test="${param.success eq true }">--%>
+                                        <%--<div class="row text-center">--%>
+                                        <%--<div class="col-md-offset-4 col-md-5">--%>
+                                        <%--<div class="alert alert-success">--%>
+                                        <%--Comment was added--%>
+                                        <%--</div>--%>
+                                        <%--</div>--%>
+                                        <%--</div>--%>
+                                        <%--</c:if>--%>
+                                        <form:form commandName="comment" method="post" action="/addComment"
+                                                   cssClass="form-horizontal addCommentForm">
+                                            <div class="form-group">
+                                                <div class="col-sm-5">
+                                                    <form:textarea path="commText"
+                                                                   cssClass="form-control"></form:textarea>
+                                                    <form:hidden path="forRole.id"
+                                                                 value="${DeptorComments[0].forRole.id}"/>
+                                                    <form:hidden path="order.orderId"
+                                                                 value="${DeptorComments[0].order.orderId}"/>
+                                                        <%--<input name="deleted" type="hidden" value="true"/>--%>
+                                                </div>
+                                            </div>
+                                            <%--<div class="modal-footer col-sm-5">--%>
+                                            <div class="col-sm-5">
+                                                <input type="submit"
+                                                       value="Save"
+                                                       class="btn btn-large btn-primary" style="float: right;">
+                                            </div>
+                                            <%--</div>--%>
+                                        </form:form>
                                     </li>
                                 </ul>
+
+
+                            </td>
+                        </table>
+                    </li>
+                    <li width="100%" class="comments to-deptor-comments to-customer-comments">
+                        <table width="100%">
+                            <td width="17%" style="vertical-align: top">
+                                <b>Voor eindafnemer</b>
+                            </td>
+                            <td width="3%" style="vertical-align: top">
+                                <a class="btn add-comment-btn">Add comment</a>
+                            </td>
+                            <td>
+                                <ul style="list-style-type:none">
+                                    <c:forEach items="${CustomerComments}" var="CustomerComment">
+                                        <li>
+                                            <c:out value="${CustomerComment.commText}"/>
+                                                <%--<c:out value="${status.name}" />--%>
+                                        </li>
+                                    </c:forEach>
+                                    <li>
+                                        <%--<c:if test="${param.success eq true }">--%>
+                                        <%--<div class="row text-center">--%>
+                                        <%--<div class="col-md-offset-4 col-md-5">--%>
+                                        <%--<div class="alert alert-success">--%>
+                                        <%--Comment was added--%>
+                                        <%--</div>--%>
+                                        <%--</div>--%>
+                                        <%--</div>--%>
+                                        <%--</c:if>--%>
+                                        <form:form commandName="comment" method="post" action="/addComment"
+                                                   cssClass="form-horizontal addCommentForm">
+                                            <div class="form-group">
+                                                <div class="col-sm-5">
+                                                    <form:textarea path="commText"
+                                                                   cssClass="form-control"></form:textarea>
+                                                    <form:hidden path="forRole.id"
+                                                                 value="${CustomerComments[0].forRole.id}"/>
+                                                    <form:hidden path="order.orderId"
+                                                                 value="${CustomerComments[0].order.orderId}"/>
+                                                        <%--<input name="deleted" type="hidden" value="true"/>--%>
+                                                </div>
+                                            </div>
+                                            <%--<div class="modal-footer col-sm-5">--%>
+                                            <div class="col-sm-5">
+                                                <input type="submit"
+                                                       value="Save"
+                                                       class="btn btn-large btn-primary" style="float: right;">
+                                            </div>
+                                            <%--</div>--%>
+                                        </form:form>
+                                    </li>
+                                </ul>
+
+
+                            </td>
+                        </table>
+                    </li>
+                    <li width="100%" class="comments">
+                        <table width="100%">
+                            <td width="17%" style="vertical-align: top">
+                                <b>Voor stamp manufacturer</b>
+                            </td>
+                            <td width="3%" style="vertical-align: top">
+                                <a class="btn add-comment-btn">Add comment</a>
+                            </td>
+                            <td>
+                                <ul style="list-style-type:none">
+                                    <c:forEach items="${StampsManufacComments}" var="StampsManufacComment">
+                                        <li>
+                                            <c:out value="${StampsManufacComment.commText}"/>
+                                                <%--<c:out value="${status.name}" />--%>
+                                        </li>
+                                    </c:forEach>
+                                    <li>
+                                        <%--<c:if test="${param.success eq true }">--%>
+                                        <%--<div class="row text-center">--%>
+                                        <%--<div class="col-md-offset-4 col-md-5">--%>
+                                        <%--<div class="alert alert-success">--%>
+                                        <%--Comment was added--%>
+                                        <%--</div>--%>
+                                        <%--</div>--%>
+                                        <%--</div>--%>
+                                        <%--</c:if>--%>
+                                        <form:form commandName="comment" method="post" action="/addComment"
+                                                   cssClass="form-horizontal addCommentForm">
+                                            <div class="form-group">
+                                                <div class="col-sm-5">
+                                                    <form:textarea path="commText"
+                                                                   cssClass="form-control"></form:textarea>
+                                                    <form:hidden path="forRole.id"
+                                                                 value="${StampsManufacComments[0].forRole.id}"/>
+                                                    <form:hidden path="order.orderId"
+                                                                 value="${StampsManufacComments[0].order.orderId}"/>
+                                                        <%--<input name="deleted" type="hidden" value="true"/>--%>
+                                                </div>
+                                            </div>
+                                            <%--<div class="modal-footer col-sm-5">--%>
+                                            <div class="col-sm-5">
+                                                <input type="submit"
+                                                       value="Save"
+                                                       class="btn btn-large btn-primary" style="float: right;">
+                                            </div>
+                                            <%--</div>--%>
+                                        </form:form>
+                                    </li>
+                                </ul>
+
+
+                            </td>
+                        </table>
+                    </li>
+                    <li width="100%" class="comments">
+                        <table width="100%">
+                            <td width="17%" style="vertical-align: top">
+                                <b>Voor production</b>
+                            </td>
+                            <td width="3%" style="vertical-align: top">
+                                <a class="btn add-comment-btn" id="production-button" >Add comment</a>
+                            </td>
+                            <td>
+                                <ul style="list-style-type:none">
+                                    <c:forEach items="${ProductionComments}" var="ProductionComment">
+                                        <li>
+                                            <c:out value="${ProductionComment.commText}"/>
+                                                <%--<c:out value="${status.name}" />--%>
+                                        </li>
+                                    </c:forEach>
+                                    <li>
+                                        <%--<c:if test="${param.success eq true }">--%>
+                                        <%--<div class="row text-center">--%>
+                                        <%--<div class="col-md-offset-4 col-md-5">--%>
+                                        <%--<div class="alert alert-success">--%>
+                                        <%--Comment was added--%>
+                                        <%--</div>--%>
+                                        <%--</div>--%>
+                                        <%--</div>--%>
+                                        <%--</c:if>--%>
+                                        <form:form commandName="comment" method="post" action="/addComment"
+                                                   cssClass="form-horizontal addCommentForm">
+                                            <div class="form-group">
+                                                <div class="col-sm-5">
+                                                    <form:textarea path="commText"
+                                                                   cssClass="form-control"></form:textarea>
+                                                    <form:hidden path="forRole.id"
+                                                                 value="${ProductionComments[0].forRole.id}"/>
+                                                    <form:hidden path="order.orderId"
+                                                                 value="${ProductionComments[0].order.orderId}"/>
+                                                        <%--<input name="deleted" type="hidden" value="true"/>--%>
+                                                </div>
+                                            </div>
+                                            <%--<div class="modal-footer col-sm-5">--%>
+                                            <div class="col-sm-5">
+                                                <input type="submit"
+                                                       value="Save"
+                                                       class="btn btn-large btn-primary" style="float: right;">
+                                            </div>
+                                            <%--</div>--%>
+                                        </form:form>
+                                    </li>
+                                </ul>
+
+
                             </td>
                         </table>
                     </li>
@@ -288,6 +509,8 @@
 
                 <%--Appove without comments and files adding--%>
                 <c:if test="${
+                            (theOrder.SAPstatus.id==6&&user.roles[0].id==2)||
+
                             (theOrder.SAPstatus.id==3&&user.roles[0].id==2&&orderPviCheck)||
                             (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.approvalBy=='Deptor')||
                             (theOrder.SAPstatus.id==4&&user.roles[0].id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
@@ -309,7 +532,7 @@
                 </c:if>
                 <%--Appove with comments and files adding--%>
                 <c:if test="${
-                            ((theOrder.SAPstatus.id==1||theOrder.SAPstatus.id==6)&&user.roles[0].id==2)||
+                            ((theOrder.SAPstatus.id==1)&&user.roles[0].id==2)||
                             (theOrder.SAPstatus.id==2&&user.roles[0].id==4)||
                             (theOrder.SAPstatus.id==5&&user.roles[0].id==4&&theOrder.processId==5)
                  }">
@@ -322,16 +545,38 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Appove</h4>
+                                    <h4 class="modal-title">Appove?</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <p>Some text in the modal.</p>
+                                    <p>Please add some comment and documentation</p>
+                                    <div class="form-container">
+                                        <form:form action='/changestatus/${theOrder.orderId}/yes' method="POST" modelAttribute="multiFileBucket" enctype="multipart/form-data" class="form-horizontal">
+                                            <c:forEach var="v" varStatus="vs" items="${multiFileBucket.files}">
+                                                <form:input type="file" path="files[${vs.index}].file" id="files[${vs.index}].file" class="form-control input-sm"/>
+                                                <div class="has-error">
+                                                    <form:errors path="files[${vs.index}].file" class="help-inline"/>
+                                                </div>
+                                            </c:forEach>
+                                            <br/>
+                                            <div class="row">
+                                                <div class="form-actions floatRight">
+                                                    <input type="submit" value="Approve" class="btn btn-success btn-sm">
+                                                </div>
+                                            </div>
+                                        </form:form>
+                                    </div>
+
                                 </div>
-                                <div class="modal-footer">
-                                        <%--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>--%>
-                                    <a href="<c:url value='/changestatus/${theOrder.orderId}/yes' />"
-                                       class="btn btn-success custom-width" data-dismiss="modal">Approve</a>
-                                </div>
+                                    <%--<div class="modal-footer">--%>
+                                    <%--&lt;%&ndash;<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>&ndash;%&gt;--%>
+                                    <%--<a href="<c:url value='/changestatus/${theOrder.orderId}/yes' />"--%>
+                                    <%--class="btn btn-success custom-width">Approve</a>--%>
+                                    <%--&lt;%&ndash;<div class="row">&ndash;%&gt;--%>
+                                    <%--<div class="form-actions floatRight">--%>
+                                    <%--<input type="submit" value="Upload" class="btn btn-success btn-sm">--%>
+                                    <%--</div>--%>
+                                    <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                                    <%--</div>--%>
                             </div>
 
                         </div>
@@ -354,16 +599,36 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Discard</h4>
+                                    <h4 class="modal-title">Discard?</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <p>Some text in the modal.</p>
+                                    <p>Please add some comment and documentation</p>
+                                    <div class="form-container">
+                                        <form:form action='/changestatus/${theOrder.orderId}/no' method="POST" modelAttribute="multiFileBucket" enctype="multipart/form-data" class="form-horizontal">
+                                            <c:forEach var="v" varStatus="vs" items="${multiFileBucket.files}">
+                                                <form:input type="file" path="files[${vs.index}].file" id="files[${vs.index}].file" class="form-control input-sm"/>
+                                                <div class="has-error">
+                                                    <form:errors path="files[${vs.index}].file" class="help-inline"/>
+                                                </div>
+                                            </c:forEach>
+                                            <br/>
+                                            <div class="row">
+                                                <div class="form-actions floatRight">
+                                                    <input type="submit" value="Discard" class="btn btn-danger btn-sm">
+                                                </div>
+                                            </div>
+                                        </form:form>
+                                    </div>
+
                                 </div>
-                                <div class="modal-footer">
-                                        <%--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>--%>
-                                    <a href="<c:url value='/changestatus/${theOrder.orderId}/no' />"
-                                       class="btn btn-danger custom-width" data-dismiss="modal">Discard</a>
-                                </div>
+                                    <%--<div class="modal-footer">--%>
+                                    <%--&lt;%&ndash;<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;<a href="<c:url value='/changestatus/${theOrder.orderId}/no' />"&ndash;%&gt;--%>
+                                    <%--&lt;%&ndash;class="btn btn-danger custom-width">Discard</a>&ndash;%&gt;--%>
+                                    <%--<div class="form-actions floatRight">--%>
+                                    <%--<input type="submit" value="Upload" class="btn btn-danger btn-sm">--%>
+                                    <%--</div>--%>
+                                    <%--</div>--%>
                             </div>
 
                         </div>
@@ -379,21 +644,50 @@
         </td>
     </tr>
 </table>
-
-
-<%--</div>--%>
-<%--<div>--%>
-<%--${user.roles[0].name}--%>
-<%--${theOrder.sapStatus.name}--%>
-
-<%--</div>--%>
-<%--<ul style="list-style-type:none">--%>
-<%--<c:forEach items="${userOrders}" var="userOrder">--%>
-<%--<li>--%>
-<%--<c:out value="${userOrder.order.SAPstatus.statusSAPStatuseRoles[0].status.name}" />--%>
-<%--&lt;%&ndash;<c:out value="${status.name}" />&ndash;%&gt;--%>
-<%--</li>--%>
-<%--</c:forEach>--%>
-<%--</ul>--%>
 </body>
 </html>
+<script>
+    var role = "${user.roles[0].name}";
+    var status = "${theOrder.sapStatus.statusSAPStatuseRoles[0].status.name}";
+    var statusId = +"${theOrder.sapStatus.statusSAPStatuseRoles[0].status.id}";
+    console.log(role + " " + status +" "+ statusId);
+    $(document).ready(function () {
+        $(".addCommentForm").hide();
+        $(".add-comment-btn").hide();
+        $(".add-comment-btn").click(function(){
+            console.log("CLick");
+            console.log($(this).parent().next().find("form"));
+            $(this).parent().next().find("form").show();
+        });
+
+        switch (role) {
+            case "ROLE_DEPTOR":
+                $(".comments").not(".to-deptor-comments").hide();
+                    if(status !== "Waiting for approval")
+                $(".comments").not(".to-deptor-comments").find(".add-comment-btn").hide();
+                break;
+            case "ROLE_CUSTOMER":
+                $(".comments").not(".to-customer-comments").hide();
+                if(status !== "Waiting for approval")
+                    $(".comments").not(".to-customer-comments").find(".add-comment-btn").hide();
+                break;
+            case "ROLE_PVI":
+                $("#DTP-button").show();
+//                    if(status === "Proof request set up" || status === "Proof requested" || status === "Check by PVI" || status === "Rejected")
+//                        $(".add-comment-btn").show();
+                break;
+            case "ROLE_DTP":
+                $("#PVI-button").show();
+                    console.log($("#PVI-button"));
+                    console.log($("#DTP-button"));
+                    if(status === "Proof requested" || status === "Approved")
+                $(".add-comment-btn").not("#production-button").show();
+
+                break;
+        }
+
+        if(statusId >= 6)
+            $(".add-comment-btn").hide();
+    });
+
+</script>

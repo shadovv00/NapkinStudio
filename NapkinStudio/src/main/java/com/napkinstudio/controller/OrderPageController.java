@@ -3,13 +3,18 @@ package com.napkinstudio.controller;
 
 import com.napkinstudio.entity.*;
 import com.napkinstudio.manager.*;
+import com.napkinstudio.util.MultiFileValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
 
@@ -18,6 +23,8 @@ import java.util.*;
 public class OrderPageController {
 
     private int ordId;
+
+     private final static String UPLOAD_LOCATION="D:/mytemp/";
 
     @Autowired
     private UserManager userManager;
@@ -48,6 +55,9 @@ public class OrderPageController {
     @Autowired
     private CommentsManager commentsManager;
 
+    @Autowired
+    MultiFileValidator multiFileValidator;
+
     @ModelAttribute("user")
     public User user(Principal principal) {
         String login = principal.getName();
@@ -58,6 +68,10 @@ public class OrderPageController {
         return user;
     }
 
+    @ModelAttribute("comment")
+    Comments comments (){
+        return new Comments();
+    }
 
 //  @RequestMapping(value = "/orders/{orderId}")
 //    @ModelAttribute("theOrder")
@@ -79,7 +93,7 @@ public class OrderPageController {
 ////        }
 //
 //        return order;
-//
+
 //    }
 
     @RequestMapping(value = "/orders/{orderId}")
@@ -91,7 +105,8 @@ public class OrderPageController {
 //        Map<String, Order> modelMap = new HashMap<>();
 //        modelMap.put("theOrder",theOrder);
 //        model.mergeAttributes(modelMap);
-
+        MultiFileBucket filesModel = new MultiFileBucket();
+        model.addAttribute("multiFileBucket", filesModel);
         StatusSAPStatusRole statusSAPStatusRole;
         try {
             statusSAPStatusRole = statusSAPStatusRoleManager.findStatusByRoleIdAndSAPStatusId(roleId, SSId);
@@ -166,6 +181,7 @@ public class OrderPageController {
             }
         }
 
+
 try {
     Map<Integer, List<Comments>> commentsMap = commentsManager.findCommentsbyOrderId(orderId);
 
@@ -190,10 +206,32 @@ try {
     }
 
 
+    @RequestMapping(value="/addComment", method = RequestMethod.POST)
+    String doAddComment(@ModelAttribute("comment") Comments comment,   BindingResult result) {
+        System.out.println(">>>>>>>>>>>>>>>>>>>");
+        System.out.println(comment.getCommText());
+        int roleId = comment.getForRole().getId();
+        int orderId = comment.getOrder().getOrderId();
+
+        Role role = roleManager.findById(roleId);
+        Order order = orderManager.findById(orderId);
+
+        comment.setForRole(role);
+        comment.setOrder(order);
+
+        commentsManager.save(comment);
+
+        return "redirect:/orders/"+orderId+".html?success=true";
+    }
+
     //    @RequestMapping(value = "/changestatus/{orderId}/{answer}")
 //    public String changeOrderStatus(Model model, @PathVariable int orderId, @PathVariable String answer, Principal principal) {
     @RequestMapping(value = "/changestatus/{orderId}/{answer}")
     public String changeOrderStatus(Model model, @PathVariable int orderId, @PathVariable String answer, Principal principal) {
+//        public String multiFileUpload(@Valid MultiFileBucket multiFileBucket,
+//                BindingResult result, ModelMap model) throws IOException {
+//    public String changeOrderStatus(@Valid MultiFileBucket multiFileBucket,
+//                    BindingResult result,Model model, @PathVariable int orderId, @PathVariable String answer, Principal principal) throws IOException {
 
         String login = principal.getName();
         System.out.println("/////////////////changestatus/////////////////");
@@ -201,14 +239,30 @@ try {
         System.out.println(answer);
         User user = userManager.findByLogin(login);
         List<Role> roles = roleManager.findByUserId(user.getUserId());
-//        user.setRoles(roles);
+        user.setRoles(roles);
         Order theOrder =orderManager.findById(orderId);
+        model.addAttribute("theOrder",theOrder);
+
+        statusChanginLogic(theOrder, user, roles, answer);
+
+        return "redirect:/orders/{orderId}";
+    }
+
+
+    @InitBinder("multiFileBucket")
+    protected void initBinderMultiFileBucket(WebDataBinder binder) {
+        binder.setValidator(multiFileValidator);
+    }
+
+    // functions for internal use
+    public void statusChanginLogic(Order theOrder, User user, List<Role> roles, String answer) {
+
         SAPstatus newSAPStatus;
         StatusChange statusChange =new StatusChange();
         statusChange.setDateTime(new Date());
         System.out.println(theOrder.getOrderId());
 //__1
-        if ((theOrder.getSapStatus().getId()==1||theOrder.getSapStatus().getId()==6)&&roles.get(0).getId()==2){
+        if ((theOrder.getSapStatus().getId()==1)&&roles.get(0).getId()==2){
             if (answer.equals("yes")){
                 newSAPStatus=sapStatusManager.findById(2);
                 theOrder.setSAPstatus(newSAPStatus);
@@ -220,7 +274,7 @@ try {
             }
         }else
 //__2
-            if (theOrder.getSapStatus().getId()==2&&user.getRoles().get(0).getId()==4){
+            if (theOrder.getSapStatus().getId()==2&&roles.get(0).getId()==4){
                 if (answer.equals("yes")){
                     if (theOrder.getPVIcheckScen()){
                         newSAPStatus=sapStatusManager.findById(3);
@@ -238,7 +292,7 @@ try {
                 }
             }else
 //__3
-                if (theOrder.getSapStatus().getId()==3&&user.getRoles().get(0).getId()==2&&theOrder.getPVIcheckScen()){
+                if (theOrder.getSapStatus().getId()==3&&roles.get(0).getId()==2&&theOrder.getPVIcheckScen()){
                     if (answer.equals("yes")){
                         newSAPStatus=sapStatusManager.findById(4);
                         theOrder.setSAPstatus(newSAPStatus);
@@ -253,7 +307,7 @@ try {
 
                 }else
 //__4
-                    if (theOrder.getSapStatus().getId()==4&&user.getRoles().get(0).getId()==1&&theOrder.getApprovalBy().equals("Deptor")){
+                    if (theOrder.getSapStatus().getId()==4&&roles.get(0).getId()==1&&theOrder.getApprovalBy().equals("Deptor")){
                         if (answer.equals("yes")){
                             approveOrders(theOrder,statusChange);
 //                newSAPStatus=sapStatusManager.findById(7);
@@ -275,7 +329,7 @@ try {
 
                     }else
 //__5&7
-                        if (theOrder.getSapStatus().getId()==4&&user.getRoles().get(0).getId()==5&&theOrder.getApprovalBy().equals("Customer")
+                        if (theOrder.getSapStatus().getId()==4&&roles.get(0).getId()==5&&theOrder.getApprovalBy().equals("Customer")
                                 &&(!theOrder.getDebCheckScen()||(theOrder.getDebCheckScen()&&theOrder.getProcessId()==2))){
                             if (answer.equals("yes")){
                                 approveOrders(theOrder,statusChange);
@@ -286,7 +340,7 @@ try {
 
                         }else
 //__6
-                            if (theOrder.getSapStatus().getId()==4&&user.getRoles().get(0).getId()==1&&theOrder.getApprovalBy().equals("Customer")&&theOrder.getDebCheckScen()&&theOrder.getProcessId()==1){
+                            if (theOrder.getSapStatus().getId()==4&&roles.get(0).getId()==1&&theOrder.getApprovalBy().equals("Customer")&&theOrder.getDebCheckScen()&&theOrder.getProcessId()==1){
                                 if (answer.equals("yes")){
                                     theOrder.setProcessId((byte) 2);
                                     orderManager.save(theOrder);
@@ -296,7 +350,7 @@ try {
 
                             }else
 //__8
-                                if (theOrder.getSapStatus().getId()==4&&user.getRoles().get(0).getId()==1&&theOrder.getApprovalBy().equals("Customer")&&theOrder.getProcessId()==3){
+                                if (theOrder.getSapStatus().getId()==4&&roles.get(0).getId()==1&&theOrder.getApprovalBy().equals("Customer")&&theOrder.getProcessId()==3){
                                     if (answer.equals("yes")){
                                         approveOrders(theOrder,statusChange);
                                     } else if (answer.equals("no")){
@@ -305,7 +359,7 @@ try {
 
                                 }else
 //__9
-                                    if (theOrder.getSapStatus().getId()==6&&user.getRoles().get(0).getId()==2){
+                                    if (theOrder.getSapStatus().getId()==6&&roles.get(0).getId()==2){
                                         if (answer.equals("yes")){
 //                TODO: Check what todo next
                                             newSAPStatus=sapStatusManager.findById(1);
@@ -325,7 +379,7 @@ try {
                                     }else
 
 //__10
-                                        if (theOrder.getSapStatus().getId()==5&&user.getRoles().get(0).getId()==2&&theOrder.getProcessId()==4){
+                                        if (theOrder.getSapStatus().getId()==5&&roles.get(0).getId()==2&&theOrder.getProcessId()==4){
                                             if (answer.equals("yes")){
                                                 theOrder.setProcessId((byte) 5);
                                                 orderManager.save(theOrder);
@@ -333,7 +387,7 @@ try {
                                         }else
 
 //__11
-                                            if (theOrder.getSapStatus().getId()==5&&user.getRoles().get(0).getId()==4&&theOrder.getProcessId()==5){
+                                            if (theOrder.getSapStatus().getId()==5&&roles.get(0).getId()==4&&theOrder.getProcessId()==5){
                                                 if (answer.equals("yes")){
                                                     newSAPStatus=sapStatusManager.findById(7);
                                                     theOrder.setSAPstatus(newSAPStatus);
@@ -344,11 +398,65 @@ try {
                                                 }
                                             }
 
-        model.addAttribute("theOrder",theOrder);
-        return "redirect:/orders/{orderId}";
+
     }
 
 
+    @RequestMapping(value = "/changestatus/{orderId}/{answer}", method = RequestMethod.POST)
+//    public String changeOrderStatus(Model model, @PathVariable int orderId, @PathVariable String answer, Principal principal) {
+//        public String multiFileUpload(@Valid MultiFileBucket multiFileBucket,
+//                BindingResult result, ModelMap model) throws IOException {
+    public String changeOrderStatusAndUpload(@Valid MultiFileBucket multiFileBucket,
+                                             BindingResult result,Model model, @PathVariable int orderId, @PathVariable String answer, Principal principal) throws IOException {
+
+        String login = principal.getName();
+        System.out.println("/////////////////changestatus&upload/////////////////");
+        System.out.println(orderId);
+        System.out.println(answer);
+        User user = userManager.findByLogin(login);
+        List<Role> roles = roleManager.findByUserId(user.getUserId());
+        user.setRoles(roles);
+        Order theOrder =orderManager.findById(orderId);
+
+        statusChanginLogic(theOrder, user, roles, answer);
+
+        model.addAttribute("theOrder",theOrder);
+
+//        if (result.hasErrors()) {
+        System.out.println("validation errors in multi upload");
+        System.out.println(result.hasErrors());
+//            return "multiFileUploader";
+//            return "redirect:/orders/{orderId}";
+//        } else {
+        System.out.println("Fetching files");
+        List<String> fileNames = new ArrayList<String>();
+        // Now do something with file...
+//            for (FileBucket bucket : multiFileBucket.getFiles()) {
+//                FileCopyUtils.copy(bucket.getFile().getBytes(), new File(UPLOAD_LOCATION + bucket.getFile().getOriginalFilename()));
+//                fileNames.add(bucket.getFile().getOriginalFilename());
+//                System.out.println("File saved "+bucket.getFile().getOriginalFilename());
+//            }
+        for(FileBucket bucket : multiFileBucket.getFiles()){
+            System.out.println("buckets");
+            if(bucket.getFile()!=null){
+                System.out.println("!=null");
+                if (bucket.getFile().getSize() != 0) {
+                    System.out.println("!=0");
+                    FileCopyUtils.copy(bucket.getFile().getBytes(), new File(UPLOAD_LOCATION + bucket.getFile().getOriginalFilename()));
+                    fileNames.add(bucket.getFile().getOriginalFilename());
+                    System.out.println("File saved "+bucket.getFile().getOriginalFilename());
+                }
+            }
+        }
+
+
+
+        model.addAttribute("fileNames", fileNames);
+//            return "singleFileUploader";
+        return "redirect:/orders/{orderId}";
+//        }
+
+    }
 
 
     // functions for internal use
@@ -372,15 +480,15 @@ try {
     }
 
 
-    @RequestMapping(value = "/orders/addcoment")
-    public String addComment () {
-
-                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        System.out.println(ordId);
-
-
-
-        return "redirect:/orders/{orderId}";
-    }
+//    @RequestMapping(value = "/orders/addcoment")
+//    public String addComment () {
+//
+//                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+//        System.out.println(ordId);
+//
+//
+//
+//        return "redirect:/orders/{orderId}";
+//    }
 
 }
