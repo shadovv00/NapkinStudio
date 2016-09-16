@@ -21,6 +21,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import java.util.Properties;
 /**
@@ -103,9 +104,14 @@ public class AppConfig extends WebMvcConfigurerAdapter{
     }
 
 
+//    @Bean(name = "multipartResolver")
+//    public StandardServletMultipartResolver resolver() {
+//        return new StandardServletMultipartResolver();
+//    }
+
     @Bean(name = "multipartResolver")
-    public StandardServletMultipartResolver resolver() {
-        return new StandardServletMultipartResolver();
+    public CommonsMultipartResolver resolver() {
+        return new CommonsMultipartResolver();
     }
 
 
