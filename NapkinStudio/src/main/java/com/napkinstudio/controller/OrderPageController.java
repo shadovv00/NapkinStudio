@@ -7,10 +7,10 @@ import com.napkinstudio.util.MultiFileValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.File;
@@ -24,7 +24,7 @@ public class OrderPageController {
 
     private int ordId;
 
-     private final static String UPLOAD_LOCATION="D:/mytemp/";
+    private final static String UPLOAD_LOCATION = "C:/mytemp/";
 
     @Autowired
     private UserManager userManager;
@@ -58,6 +58,9 @@ public class OrderPageController {
     @Autowired
     MultiFileValidator multiFileValidator;
 
+    @Autowired
+    private MailManager mailManager;
+
     @ModelAttribute("user")
     public User user(Principal principal) {
         String login = principal.getName();
@@ -69,7 +72,7 @@ public class OrderPageController {
     }
 
     @ModelAttribute("comment")
-    Comments comments (){
+    Comments comments() {
         return new Comments();
     }
 
@@ -97,7 +100,7 @@ public class OrderPageController {
 //    }
 
     @RequestMapping(value = "/orders/{orderId}")
-    public String goToOrders(Model model,@PathVariable("orderId") int orderId, @ModelAttribute("user") User user) {
+    public String goToOrders(Model model, @PathVariable("orderId") int orderId, @ModelAttribute("user") User user) {
         ordId = orderId;
         Order theOrder = orderManager.findById(orderId);
         Integer SSId = theOrder.getSAPstatus().getId();
@@ -182,71 +185,81 @@ public class OrderPageController {
         }
 
 
-try {
-    Map<Integer, List<Comments>> commentsMap = commentsManager.findCommentsbyOrderId(orderId);
+        try {
+            Map<Integer, List<Comments>> commentsMap = commentsManager.findCommentsbyOrderId(orderId);
 
 
-    model.addAttribute("PVIComments", commentsMap.get(2));
-    model.addAttribute("DeptorComments", commentsMap.get(1));
-    model.addAttribute("DTPComments", commentsMap.get(4));
-    model.addAttribute("CustomerComments", commentsMap.get(5));
-    model.addAttribute("StampsManufacComments", commentsMap.get(6));
-    model.addAttribute("ProductionComments", commentsMap.get(7));
+            model.addAttribute("PVIComments", commentsMap.get(2));
+            model.addAttribute("DeptorComments", commentsMap.get(1));
+            model.addAttribute("DTPComments", commentsMap.get(4));
+            model.addAttribute("CustomerComments", commentsMap.get(5));
+            model.addAttribute("StampsManufacComments", commentsMap.get(6));
+            model.addAttribute("ProductionComments", commentsMap.get(7));
 
-}catch (Exception e){
-    e.printStackTrace(System.out);
-}
- //        model.addAttribute("user", user);
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+        }
+        //        model.addAttribute("user", user);
 //        model.addAttribute("userOrders", userOrders);
         model.addAttribute("theOrder", theOrder);
         model.addAttribute("barFields", barFields);
-        model.addAttribute("orderPviCheck",theOrder.getPVIcheckScen());
+        model.addAttribute("orderPviCheck", theOrder.getPVIcheckScen());
 
         return "orderpage";
     }
 
 
-    @RequestMapping(value="/addComment", method = RequestMethod.POST)
-    String doAddComment(@ModelAttribute("comment") Comments comment,   BindingResult result) {
-        System.out.println(">>>>>>>>>>>>>>>>>>>");
-        System.out.println(comment.getCommText());
+    @RequestMapping(value = "/addComment", method = RequestMethod.POST)
+    String doAddComment(@ModelAttribute("comment") Comments comment, @ModelAttribute("user") User user, BindingResult result) {
         int roleId = comment.getForRole().getId();
         int orderId = comment.getOrder().getOrderId();
+        User userTo = userOrderManager.findUserforOrdedByRole(orderId, roleId);
 
         Role role = roleManager.findById(roleId);
         Order order = orderManager.findById(orderId);
 
+        comment.setFromUser(user);
+        comment.setToUser(userTo);
         comment.setForRole(role);
         comment.setOrder(order);
 
+
+        if ((comment.getForRole().getId() == 2 && user.getRoles().get(0).getId() != 2) || comment.getForRole().getId() == 4) {
+            Role forRole = roleManager.findById(comment.getForRole().getId());
+            comment.setForRole(forRole);
+            mailManager.sendEmail(comment);
+
+        }
+
+
         commentsManager.save(comment);
 
-        return "redirect:/orders/"+orderId+".html?success=true";
+        return "redirect:/orders/" + orderId + ".html?success=true";
     }
 
     //    @RequestMapping(value = "/changestatus/{orderId}/{answer}")
 //    public String changeOrderStatus(Model model, @PathVariable int orderId, @PathVariable String answer, Principal principal) {
     @RequestMapping(value = "/changestatus/{orderId}/{answer}")
-    public String changeOrderStatus(Model model, @PathVariable int orderId, @PathVariable String answer, Principal principal) {
-//        public String multiFileUpload(@Valid MultiFileBucket multiFileBucket,
-//                BindingResult result, ModelMap model) throws IOException {
-//    public String changeOrderStatus(@Valid MultiFileBucket multiFileBucket,
-//                    BindingResult result,Model model, @PathVariable int orderId, @PathVariable String answer, Principal principal) throws IOException {
-
-        String login = principal.getName();
-        System.out.println("/////////////////changestatus/////////////////");
-        System.out.println(orderId);
-        System.out.println(answer);
-        User user = userManager.findByLogin(login);
-        List<Role> roles = roleManager.findByUserId(user.getUserId());
-        user.setRoles(roles);
-        Order theOrder =orderManager.findById(orderId);
-        model.addAttribute("theOrder",theOrder);
-
-        statusChanginLogic(theOrder, user, roles, answer);
-
-        return "redirect:/orders/{orderId}";
-    }
+//    public String changeOrderStatus(Model model, @PathVariable int orderId, @PathVariable String answer, Principal principal) {
+////        public String multiFileUpload(@Valid MultiFileBucket multiFileBucket,
+////                BindingResult result, ModelMap model) throws IOException {
+////    public String changeOrderStatus(@Valid MultiFileBucket multiFileBucket,
+////                    BindingResult result,Model model, @PathVariable int orderId, @PathVariable String answer, Principal principal) throws IOException {
+//
+//        String login = principal.getName();
+//        System.out.println("/////////////////changestatus/////////////////");
+//        System.out.println(orderId);
+//        System.out.println(answer);
+//        User user = userManager.findByLogin(login);
+//        List<Role> roles = roleManager.findByUserId(user.getUserId());
+//        user.setRoles(roles);
+//        Order theOrder = orderManager.findById(orderId);
+//        model.addAttribute("theOrder", theOrder);
+//
+//        statusChanginLogic(theOrder,  roles, answer);
+//
+//        return "redirect:/orders/{orderId}";
+//    }
 
 
     @InitBinder("multiFileBucket")
@@ -255,69 +268,78 @@ try {
     }
 
     // functions for internal use
-    public void statusChanginLogic(Order theOrder, User user, List<Role> roles, String answer) {
-
+    public Comments statusChanginLogic(Order theOrder, Comments comment, List<Role> roles, String answer) {
+        User userTo;
         SAPstatus newSAPStatus;
-        StatusChange statusChange =new StatusChange();
+        StatusChange statusChange = new StatusChange();
         statusChange.setDateTime(new Date());
         System.out.println(theOrder.getOrderId());
 //__1
-        if ((theOrder.getSapStatus().getId()==1)&&roles.get(0).getId()==2){
-            if (answer.equals("yes")){
-                newSAPStatus=sapStatusManager.findById(2);
+        if ((theOrder.getSapStatus().getId() == 1) && roles.get(0).getId() == 2) {
+            if (answer.equals("yes")) {
+                newSAPStatus = sapStatusManager.findById(2);
                 theOrder.setSAPstatus(newSAPStatus);
                 theOrder.setRejected(false);
+                userTo = userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 4);
+                comment.setToUser(userTo);
+                comment.setOrder(theOrder);
                 orderManager.save(theOrder);
                 statusChange.setOrder(theOrder);
                 statusChange.setSAPstatus(newSAPStatus);
                 statusChangeManager.save(statusChange);
             }
-        }else
+        } else
 //__2
-            if (theOrder.getSapStatus().getId()==2&&roles.get(0).getId()==4){
-                if (answer.equals("yes")){
-                    if (theOrder.getPVIcheckScen()){
-                        newSAPStatus=sapStatusManager.findById(3);
-                    } else{
-                        newSAPStatus=sapStatusManager.findById(4);
+            if (theOrder.getSapStatus().getId() == 2 && roles.get(0).getId() == 4) {
+                if (answer.equals("yes")) {
+                    if (theOrder.getPVIcheckScen()) {
+                        newSAPStatus = sapStatusManager.findById(3);
+                        userTo = userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 2);
+                    } else {
+                        newSAPStatus = sapStatusManager.findById(4);
+                        userTo = userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 1);
                     }
-                    if (theOrder.getApprovalBy().equals("Customer")&&theOrder.getDebCheckScen()){
+                    if (theOrder.getApprovalBy().equals("Customer") && theOrder.getDebCheckScen()) {
                         theOrder.setProcessId((byte) 1);
                     }
+
+
                     theOrder.setSAPstatus(newSAPStatus);
+                    comment.setToUser(userTo);
+                    comment.setOrder(theOrder);
                     orderManager.save(theOrder);
                     statusChange.setOrder(theOrder);
                     statusChange.setSAPstatus(newSAPStatus);
                     statusChangeManager.save(statusChange);
                 }
-            }else
+            } else
 //__3
-                if (theOrder.getSapStatus().getId()==3&&roles.get(0).getId()==2&&theOrder.getPVIcheckScen()){
-                    if (answer.equals("yes")){
-                        newSAPStatus=sapStatusManager.findById(4);
+                if (theOrder.getSapStatus().getId() == 3 && roles.get(0).getId() == 2 && theOrder.getPVIcheckScen()) {
+                    if (answer.equals("yes")) {
+                        newSAPStatus = sapStatusManager.findById(4);
                         theOrder.setSAPstatus(newSAPStatus);
                         theOrder.setRejected(false);
                         orderManager.save(theOrder);
                         statusChange.setOrder(theOrder);
                         statusChange.setSAPstatus(newSAPStatus);
                         statusChangeManager.save(statusChange);
-                    } else if (answer.equals("no")){
-                        discardOrders(theOrder,statusChange);
+                    } else if (answer.equals("no")) {
+                        discardOrders(theOrder, statusChange);
                     }
 
-                }else
+                } else
 //__4
-                    if (theOrder.getSapStatus().getId()==4&&roles.get(0).getId()==1&&theOrder.getApprovalBy().equals("Deptor")){
-                        if (answer.equals("yes")){
-                            approveOrders(theOrder,statusChange);
+                    if (theOrder.getSapStatus().getId() == 4 && roles.get(0).getId() == 1 && theOrder.getApprovalBy().equals("Deptor")) {
+                        if (answer.equals("yes")) {
+                            approveOrders(theOrder, statusChange);
 //                newSAPStatus=sapStatusManager.findById(7);
 //                theOrder.setSAPstatus(newSAPStatus);
 //                orderManager.save(theOrder);
 //                statusChange.setOrder(theOrder);
 //                statusChange.setSAPstatus(newSAPStatus);
 //                statusChangeManager.save(statusChange);
-                        } else if (answer.equals("no")){
-                            discardOrders(theOrder,statusChange);
+                        } else if (answer.equals("no")) {
+                            discardOrders(theOrder, statusChange);
 //                newSAPStatus=sapStatusManager.findById(6);
 //                theOrder.setSAPstatus(newSAPStatus);
 //                theOrder.setRejected(true);
@@ -327,69 +349,69 @@ try {
 //                statusChangeManager.save(statusChange);
                         }
 
-                    }else
+                    } else
 //__5&7
-                        if (theOrder.getSapStatus().getId()==4&&roles.get(0).getId()==5&&theOrder.getApprovalBy().equals("Customer")
-                                &&(!theOrder.getDebCheckScen()||(theOrder.getDebCheckScen()&&theOrder.getProcessId()==2))){
-                            if (answer.equals("yes")){
-                                approveOrders(theOrder,statusChange);
-                            } else if (answer.equals("no")){
+                        if (theOrder.getSapStatus().getId() == 4 && roles.get(0).getId() == 5 && theOrder.getApprovalBy().equals("Customer")
+                                && (!theOrder.getDebCheckScen() || (theOrder.getDebCheckScen() && theOrder.getProcessId() == 2))) {
+                            if (answer.equals("yes")) {
+                                approveOrders(theOrder, statusChange);
+                            } else if (answer.equals("no")) {
                                 theOrder.setProcessId((byte) 3);
                                 orderManager.save(theOrder);
                             }
 
-                        }else
+                        } else
 //__6
-                            if (theOrder.getSapStatus().getId()==4&&roles.get(0).getId()==1&&theOrder.getApprovalBy().equals("Customer")&&theOrder.getDebCheckScen()&&theOrder.getProcessId()==1){
-                                if (answer.equals("yes")){
+                            if (theOrder.getSapStatus().getId() == 4 && roles.get(0).getId() == 1 && theOrder.getApprovalBy().equals("Customer") && theOrder.getDebCheckScen() && theOrder.getProcessId() == 1) {
+                                if (answer.equals("yes")) {
                                     theOrder.setProcessId((byte) 2);
                                     orderManager.save(theOrder);
-                                } else if (answer.equals("no")){
-                                    discardOrders(theOrder,statusChange);
+                                } else if (answer.equals("no")) {
+                                    discardOrders(theOrder, statusChange);
                                 }
 
-                            }else
+                            } else
 //__8
-                                if (theOrder.getSapStatus().getId()==4&&roles.get(0).getId()==1&&theOrder.getApprovalBy().equals("Customer")&&theOrder.getProcessId()==3){
-                                    if (answer.equals("yes")){
-                                        approveOrders(theOrder,statusChange);
-                                    } else if (answer.equals("no")){
-                                        discardOrders(theOrder,statusChange);
+                                if (theOrder.getSapStatus().getId() == 4 && roles.get(0).getId() == 1 && theOrder.getApprovalBy().equals("Customer") && theOrder.getProcessId() == 3) {
+                                    if (answer.equals("yes")) {
+                                        approveOrders(theOrder, statusChange);
+                                    } else if (answer.equals("no")) {
+                                        discardOrders(theOrder, statusChange);
                                     }
 
-                                }else
+                                } else
 //__9
-                                    if (theOrder.getSapStatus().getId()==6&&roles.get(0).getId()==2){
-                                        if (answer.equals("yes")){
+                                    if (theOrder.getSapStatus().getId() == 6 && roles.get(0).getId() == 2) {
+                                        if (answer.equals("yes")) {
 //                TODO: Check what todo next
-                                            newSAPStatus=sapStatusManager.findById(1);
+                                            newSAPStatus = sapStatusManager.findById(1);
                                             theOrder.setSAPstatus(newSAPStatus);
                                             orderManager.save(theOrder);
                                             statusChange.setOrder(theOrder);
                                             statusChange.setSAPstatus(newSAPStatus);
                                             statusChangeManager.save(statusChange);
-                                        } else if (answer.equals("no")){
-                                            newSAPStatus=sapStatusManager.findById(2);
+                                        } else if (answer.equals("no")) {
+                                            newSAPStatus = sapStatusManager.findById(2);
                                             theOrder.setSAPstatus(newSAPStatus);
                                             orderManager.save(theOrder);
                                             statusChange.setOrder(theOrder);
                                             statusChange.setSAPstatus(newSAPStatus);
                                             statusChangeManager.save(statusChange);
                                         }
-                                    }else
+                                    } else
 
 //__10
-                                        if (theOrder.getSapStatus().getId()==5&&roles.get(0).getId()==2&&theOrder.getProcessId()==4){
-                                            if (answer.equals("yes")){
+                                        if (theOrder.getSapStatus().getId() == 5 && roles.get(0).getId() == 2 && theOrder.getProcessId() == 4) {
+                                            if (answer.equals("yes")) {
                                                 theOrder.setProcessId((byte) 5);
                                                 orderManager.save(theOrder);
                                             }
-                                        }else
+                                        } else
 
 //__11
-                                            if (theOrder.getSapStatus().getId()==5&&roles.get(0).getId()==4&&theOrder.getProcessId()==5){
-                                                if (answer.equals("yes")){
-                                                    newSAPStatus=sapStatusManager.findById(7);
+                                            if (theOrder.getSapStatus().getId() == 5 && roles.get(0).getId() == 4 && theOrder.getProcessId() == 5) {
+                                                if (answer.equals("yes")) {
+                                                    newSAPStatus = sapStatusManager.findById(7);
                                                     theOrder.setSAPstatus(newSAPStatus);
                                                     orderManager.save(theOrder);
                                                     statusChange.setOrder(theOrder);
@@ -397,6 +419,7 @@ try {
                                                     statusChangeManager.save(statusChange);
                                                 }
                                             }
+        return comment;
 
 
     }
@@ -407,20 +430,44 @@ try {
 //        public String multiFileUpload(@Valid MultiFileBucket multiFileBucket,
 //                BindingResult result, ModelMap model) throws IOException {
     public String changeOrderStatusAndUpload(@Valid MultiFileBucket multiFileBucket,
-                                             BindingResult result,Model model, @PathVariable int orderId, @PathVariable String answer, Principal principal) throws IOException {
+                                             BindingResult result, Model model, @PathVariable int orderId, @PathVariable String answer, @ModelAttribute("user") User user, @ModelAttribute("comment") Comments comment) throws IOException {
 
-        String login = principal.getName();
-        System.out.println("/////////////////changestatus&upload/////////////////");
-        System.out.println(orderId);
-        System.out.println(answer);
-        User user = userManager.findByLogin(login);
-        List<Role> roles = roleManager.findByUserId(user.getUserId());
-        user.setRoles(roles);
-        Order theOrder =orderManager.findById(orderId);
 
-        statusChanginLogic(theOrder, user, roles, answer);
+        List<Role> roles = user.getRoles();
+        Role role = roles.get(0);
+        Order theOrder = orderManager.findById(orderId);
+        comment = statusChanginLogic(theOrder, comment, roles, answer);
+        comment.setFromUser(user);
 
-        model.addAttribute("theOrder",theOrder);
+
+        User userTo = comment.getToUser();
+        List<Role> UserToRoles = roleManager.findByUserId(userTo.getUserId());
+        userTo.setRoles(UserToRoles);
+        try {
+            Integer userToRoleId = UserToRoles.get(0).getId();
+            Integer SSId = comment.getOrder().getSAPstatus().getId();
+
+            StatusSAPStatusRole statusSAPStatusRole = statusSAPStatusRoleManager.findStatusByRoleIdAndSAPStatusId(userToRoleId, SSId);
+
+            List<StatusSAPStatusRole> statusSAPStatusRolesList = new ArrayList<>();
+            statusSAPStatusRolesList.add(statusSAPStatusRole);
+
+            theOrder.getSAPstatus().setStatusSAPStatuseRoles(statusSAPStatusRolesList);
+        } catch (NullPointerException e) {
+            System.out.println(e.getStackTrace());
+        }
+
+
+        comment.setToUser(userTo);
+        comment.setForRole(role);
+
+        commentsManager.save(comment);
+        Map<Comments, MultiFile> notification = new HashMap<>();
+        notification.put(comment, null);
+        mailManager.sendEmail(notification);
+
+
+//        model.addAttribute("theOrder",theOrder);
 
 //        if (result.hasErrors()) {
         System.out.println("validation errors in multi upload");
@@ -428,40 +475,78 @@ try {
 //            return "multiFileUploader";
 //            return "redirect:/orders/{orderId}";
 //        } else {
-        System.out.println("Fetching files");
-        List<String> fileNames = new ArrayList<String>();
+//        System.out.println("Fetching files");
+//        List<String> fileNames = new ArrayList<String>();
         // Now do something with file...
 //            for (FileBucket bucket : multiFileBucket.getFiles()) {
 //                FileCopyUtils.copy(bucket.getFile().getBytes(), new File(UPLOAD_LOCATION + bucket.getFile().getOriginalFilename()));
 //                fileNames.add(bucket.getFile().getOriginalFilename());
 //                System.out.println("File saved "+bucket.getFile().getOriginalFilename());
 //            }
-        for(FileBucket bucket : multiFileBucket.getFiles()){
-            System.out.println("buckets");
-            if(bucket.getFile()!=null){
-                System.out.println("!=null");
-                if (bucket.getFile().getSize() != 0) {
-                    System.out.println("!=0");
-                    FileCopyUtils.copy(bucket.getFile().getBytes(), new File(UPLOAD_LOCATION + bucket.getFile().getOriginalFilename()));
-                    fileNames.add(bucket.getFile().getOriginalFilename());
-                    System.out.println("File saved "+bucket.getFile().getOriginalFilename());
-                }
-            }
-        }
+//        for(FileBucket bucket : multiFileBucket.getFiles()){
+//            System.out.println("buckets");
+//            if(bucket.getFile()!=null){
+//                System.out.println("!=null");
+//                if (bucket.getFile().getSize() != 0) {
+//                    System.out.println("!=0");
+//                    FileCopyUtils.copy(bucket.getFile().getBytes(), new File(UPLOAD_LOCATION + bucket.getFile().getOriginalFilename()));
+//                    fileNames.add(bucket.getFile().getOriginalFilename());
+//                    System.out.println("File saved "+bucket.getFile().getOriginalFilename());
+//                }
+//            }
+//        }
 
 
-
-        model.addAttribute("fileNames", fileNames);
+//        model.addAttribute("fileNames", fileNames);
 //            return "singleFileUploader";
         return "redirect:/orders/{orderId}";
 //        }
 
     }
 
+    @RequestMapping(value = "/save-file/{orderId}", method = RequestMethod.POST)
+    public @ResponseBody FileMeta doUpload(@RequestParam("files[]") MultipartFile multipartFile, @PathVariable int orderId) {
+        System.out.println("/save-file");
+        System.out.println(multipartFile.getOriginalFilename());
+//        File file = new File("my-file.txt");
+//        multipartFile.transferTo(file);
+        FileMeta fileMeta = new FileMeta();
+//        File directory= new File(UPLOAD_LOCATION +orderId+"/");
+//        if (!directory.exists()) {
+//            // ...
+//        }
+//        new File("C:/folder1")
+        try {
+//            FileCopyUtils.copy(multipartFile.getBytes(), new File(UPLOAD_LOCATION + fileName));
+            File file = new File(UPLOAD_LOCATION +orderId+"/"+ multipartFile.getOriginalFilename());
+            file.getParentFile().mkdirs();
+            multipartFile.transferTo(file);
+            fileMeta.setFileName(multipartFile.getOriginalFilename());
+            fileMeta.setFileSize(multipartFile.getSize()/1024+" Kb");
+            fileMeta.setFileType(multipartFile.getContentType());
+            fileMeta.setBytes(multipartFile.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return fileMeta;
+    }
+    @RequestMapping(value = "/remove-file/{orderId}/{fileName:.*}")
+    public @ResponseBody void doRemove(@PathVariable int orderId,@PathVariable String fileName) {
+        System.out.println("/remove-file");
+        System.out.println(fileName);
+        try{
+            File file = new File(UPLOAD_LOCATION +orderId+"/"+ fileName);
+            if(file.delete()){System.out.println(file.getName() + " is deleted!");}
+//            else{System.out.println("Delete operation is failed.");}
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     // functions for internal use
     public void approveOrders(Order theOrder, StatusChange statusChange) {
-        SAPstatus newSAPStatus=sapStatusManager.findById(7);
+        SAPstatus newSAPStatus = sapStatusManager.findById(5);
         theOrder.setSAPstatus(newSAPStatus);
         orderManager.save(theOrder);
         statusChange.setOrder(theOrder);
@@ -470,7 +555,7 @@ try {
     }
 
     public void discardOrders(Order theOrder, StatusChange statusChange) {
-        SAPstatus newSAPStatus=sapStatusManager.findById(6);
+        SAPstatus newSAPStatus = sapStatusManager.findById(6);
         theOrder.setSAPstatus(newSAPStatus);
         theOrder.setRejected(true);
         orderManager.save(theOrder);
@@ -490,5 +575,7 @@ try {
 //
 //        return "redirect:/orders/{orderId}";
 //    }
+
+
 
 }
