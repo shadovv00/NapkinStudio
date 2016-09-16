@@ -215,3 +215,4 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 *.properties
+NapkinStudio/src/main/resources/project.properties
