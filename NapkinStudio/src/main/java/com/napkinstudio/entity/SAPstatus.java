@@ -1,11 +1,8 @@
 package com.napkinstudio.entity;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 import javax.persistence.*;
-import com.napkinstudio.entity.Status;
-
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.REMOVE;
-
 import java.util.List;
 
 /**
@@ -16,7 +13,8 @@ import java.util.List;
 
         /*@NamedQuery(name = "Status.findByRoleId", query = "SELECT s FROM  Status s  inner join s.roles r WHERE r.id  =:id"), */})
 @Entity
-@Table(name="sap_statuses")
+@XStreamAlias("sapStatus")
+@Table(name="SAPstatus")
 public class SAPstatus {
     @Id
     @GeneratedValue
@@ -24,12 +22,51 @@ public class SAPstatus {
 
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
-    private List<Status> statuses;
-    public List<Status> getStatuses() {
-        return statuses;    }
-    public void setStatuses(List<Status> statuses) {
-        this.statuses = statuses;    }
+    @OneToMany(mappedBy = "SAPStatus",
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    private List<StatusSAPStatusRole> statusSAPStatuseRoles;
+
+    public List<StatusSAPStatusRole> getUserGroups() {
+        return statusSAPStatuseRoles;
+    }
+
+    public void setStatusSAPStatuseRoles(List<StatusSAPStatusRole> statusSAPStatuseRoles) {
+        this.statusSAPStatuseRoles = statusSAPStatuseRoles;
+    }
+
+    public List<StatusSAPStatusRole> getStatusSAPStatuseRoles() {
+        return statusSAPStatuseRoles;
+    }
+
+    @OneToMany(mappedBy = "SAPStatus",
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    private List<ProgresBarFields> progresBarFieldses;
+    public List<ProgresBarFields> getProgresBarFieldses() {
+        return progresBarFieldses;
+    }
+    public void setProgresBarFieldses(List<ProgresBarFields> progresBarFieldses) {
+        this.progresBarFieldses = progresBarFieldses;
+    }
+
+    @OneToMany(mappedBy = "sapStatus",
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    private List<StatusChange> statusChanges;
+    public List<StatusChange> getStatusChangees() {
+        return statusChanges;
+    }
+    public void setStatusChangees(List<StatusChange> statusChanges) {
+        this.statusChanges = statusChanges;
+    }
+
+
+
+    //    @ManyToMany(mappedBy = "sapStatuses")
+//    private List<Status> statuses;
+
+//    public List<Status> getStatuses() {
+//        return statuses;    }
+//    public void setStatuses(List<Status> statuses) {
+//        this.statuses = statuses;    }
 
     public Integer getId() {
         return id;    }

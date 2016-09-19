@@ -3,7 +3,7 @@ html{
 }
 
 body{
-	height: 100%;
+	/*height: 100%;*/
 	background-color:rgb(245, 245, 245);
 }
 
@@ -83,4 +83,42 @@ body, #mainWrapper, .form-control{
 
 .authbar{
 	margin-bottom:15px;
+}
+
+.order-attachment li {
+	list-style-type: none;
+}
+.order-attachment a {
+	color: inherit;
+}
+.order-attachment .file-info {
+	color: #b4b4b4;
+    display: inline;
+    font-size: 0.9em;
+}
+.order-attachment .remove-attachment {
+	display: none;
+}
+remove-attachment:hover {
+	display: inline-block !important;	
+}
+.icon-align {
+	vertical-align: bottom;
+}
+.remove-icon-align {
+	vertical-align: text-top;
+    margin-left: 4px;
+    color: #b4b4b4;
+}
+.remove-icon-align:hover {
+	cursor: pointer;
+}
+.remove-icon-align:active {
+	color: #a4a4a4;
+}
+.attachment-preview:hover {
+	cursor: pointer;
+}
+.attachment-preview:active {
+	color: #8cd5ff;
 }

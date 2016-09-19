@@ -5,9 +5,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
+import com.napkinstudio.entity.Order;
+import com.napkinstudio.entity.SAPstatus;
+import com.napkinstudio.entity.SynchronizationDate;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.net.ftp.FTPSClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +25,8 @@ import com.napkinstudio.sapcommunicationmodels.DataTransferToSAP;
 //import com.napkinstudio.sapcommunicationmodels.DataTransferFromSAP;
 //import com.napkinstudio.sapcommunicationmodels.DataTransferToSAP;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 
 @Service("ftpService")
@@ -26,17 +34,30 @@ public class FTPManager {
 	
 	@Autowired
 	XStream xstream;
+
+	@Autowired
+	private OrderManager orderManager;
+
+    @Autowired
+    private SynchronizationDateManager synchro_dateManager;
+
 	
 //	@Autowired
 	FTPSClient ftpClient;
 	
 	public String handle() {
+		System.out.println("FTPManager start");
+
 		String message = "ok";
 		
-		String 	host = "localhost",//"10.4.0.129",
+		String
+//				host = "localhost",//"10.4.0.129",
+				host = "10.4.0.129",
 				username = "catdogcat",
 				password = "2cats1dog";
-		
+//				username = "ftpuser",
+//				password = "123";
+
 		int 	port = 21;
 		
 		String 	pathToIsBusyFile = "checkisbusy.txt",
@@ -83,9 +104,11 @@ public class FTPManager {
 					ftpClient.enterLocalPassiveMode();
 					
 //					ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-					
-					
-					
+                    SynchronizationDate synchroData= synchro_dateManager.findById(1);
+//					System.out.println(synchroData);
+					if (synchroData==null){synchroData=new SynchronizationDate();}
+                    synchroData.setId(1);
+
 					is_ = ftpClient.retrieveFileStream(pathToIsBusyFile);
 					if(is_ != null) {
 						reader = new BufferedReader(new InputStreamReader(is_));
@@ -174,10 +197,26 @@ public class FTPManager {
 		            	//SAP file was delivered by SAP, so Portal must accept it
 		            	is1 = ftpClient.retrieveFileStream(pathToFileFromSAP);
 		            	if(is1 != null) {
-		            		dtfs = (DataTransferFromSAP) xstream.fromXML(is1);
-			                //write to db
-			                System.out.println(dtfs);
-			                
+							xstream.processAnnotations(DataTransferFromSAP.class);
+							dtfs = (DataTransferFromSAP) xstream.fromXML(is1);
+                            //write to db
+							LinkedList<Order> orders = dtfs.getSapOrders().getOrders();
+							for (Order order: orders) {
+								System.out.println(order.getDebNum());
+								System.out.println(order.getSAPstatus());
+								Order thisOrder = orderManager.findById(order.getOrderId());
+								System.out.println(thisOrder);
+//								for each field update
+//								for(Field field : order.getClass().getDeclaredFields()){
+//									System.out.println(field);
+//									if (field.get()!=null){}
+//								}
+//								order.setUpdate(new Date());
+								orderManager.save(order);
+							}
+                            //set date of the "fromSAP" file read
+			                synchroData.setDateFromSAP(new Date());
+                            synchroData.setErrorFromSAP(false);
 			                fileFromSAPStatus = "accepted";
 			                is1.close();
 			                System.out.println("is1 is closed? Answer: " + ftpClient.completePendingCommand());
@@ -189,20 +228,49 @@ public class FTPManager {
 		            	os2 = ftpClient.storeFileStream(pathToFileToSAP);
 		            	if(os2 != null) {
 		            		dtts = new DataTransferToSAP();
-			                User us = new User();
-			                us.setEnabled(true);
-			                us.setFirstName("Cheryl");
-			                us.setLastName("Brooks");
-			                us.setLastModifiedDate(new Date());
-			                us.setLogin("trdd");
-			                dtts.setUser(us);
+//			                User us = new User();
+//			                us.setEnabled(true);
+//			                us.setFirstName("Cheryl");
+//			                us.setLastName("Brooks");
+//			                us.setLastModifiedDate(new Date());
+//			                us.setLogin("trdd");
+//			                dtts.setUser(us);
 			                //read from db
+							System.out.print("/////////////////////////orderManager///////////////////////////");
+
+							LinkedList<Order> outOrders = orderManager.getUpdatedOrders(synchroData.getDateToSAP());
+//                            LinkedList<Order> outOrders = new LinkedList<Order>();
+							System.out.print(outOrders);
+							if (outOrders!=null){
+								System.out.print(outOrders.size());
+							}
+
+//                            Order s_order = new Order();
+//                            s_order.setOrderId(123);
+//                            s_order.setDebItemNum("123");
+//                            s_order.setApprovalBy("123");
+//							SAPstatus s_sapstatus= new SAPstatus();
+//							s_sapstatus.setId(1);
+//							s_sapstatus.setName("test status name");
+//							s_order.setSAPstatus(s_sapstatus);
+//                            outOrders.add(s_order);
+//                            Order s_order1 = new Order();
+//                            s_order1.setOrderId(890);
+//                            s_order1.setDebItemNum("890");
+//                            s_order1.setApprovalBy("890");
+//                            outOrders.add(s_order1);
+			                dtts.setOrders(outOrders);
+                            xstream.processAnnotations(DataTransferToSAP.class);
 			                xstream.toXML(dtts, os2);
 			                
 			                fileToSAPStatus = "delivered";
 			                os2.flush();
 			                os2.close();
 			                System.out.println("os2 is closed? Answer: " + ftpClient.completePendingCommand());
+                            //set date of the "toSAP" file write
+                            synchroData.setDateToSAP(new Date());
+                            synchroData.setErrorToSAP(false);
+
 		            	} else {
 		            		System.out.println("Can't open outputstream <os2> to FileToSAP!");
 		            		System.out.println(ftpClient.getReplyString());
@@ -211,8 +279,8 @@ public class FTPManager {
 		            	//Portal file has not been accepted by SAP yet, so new portal file must not be uploaded
 		            	System.out.println("Portal file has not been accepted by SAP yet, so new portal file must not be uploaded!");
 		            }
-		            
-		            
+		            //save date of the last synchronization to DB
+		            synchro_dateManager.save(synchroData);
 		            bytes = ("fileFromSAPStatus:\t" + fileFromSAPStatus + "\r\n"
 		            		+ "fileToSAPStatus:\t" + fileToSAPStatus + "\r\n").getBytes();
 		            os0 = ftpClient.storeFileStream("keepinsync.txt");
@@ -341,3 +409,5 @@ public class FTPManager {
 //	}
 	
 }
+
+

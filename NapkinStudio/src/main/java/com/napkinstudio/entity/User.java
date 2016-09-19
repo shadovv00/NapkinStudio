@@ -1,15 +1,14 @@
 package com.napkinstudio.entity;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 import javax.persistence.*;
 import java.util.List;
 
-import static javax.persistence.CacheStoreMode.REFRESH;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REMOVE;
 import java.util.Date;
-import com.napkinstudio.entity.Order;
-import com.napkinstudio.entity.Role;
-import com.napkinstudio.entity.Comments;;
+;
 
 /**
  * Created by User1 on 20.07.2016.
@@ -23,13 +22,15 @@ import com.napkinstudio.entity.Comments;;
         @NamedQuery(name = "User.findAllByFirstName", query = "SELECT u FROM  User  u  WHERE u.firstName =:firstName"),
         @NamedQuery(name = "User.findAllByLastName", query = "SELECT u FROM  User  u  WHERE u.lastName  =:lastName"),
 
-        @NamedQuery(name = "User.findByLogin", query = "SELECT u FROM  User  u  WHERE u.login   =:login"),
+        @NamedQuery(name = "User.findByLogin", query = "SELECT u FROM  User  u  WHERE u.login =:login"),
+        @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM  User  u  WHERE u.email =:email"),
 
 
         @NamedQuery(name = "User.deleteById", query = "DELETE FROM User u WHERE u.userId = ?1"),
         /*@NamedQuery(name = "User.deactivateById", query = "update User as u set u.enabled =0  where u.userId = ?1"),
         @NamedQuery(name = "User.activateById", query = "update User as u set u.enabled =1  where u.userId = ?1"),*/ })
 
+@XStreamAlias("user")
 @Table(name = "users")
 public class User extends AbstractEntity {
 
@@ -57,19 +58,25 @@ public class User extends AbstractEntity {
     public void setRoles(List<Role> roles) {
         this.roles = roles;    }
 
-    @ManyToMany(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
-    @JoinTable
-//  @JoinTable(name="ORDER_DETAIL",
-//  joinColumns=
-//  @JoinColumn(name="ORDER_ID", referencedColumnName="ORDER_ID"),
-//inverseJoinColumns=
-//  @JoinColumn(name="PROD_ID", referencedColumnName="PROD_ID")
-//)
-    private List<Order> orders;
-    public List<Order> getOrders() {
-        return orders;    }
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;    }
+//    @ManyToMany(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+//    @JoinTable
+////  @JoinTable(name="ORDER_DETAIL",
+////  joinColumns=
+////  @JoinColumn(name="ORDER_ID", referencedColumnName="ORDER_ID"),
+////inverseJoinColumns=
+////  @JoinColumn(name="PROD_ID", referencedColumnName="PROD_ID")
+////)
+//    private List<Order> orders;
+//    public List<Order> getOrders() {
+//        return orders;    }
+//    public void setOrders(List<Order> orders) {
+//        this.orders = orders;    }
+    @OneToMany(mappedBy="order", fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+    private List<UserOrder> myOrders;
+    public List<UserOrder> getMyOrders() {
+        return myOrders;    }
+    public void setMyOrders(List<UserOrder> myOrders) {
+        this.myOrders = myOrders;    }
 
     
     

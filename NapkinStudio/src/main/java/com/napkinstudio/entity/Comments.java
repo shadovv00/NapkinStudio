@@ -1,46 +1,46 @@
 package com.napkinstudio.entity;
 
-import com.napkinstudio.entity.Order;
-import com.napkinstudio.entity.User;
-import com.napkinstudio.entity.Role;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REMOVE;
-
-import java.io.Serializable;
-import java.lang.Integer;
-import java.lang.String;
-import java.util.Date;
-import javax.persistence.*;
 
 /**
  * Entity implementation class for Entity: Comments
  *
  */
+
+@NamedQueries(
+		@NamedQuery(name = "Comments.findCommentsbyOrderId", query = "select c from Comments c inner join c.order o where o.orderId =:id order by c.lastModifiedDate desc ")
+)
 @Entity
 
 @Table(name = "comments")
-public class Comments implements Serializable {
+public class Comments extends AbstractEntity {
 
 	   
 	@Id
+	@GeneratedValue
 	private Integer Id;
 	
-	@ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+	@ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE,REMOVE})
 	private User fromUser;
     
 	@ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
 	private User toUser;
     
-    @ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+    @ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE,REMOVE})
 	private Order order;
     
-    @OneToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+    @ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE,REMOVE})
 	private Role forRole;
     
     
 	private String commText;
 	private Date dateTime;
+	private Boolean deleted;
 	private static final long serialVersionUID = 1L;
 
 	public Comments() {
@@ -81,5 +81,12 @@ public class Comments implements Serializable {
 	public void setDateTime(Date dateTime) {
 		this.dateTime = dateTime;
 	}
-   
+
+	public Boolean getDeleted() {
+		return deleted;    }
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;    }
+
+
+
 }
