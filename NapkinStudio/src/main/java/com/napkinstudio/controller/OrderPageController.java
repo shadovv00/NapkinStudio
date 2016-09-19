@@ -567,7 +567,7 @@ public class OrderPageController {
             fileMeta.setFileName(multipartFile.getOriginalFilename());
             fileMeta.setFileSize(multipartFile.getSize()/1024+" Kb");
             fileMeta.setFileType(multipartFile.getContentType());
-            fileMeta.setBytes(multipartFile.getBytes());
+//            fileMeta.setBytes(multipartFile.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -619,7 +619,7 @@ public class OrderPageController {
 //        return "redirect:/orders/{orderId}";
 //    }
 
-private final static String ORDER_FOLDER_PATH = "d:\\saphana\\localFiles\\order_attachments";
+private final static String ORDER_FOLDER_PATH = UPLOAD_LOCATION;//"d:\\saphana\\localFiles\\order_attachments";
 	
 	@RequestMapping(value = "/orders/{orderId}/order_attachments", method = RequestMethod.GET)
 	public @ResponseBody ArrayList<FileInfo> getAllOrderAttachments(@PathVariable String orderId) {

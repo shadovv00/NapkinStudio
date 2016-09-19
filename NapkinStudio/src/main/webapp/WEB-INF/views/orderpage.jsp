@@ -16,6 +16,7 @@
     <link href="<c:url value='/static/css/app.css' />" rel="stylesheet"></link>
     <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.css"/>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
     <%--TODO: dowload files and set path--%>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -699,7 +700,7 @@
                                 </div>
                                 <div id="foruploadedfiles">
                                     <input id="fileupload" type="file" name="files[]"
-                                           data-url='/save-file/${theOrder.orderId}' multiple>
+                                           data-url='<c:url value='/save-file/${theOrder.orderId}' />' multiple>
                                     <div id="progress">
                                         <div class="bar" style="width: 0%; height: 18px; background: green;"></div>
                                     </div>
@@ -856,12 +857,13 @@
                         'console.log($(this));'+
                         'var thisElement=$(this);'+
                         '$.ajax({'+
-                        '    url: "/remove-file/${theOrder.orderId}/"+thisElement.parent().parent().attr("name"),'+
+                        '    url: "<c:url value='/remove-file/${theOrder.orderId}/"+thisElement.parent().parent().attr("name")' />,'+
                         'success: function(result){'+
-                        'console.log("dqwdqw");'+
+                        'console.log("dqwdqw"); napkin.buildFileInfoList();'+
                         'thisElement.parent().parent().remove();'+
                         '}});'+
                         '});</s'+'cript>').appendTo(document.body);
+                napkin.buildFileInfoList();
             },
             progressall: function (e, data) {
                 var progress = parseInt(data.loaded / data.total * 100, 10);
