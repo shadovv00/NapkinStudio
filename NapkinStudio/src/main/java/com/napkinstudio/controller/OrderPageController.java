@@ -1,22 +1,65 @@
 package com.napkinstudio.controller;
 
 
-import com.napkinstudio.entity.*;
-import com.napkinstudio.manager.*;
-import com.napkinstudio.util.MultiFileValidator;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
-import java.io.File;
-import java.io.IOException;
-import java.security.Principal;
-import java.util.*;
+import com.napkinstudio.entity.Comments;
+import com.napkinstudio.entity.FileMeta;
+import com.napkinstudio.entity.MultiFile;
+import com.napkinstudio.entity.MultiFileBucket;
+import com.napkinstudio.entity.Order;
+import com.napkinstudio.entity.Role;
+import com.napkinstudio.entity.SAPstatus;
+import com.napkinstudio.entity.StatusChange;
+import com.napkinstudio.entity.StatusSAPStatusRole;
+import com.napkinstudio.entity.User;
+import com.napkinstudio.manager.CommentsManager;
+import com.napkinstudio.manager.MailManager;
+import com.napkinstudio.manager.OrderManager;
+import com.napkinstudio.manager.ProgresBarFieldsManager;
+import com.napkinstudio.manager.RoleManager;
+import com.napkinstudio.manager.SAPstatusManager;
+import com.napkinstudio.manager.StatusChangeManager;
+import com.napkinstudio.manager.StatusManager;
+import com.napkinstudio.manager.StatusSAPStatusRoleManager;
+import com.napkinstudio.manager.UserManager;
+import com.napkinstudio.manager.UserOrderManager;
+import com.napkinstudio.simplemodel.FileInfo;
+import com.napkinstudio.util.MultiFileValidator;
 
 
 @Controller
@@ -576,6 +619,107 @@ public class OrderPageController {
 //        return "redirect:/orders/{orderId}";
 //    }
 
+private final static String ORDER_FOLDER_PATH = "d:\\saphana\\localFiles\\order_attachments";
+	
+	@RequestMapping(value = "/orders/{orderId}/order_attachments", method = RequestMethod.GET)
+	public @ResponseBody ArrayList<FileInfo> getAllOrderAttachments(@PathVariable String orderId) {
+		
+		ArrayList<FileInfo> fileInfoList = new ArrayList<>();
+		FileInfo fileInfo;
+		File file;
+		
+		System.out.println(ORDER_FOLDER_PATH + "\\" + orderId);
+		File folder = new File(ORDER_FOLDER_PATH + "\\" + orderId);
+		if(folder.exists()) {
+			File[] listOfFiles = folder.listFiles();
+			for (int i = 0; i < listOfFiles.length; i++) {
+				file = listOfFiles[i];
+				if (file.isFile()) {
+					System.out.println("File: " + file.getName());
+					fileInfo = new FileInfo();
+					fileInfo.setName(file.getName());
+					fileInfo.setSize(file.length());
+					fileInfo.setLastModified(new Date(file.lastModified()));
+					fileInfoList.add(fileInfo);
+				} else if (file.isDirectory()) {
+					System.out.println("Directory " + file.getName());
+				}
+			}
+		} else {
+			System.out.println("for this order any attachment is not available!");
+		}
+		
+		return fileInfoList;
+	}
 
+	private final static String EXTERNAL_FILE_PATH = "d:\\saphana\\localFiles\\order_attachments\\";
+
+	@RequestMapping(value = "/orders/{orderId}/order_attachments/{file:.*}", method = RequestMethod.GET)
+	public void downloadFile(HttpServletResponse response, @PathVariable String orderId, @PathVariable("file") String fileName) throws IOException {
+		System.out.println("!! DOWNLOAD !!");
+		File file = null;
+		System.out.println(EXTERNAL_FILE_PATH + orderId + "\\" + fileName + "]");
+		file = new File(EXTERNAL_FILE_PATH + orderId + "\\" + fileName);
+
+		if (!file.exists()) {
+			String errorMessage = "Sorry. The file you are looking for does not exist";
+			System.out.println(errorMessage);
+			OutputStream outputStream = response.getOutputStream();
+			outputStream.write(errorMessage.getBytes(Charset.forName("UTF-8")));
+			outputStream.close();
+			return;
+		}
+
+		String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+		if (mimeType == null) {
+			System.out.println("mimetype is not detectable, will take default");
+			mimeType = "application/octet-stream";
+		}
+
+		System.out.println("mimetype : " + mimeType);
+
+		response.setContentType(mimeType);
+
+		/*
+		 * "Content-Disposition : inline" will show viewable types [like
+		 * images/text/pdf/anything viewable by browser] right on browser while
+		 * others(zip e.g) will be directly downloaded [may provide save as
+		 * popup, based on your browser setting.]
+		 */
+		response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() + "\""));
+
+		/*
+		 * "Content-Disposition : attachment" will be directly download, may
+		 * provide save as popup, based on your browser setting
+		 */
+		// response.setHeader("Content-Disposition", String.format("attachment;
+		// filename=\"%s\"", file.getName()));
+
+		response.setContentLength((int) file.length());
+
+		InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+
+		// Copy bytes from source to destination(outputstream in this example),
+		// closes both streams.
+		FileCopyUtils.copy(inputStream, response.getOutputStream());
+	}
+	
+	@RequestMapping(value = "/orders/{orderId}/order_attachments/remove/{fileName:.*}", method = RequestMethod.DELETE)
+	public @ResponseBody ResponseEntity<String> removeOrderAttachments(@PathVariable String orderId, @PathVariable String fileName) {
+		
+		String path = ORDER_FOLDER_PATH + "\\" + orderId + "\\" + fileName;
+		System.out.println(path);
+		File file = new File(path);
+		if(file.exists()) {
+			if(file.delete()) {
+				return new ResponseEntity<String>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<String>(HttpStatus.CONFLICT);
+			}
+		} else {
+			System.out.println("file not found!");
+			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+		}
+	}
 
 }

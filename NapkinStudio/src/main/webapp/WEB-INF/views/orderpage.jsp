@@ -10,12 +10,13 @@
 </script>
 <html>
 <head>
-
     <title>NapkinStudio</title>
+    
     <link href="<c:url value='/static/css/bootstrap.css' />" rel="stylesheet"></link>
     <link href="<c:url value='/static/css/app.css' />" rel="stylesheet"></link>
-    <link rel="stylesheet" type="text/css"
-          href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.css"/>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    
     <%--TODO: dowload files and set path--%>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -33,7 +34,6 @@
     <%--<span style="margin-left: 100px"> ${theOrder.orderId} order id </span>--%>
     <%--&lt;%&ndash;<p display="inline">You are logged in as ${user.roles[0].name}</p>&ndash;%&gt;--%>
     <%--</nav>%--<a href="<c:url value="/logout"/>"> Logout </a>--%>
-
 </head>
 <body style="overflow-y: auto">
 
@@ -596,13 +596,11 @@
                     </li>
                 </ul>
             </div>
-            <div width="100%" style="margin-bottom: 10px">
-                <b>Opmerkingen</b>
-                <ul>
-                    <li>some files</li>
-                </ul>
-            </div>
-            <input type="checkbox" name="check0" value="a2">Drukproef eerst door PVI laten controleren.<Br>
+            <div width="100%" style="margin-bottom: 10px" class="order-attachment" orderId="${theOrder.orderId}"></div>
+            <label>
+				<input type="checkbox" name="check0" value="a2">Drukproef eerst door PVI laten controleren.
+			</label>
+<!--             <input type="checkbox" name="check0" value="a2">Drukproef eerst door PVI laten controleren.<Br> -->
             <div display="inline" style="margin-bottom: 10px">
 
                 <%--Appove without comments and files adding--%>
@@ -827,6 +825,8 @@
         </td>
     </tr>
 </table>
+
+	<script src="<c:url value='/static/js/app.js' />"></script>
 </body>
 </html>
 <script>
@@ -924,6 +924,7 @@
 
         if (statusId > 6 && status !== "Rejected")
             $(".add-comment-btn").hide();
+        napkin.buildFileInfoList();
     });
-
+	
 </script>
