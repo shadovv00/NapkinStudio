@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -64,10 +66,14 @@ import com.napkinstudio.util.MultiFileValidator;
 
 @Controller
 public class OrderPageController {
-
-    private int ordId;
-
-    private final static String UPLOAD_LOCATION = "C:/mytemp/";
+	
+    private final static String USER_HOME = System.getProperty("user.home");
+    
+    private final static String FILE_SEPARATOR = System.getProperty("file.separator");
+    
+    private final static String UPLOAD_DIRECTORY = "napkinStorage";
+    
+    private final static String ORDERS_DIRECTORY = "orders";
 
     @Autowired
     private UserManager userManager;
@@ -144,7 +150,6 @@ public class OrderPageController {
 
     @RequestMapping(value = "/orders/{orderId}")
     public String goToOrders(Model model, @PathVariable("orderId") int orderId, @ModelAttribute("user") User user) {
-        ordId = orderId;
         Order theOrder = orderManager.findById(orderId);
         Integer SSId = theOrder.getSAPstatus().getId();
         Integer roleId = user.getRoles().get(0).getId();
@@ -558,14 +563,13 @@ public class OrderPageController {
 //        if (!directory.exists()) {
 //            // ...
 //        }
-//        new File("C:/folder1")
+        
         try {
-//            FileCopyUtils.copy(multipartFile.getBytes(), new File(UPLOAD_LOCATION + fileName));
-            File file = new File(UPLOAD_LOCATION +orderId+"/"+ multipartFile.getOriginalFilename());
+            File file = new File(USER_HOME + FILE_SEPARATOR + UPLOAD_DIRECTORY + FILE_SEPARATOR + ORDERS_DIRECTORY + FILE_SEPARATOR + orderId + FILE_SEPARATOR + multipartFile.getOriginalFilename());
             file.getParentFile().mkdirs();
             multipartFile.transferTo(file);
             fileMeta.setFileName(multipartFile.getOriginalFilename());
-            fileMeta.setFileSize(multipartFile.getSize()/1024+" Kb");
+            fileMeta.setFileSize(multipartFile.getSize() /1024 + " Kb");
             fileMeta.setFileType(multipartFile.getContentType());
 //            fileMeta.setBytes(multipartFile.getBytes());
         } catch (IOException e) {
@@ -578,7 +582,7 @@ public class OrderPageController {
         System.out.println("/remove-file");
         System.out.println(fileName);
         try{
-            File file = new File(UPLOAD_LOCATION +orderId+"/"+ fileName);
+            File file = new File(USER_HOME + FILE_SEPARATOR + UPLOAD_DIRECTORY + FILE_SEPARATOR + ORDERS_DIRECTORY + FILE_SEPARATOR + orderId + FILE_SEPARATOR + fileName);
             if(file.delete()){System.out.println(file.getName() + " is deleted!");}
 //            else{System.out.println("Delete operation is failed.");}
         }catch(Exception e){
@@ -619,7 +623,6 @@ public class OrderPageController {
 //        return "redirect:/orders/{orderId}";
 //    }
 
-private final static String ORDER_FOLDER_PATH = UPLOAD_LOCATION;//"d:\\saphana\\localFiles\\order_attachments";
 	
 	@RequestMapping(value = "/orders/{orderId}/order_attachments", method = RequestMethod.GET)
 	public @ResponseBody ArrayList<FileInfo> getAllOrderAttachments(@PathVariable String orderId) {
@@ -628,8 +631,8 @@ private final static String ORDER_FOLDER_PATH = UPLOAD_LOCATION;//"d:\\saphana\\
 		FileInfo fileInfo;
 		File file;
 		
-		System.out.println(ORDER_FOLDER_PATH + "\\" + orderId);
-		File folder = new File(ORDER_FOLDER_PATH + "\\" + orderId);
+		System.out.println(USER_HOME + FILE_SEPARATOR + UPLOAD_DIRECTORY + FILE_SEPARATOR + ORDERS_DIRECTORY + FILE_SEPARATOR + orderId);
+		File folder = new File(USER_HOME + FILE_SEPARATOR + UPLOAD_DIRECTORY + FILE_SEPARATOR + ORDERS_DIRECTORY + FILE_SEPARATOR + orderId);
 		if(folder.exists()) {
 			File[] listOfFiles = folder.listFiles();
 			for (int i = 0; i < listOfFiles.length; i++) {
@@ -652,14 +655,13 @@ private final static String ORDER_FOLDER_PATH = UPLOAD_LOCATION;//"d:\\saphana\\
 		return fileInfoList;
 	}
 
-	private final static String EXTERNAL_FILE_PATH = "d:\\saphana\\localFiles\\order_attachments\\";
 
 	@RequestMapping(value = "/orders/{orderId}/order_attachments/{file:.*}", method = RequestMethod.GET)
 	public void downloadFile(HttpServletResponse response, @PathVariable String orderId, @PathVariable("file") String fileName) throws IOException {
 		System.out.println("!! DOWNLOAD !!");
 		File file = null;
-		System.out.println(EXTERNAL_FILE_PATH + orderId + "\\" + fileName + "]");
-		file = new File(EXTERNAL_FILE_PATH + orderId + "\\" + fileName);
+		System.out.println(USER_HOME + FILE_SEPARATOR + UPLOAD_DIRECTORY + FILE_SEPARATOR + ORDERS_DIRECTORY + FILE_SEPARATOR + orderId + FILE_SEPARATOR + fileName + "]");
+		file = new File(USER_HOME + FILE_SEPARATOR + UPLOAD_DIRECTORY + FILE_SEPARATOR + ORDERS_DIRECTORY + FILE_SEPARATOR + orderId + FILE_SEPARATOR + fileName);
 
 		if (!file.exists()) {
 			String errorMessage = "Sorry. The file you are looking for does not exist";
@@ -707,7 +709,7 @@ private final static String ORDER_FOLDER_PATH = UPLOAD_LOCATION;//"d:\\saphana\\
 	@RequestMapping(value = "/orders/{orderId}/order_attachments/remove/{fileName:.*}", method = RequestMethod.DELETE)
 	public @ResponseBody ResponseEntity<String> removeOrderAttachments(@PathVariable String orderId, @PathVariable String fileName) {
 		
-		String path = ORDER_FOLDER_PATH + "\\" + orderId + "\\" + fileName;
+		String path = USER_HOME + FILE_SEPARATOR + UPLOAD_DIRECTORY + FILE_SEPARATOR + ORDERS_DIRECTORY + FILE_SEPARATOR + orderId + FILE_SEPARATOR + fileName;
 		System.out.println(path);
 		File file = new File(path);
 		if(file.exists()) {
