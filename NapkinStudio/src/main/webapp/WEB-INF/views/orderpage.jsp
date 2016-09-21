@@ -207,7 +207,7 @@
                                         <%--</div>--%>
                                         <%--</div>--%>
                                         <%--</c:if>--%>
-                                        <form:form commandName="comment" method="post" action="/addComment"
+                                        <form:form commandName="comment" method="post" action="/NapkinStudio/addComment"
                                                    cssClass="form-horizontal addCommentForm">
                                             <div class="form-group">
                                                 <div class="col-sm-5">
@@ -281,7 +281,7 @@
                                         <%--</div>--%>
                                         <%--</div>--%>
                                         <%--</c:if>--%>
-                                        <form:form commandName="comment" method="post" action="/addComment"
+                                        <form:form commandName="comment" method="post" action="/NapkinStudio/addComment"
                                                    cssClass="form-horizontal addCommentForm">
                                             <div class="form-group">
                                                 <div class="col-sm-5">
@@ -351,7 +351,7 @@
                                         <%--</div>--%>
                                         <%--</div>--%>
                                         <%--</c:if>--%>
-                                        <form:form commandName="comment" method="post" action="/addComment"
+                                        <form:form commandName="comment" method="post" action="/NapkinStudio/addComment"
                                                    cssClass="form-horizontal addCommentForm">
                                             <div class="form-group">
                                                 <div class="col-sm-5">
@@ -420,7 +420,7 @@
                                         <%--</div>--%>
                                         <%--</div>--%>
                                         <%--</c:if>--%>
-                                        <form:form commandName="comment" method="post" action="/addComment"
+                                        <form:form commandName="comment" method="post" action="/NapkinStudio/addComment"
                                                    cssClass="form-horizontal addCommentForm">
                                             <div class="form-group">
                                                 <div class="col-sm-5">
@@ -489,7 +489,7 @@
                                         <%--</div>--%>
                                         <%--</div>--%>
                                         <%--</c:if>--%>
-                                        <form:form commandName="comment" method="post" action="/addComment"
+                                        <form:form commandName="comment" method="post" action="/NapkinStudio/addComment"
                                                    cssClass="form-horizontal addCommentForm">
                                             <div class="form-group">
                                                 <div class="col-sm-5">
@@ -558,7 +558,7 @@
                                         <%--</div>--%>
                                         <%--</div>--%>
                                         <%--</c:if>--%>
-                                        <form:form commandName="comment" method="post" action="/addComment"
+                                        <form:form commandName="comment" method="post" action="/NapkinStudio/addComment"
                                                    cssClass="form-horizontal addCommentForm">
                                             <div class="form-group">
                                                 <div class="col-sm-5">
@@ -614,9 +614,10 @@
                             (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==1)||
                             (theOrder.SAPstatus.id==4&&user.roles[0].id==5&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==2)||
                             (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.approvalBy=='Customer'&&theOrder.processId==3)||
-                            (theOrder.SAPstatus.id==5&&user.roles[0].id==2&&theOrder.processId==4)
+                            (theOrder.SAPstatus.id==5&&user.roles[0].id==2&&theOrder.processId==4)||
+                            (theOrder.SAPstatus.id==7&&user.roles[0].id==2)
                  }">
-                <a href="<c:url value='/changestatus/${theOrder.orderId}/yes' />"
+                <a href="<c:url value='/NapkinStudio/changestatus/${theOrder.orderId}/yes' />"
                    class="btn btn-success custom-width">Approve</a>
                 </c:if>
                 <%--Discard without comments and files adding--%>
@@ -624,7 +625,7 @@
                             (theOrder.SAPstatus.id==3&&user.roles[0].id==2&&orderPviCheck)||
                             (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.approvalBy=='Customer'&&theOrder.processId==3)
                  }">
-                <a href="<c:url value='/changestatus/${theOrder.orderId}/no' />"
+                <a href="<c:url value='/NapkinStudio/changestatus/${theOrder.orderId}/no' />"
                    class="btn btn-danger custom-width">Discard</a>
                 </c:if>
                 <%--Appove with comments and files adding--%>
@@ -669,7 +670,7 @@
 
                                         <%--</div>--%>
                                     <form:form commandName="comment" method="post"
-                                               action="/changestatus/${theOrder.orderId}/yes"
+                                               action="/NapkinStudio/changestatus/${theOrder.orderId}/yes"
                                                cssClass="form-horizontal">
                                         <div class="form-group">
                                             <div class="col-sm-5">
@@ -765,7 +766,7 @@
                                                 <%--</form:form>--%>
 
                                             <form:form commandName="comment" method="post"
-                                                       action="/changestatus/${theOrder.orderId}/no"
+                                                       action="/NapkinStudio/changestatus/${theOrder.orderId}/no"
                                                        cssClass="form-horizontal">
                                                 <div class="form-group">
                                                     <div class="col-sm-5">

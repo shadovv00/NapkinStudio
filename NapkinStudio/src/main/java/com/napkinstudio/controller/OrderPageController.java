@@ -466,6 +466,18 @@ public class OrderPageController {
                                                     statusChange.setSAPstatus(newSAPStatus);
                                                     statusChangeManager.save(statusChange);
                                                 }
+                                            }else
+
+//__12
+                                            if (theOrder.getSapStatus().getId() == 7 && roles.get(0).getId() == 2) {
+                                                if (answer.equals("yes")) {
+                                                    newSAPStatus = sapStatusManager.findById(8);
+                                                    theOrder.setSAPstatus(newSAPStatus);
+                                                    orderManager.save(theOrder);
+                                                    statusChange.setOrder(theOrder);
+                                                    statusChange.setSAPstatus(newSAPStatus);
+                                                    statusChangeManager.save(statusChange);
+                                                }
                                             }
         return comment;
 
@@ -595,6 +607,7 @@ public class OrderPageController {
     public void approveOrders(Order theOrder, StatusChange statusChange) {
         SAPstatus newSAPStatus = sapStatusManager.findById(5);
         theOrder.setSAPstatus(newSAPStatus);
+        theOrder.setProcessId((byte) 4);
         orderManager.save(theOrder);
         statusChange.setOrder(theOrder);
         statusChange.setSAPstatus(newSAPStatus);
