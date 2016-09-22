@@ -503,19 +503,19 @@ public class OrderPageController {
         User userTo = comment.getToUser();
         List<Role> UserToRoles = roleManager.findByUserId(userTo.getUserId());
         userTo.setRoles(UserToRoles);
-        try {
-            Integer userToRoleId = UserToRoles.get(0).getId();
-            Integer SSId = comment.getOrder().getSAPstatus().getId();
-
-            StatusSAPStatusRole statusSAPStatusRole = statusSAPStatusRoleManager.findStatusByRoleIdAndSAPStatusId(userToRoleId, SSId);
-
-            List<StatusSAPStatusRole> statusSAPStatusRolesList = new ArrayList<>();
-            statusSAPStatusRolesList.add(statusSAPStatusRole);
-
-            theOrder.getSAPstatus().setStatusSAPStatuseRoles(statusSAPStatusRolesList);
-        } catch (NullPointerException e) {
-            System.out.println(e.getStackTrace());
-        }
+//        try {
+//            Integer userToRoleId = UserToRoles.get(0).getId();
+//            Integer SSId = comment.getOrder().getSAPstatus().getId();
+//
+//            StatusSAPStatusRole statusSAPStatusRole = statusSAPStatusRoleManager.findStatusByRoleIdAndSAPStatusId(userToRoleId, SSId);
+//
+//            List<StatusSAPStatusRole> statusSAPStatusRolesList = new ArrayList<>();
+//            statusSAPStatusRolesList.add(statusSAPStatusRole);
+//
+//            theOrder.getSAPstatus().setStatusSAPStatuseRoles(statusSAPStatusRolesList);
+//        } catch (NullPointerException e) {
+//            System.out.println(e.getStackTrace());
+//        }
 
 
         comment.setToUser(userTo);

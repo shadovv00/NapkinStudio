@@ -648,27 +648,6 @@
                             <div class="modal-body">
                                 <p>Please add some comment and documentation</p>
                                 <div class="form-container">
-                                        <%--<form:form action='/changestatus/${theOrder.orderId}/yes' method="POST"--%>
-                                        <%--modelAttribute="multiFileBucket" enctype="multipart/form-data"--%>
-                                        <%--class="form-horizontal">--%>
-                                        <%--<c:forEach var="v" varStatus="vs" items="${multiFileBucket.files}">--%>
-                                        <%--<form:input type="file" path="files[${vs.index}].file"--%>
-                                        <%--id="files[${vs.index}].file"--%>
-                                        <%--class="form-control input-sm"/>--%>
-                                        <%--<div class="has-error">--%>
-                                        <%--<form:errors path="files[${vs.index}].file" class="help-inline"/>--%>
-                                        <%--</div>--%>
-                                        <%--</c:forEach>--%>
-                                        <%--<br/>--%>
-
-                                        <%--<div class="row">--%>
-                                        <%--<div class="form-actions floatRight">--%>
-                                        <%--<input type="submit" value="Approve" class="btn btn-success btn-sm">`--%>
-                                        <%--</div>--%>
-                                        <%--</div>--%>
-                                        <%--</form:form>--%>
-
-                                        <%--</div>--%>
                                     <form:form commandName="comment" method="post"
                                                action="/NapkinStudio/changestatus/${theOrder.orderId}/yes"
                                                cssClass="form-horizontal">
@@ -700,7 +679,7 @@
                                     </form:form>
                                 </div>
                                 <div id="foruploadedfiles">
-                                    <input id="fileupload" type="file" name="files[]"
+                                    <input id="fileupload" type="file" name="files[]" orderId="${theOrder.orderId}"
                                            data-url='<c:url value='/save-file/${theOrder.orderId}' />' multiple>
                                     <div id="progress">
                                         <div class="bar" style="width: 0%; height: 18px; background: green;"></div>
@@ -744,28 +723,7 @@
                                     <div class="modal-body">
                                         <p>Please add some comment and documentation</p>
                                         <div class="form-container">
-                                                <%--<form:form action='/changestatus/${theOrder.orderId}/no' method="POST"--%>
-                                                <%--modelAttribute="multiFileBucket" enctype="multipart/form-data"--%>
-                                                <%--class="form-horizontal">--%>
-                                                <%--<c:forEach var="v" varStatus="vs" items="${multiFileBucket.files}">--%>
-                                                <%--<form:input type="file" path="files[${vs.index}].file"--%>
-                                                <%--id="files[${vs.index}].file"--%>
-                                                <%--class="form-control input-sm"/>--%>
-                                                <%--<div class="has-error">--%>
-                                                <%--<form:errors path="files[${vs.index}].file"--%>
-                                                <%--class="help-inline"/>--%>
-                                                <%--</div>--%>
-                                                <%--</c:forEach>--%>
-                                                <%--<br/>--%>
-                                                <%--<div class="row">--%>
-                                                <%--<div class="form-actions floatRight">--%>
-                                                <%--<input type="submit" value="Discard"--%>
-                                                <%--class="btn btn-danger btn-sm">--%>
-                                                <%--</div>--%>
-                                                <%--</div>--%>
-                                                <%--</form:form>--%>
-
-                                            <form:form commandName="comment" method="post"
+                                             <form:form commandName="comment" method="post"
                                                        action="/NapkinStudio/changestatus/${theOrder.orderId}/no"
                                                        cssClass="form-horizontal">
                                                 <div class="form-group">
@@ -785,13 +743,6 @@
                                                                 value="${theOrder.printName}"/>
                                                             <%--<input name="deleted" type="hidden" value="true"/>--%>
                                                     </div>
-                                                    <div id="foruploadedfiles">
-                                                        <input id="fileupload" type="file" name="files[]"
-                                                               data-url='/save-file/${theOrder.orderId}' multiple>
-                                                        <div id="progress">
-                                                            <div class="bar" style="width: 0%; height: 18px; background: green;"></div>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                                 <%--<div class="modal-footer col-sm-5">--%>
                                                 <div class="col-sm-5">
@@ -802,16 +753,23 @@
                                                 <%--</div>--%>
                                             </form:form>
                                         </div>
+                                                    <div id="foruploadedfiles">
+                                                        <input id="fileupload" type="file" name="files[]" orderId="${theOrder.orderId}"
+                                           					   data-url='<c:url value='/save-file/${theOrder.orderId}' />' multiple>
+                                                        <div id="progress">
+                                                            <div class="bar" style="width: 0%; height: 18px; background: green;"></div>
+                                                        </div>
+                                                    </div>
 
                                     </div>
-                                        <%--<div class="modal-footer">--%>
+<!--                                         <div class="modal-footer"> -->
                                         <%--&lt;%&ndash;<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>&ndash;%&gt;--%>
                                         <%--&lt;%&ndash;<a href="<c:url value='/changestatus/${theOrder.orderId}/no' />"&ndash;%&gt;--%>
                                         <%--&lt;%&ndash;class="btn btn-danger custom-width">Discard</a>&ndash;%&gt;--%>
-                                        <%--<div class="form-actions floatRight">--%>
-                                        <%--<input type="submit" value="Upload" class="btn btn-danger btn-sm">--%>
-                                        <%--</div>--%>
-                                        <%--</div>--%>
+<!--                                         <div class="form-actions floatRight"> -->
+<!--                                         <input value="Submit" class="btn btn-danger btn-sm"> -->
+<!--                                         </div> -->
+<!--                                         </div> -->
                                 </div>
 
                             </div>
@@ -840,40 +798,41 @@
     console.log(role + " " + status + " " + statusId);
     $(document).ready(function () {
 
-        $('#fileupload').fileupload({
-            dataType: 'json',
-            done: function (e, data) {
-//                $('<p/>').text(data.result.fileName+"   "+data.result.fileSize).insertAfter('#progress');
-                $('<div class="row" name="'+data.result.fileName+'" style="display: inline">'+data.result.fileName+' '+data.result.fileSize+
-                        ' <div class="floatRight">' +
-                        '<input  value="Delete" type="button" class=" del-file-but btn btn-danger btn-sm" >' +
-//                        '</div></div>').insertAfter('#progress');
-                        <%--' <a href="/remove-file/${theOrder.orderId}/'+data.result.fileName+'" class=" del-file-but  btn btn-danger custom-width">Discard</a> ' +--%>
-                        '</div></div>').appendTo('#foruploadedfiles');
-                //                $.each(data.files, function (index, file) {
-//                    $('<p/>').text(file.name+"   "+file.size+"Kb  "+file.lastModifiedDate).appendTo(document.body);
-//                });
-                $('<script>$(".del-file-but").click(function(){'+
-                        'console.log("dqwdqw");'+
-                        'console.log($(this));'+
-                        'var thisElement=$(this);'+
-                        '$.ajax({'+
-                        '    url: "<c:url value='/remove-file/${theOrder.orderId}/"+thisElement.parent().parent().attr("name")' />,'+
-                        'success: function(result){'+
-                        'console.log("dqwdqw"); napkin.buildFileInfoList();'+
-                        'thisElement.parent().parent().remove();'+
-                        '}});'+
-                        '});</s'+'cript>').appendTo(document.body);
-                napkin.buildFileInfoList();
-            },
-            progressall: function (e, data) {
-                var progress = parseInt(data.loaded / data.total * 100, 10);
-                $('#progress .bar').css(
-                        'width',
-                        progress + '%'
-                );
-            }
-        });
+//         $('#fileupload').fileupload({
+//             dataType: 'json',
+//             done: function (e, data) {
+// //                $('<p/>').text(data.result.fileName+"   "+data.result.fileSize).insertAfter('#progress');
+//                 $('<div class="row" name="'+data.result.fileName+'" style="display: inline">'+data.result.fileName+' '+data.result.fileSize+
+//                         ' <div class="floatRight">' +
+//                         '<input  value="Delete" type="button" class=" del-file-but btn btn-danger btn-sm" >' +
+// //                        '</div></div>').insertAfter('#progress');
+<%--                         ' <a href="/remove-file/${theOrder.orderId}/'+data.result.fileName+'" class=" del-file-but  btn btn-danger custom-width">Discard</a> ' + --%>
+//                         '</div></div>').appendTo('#foruploadedfiles');
+//                 //                $.each(data.files, function (index, file) {
+// //                    $('<p/>').text(file.name+"   "+file.size+"Kb  "+file.lastModifiedDate).appendTo(document.body);
+// //                });
+//                 var orderId=$('#fileupload').attr("orderId");
+//                 $('<script>$(".del-file-but").click(function(){'+
+//                         'console.log("dqwdqw");'+
+//                         'console.log($(this));'+
+//                         'var thisElement=$(this);'+
+//                         '$.ajax({'+
+//                         '    url: 'remove-file/${theOrder.orderId}/"+thisElement.parent().parent().attr("name")','+
+//                         'success: function(result){'+
+//                         'console.log("dqwdqw"); napkin.buildFileInfoList();'+
+//                         'thisElement.parent().parent().remove();'+
+//                         '}});'+
+//                         '});</s'+'cript>').appendTo(document.body);
+//                 napkin.buildFileInfoList();
+//             },
+//             progressall: function (e, data) {
+//                 var progress = parseInt(data.loaded / data.total * 100, 10);
+//                 $('#progress .bar').css(
+//                         'width',
+//                         progress + '%'
+//                 );
+//             }
+//         });
 
 
         $(".addCommentForm").hide();
@@ -927,6 +886,7 @@
 
         if (statusId > 6 && status !== "Rejected")
             $(".add-comment-btn").hide();
+        napkin.uploadFile();
         napkin.buildFileInfoList();
     });
 	

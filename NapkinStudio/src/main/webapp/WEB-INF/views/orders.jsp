@@ -28,6 +28,14 @@
     </style>
 </head>
 <body>
+               <c:if test="${
+                            (theOrder.SAPstatus.id==7&&user.roles[0].id==2)
+                 }">
+                    ChanwfwefgeStatus
+                </c:if>
+               <c:if test="true">
+                    ChangeStatus
+                </c:if>
 
 <a href="<c:url value="/logout"/>"> Logout </a>
 <p>You are logged in as ${user.roles[0].name}</p>
@@ -108,16 +116,16 @@
 <%--" class="btn btn-primary  custom-width">GO</a>--%>
                     <%--</td>--%>
                     <c:if test="${(theOrder.SAPstatus.id==5&&user.roles[0].id==4&&theOrder.processId==5)}">
-                        <a href="<spring:url value="/orders/{orderId}/yes">
+                        <td><a href="<spring:url value="/orders/{orderId}/yes">
                                     <spring:param name="orderId" value ="${userOrder.order.orderId}"/>
                                  </spring:url>
-                        " class="btn btn-success  custom-width">Stamps ordered</a>
+                        " class="btn btn-success  custom-width">Stamps ordered</a></td>
                     </c:if>
                     <c:if test="${(theOrder.SAPstatus.id==7&&user.roles[0].id==2)}">
-                        <a href="<spring:url value="/orders/{orderId}/yes">
+                        <td><a href="<spring:url value="/orders/{orderId}/yes">
                                     <spring:param name="orderId" value ="${userOrder.order.orderId}"/>
                                  </spring:url>
-                        " class="btn btn-success  custom-width">Stamps received</a>
+                        " class="btn btn-success  custom-width">Stamps received</a></td>
                     </c:if>
                 </tr>
             </c:forEach>

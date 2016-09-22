@@ -130,5 +130,68 @@ var napkin = {};
 		}
 		
 	};
+	
+	napkin.uploadFile = function(){
+        var orderId=$('#fileupload').attr("orderId");
+       $('#fileupload').fileupload({
+            dataType: 'json',
+            done: function (e, data) {
+            	var jDiv1 = $('<div class="row"  style="display: inline">'+data.result.fileName+' '+data.result.fileSize+'</div>');
+            	var jInp = $('<input  value="Delete" name="'+data.result.fileName+'"  type="button" class=" del-file-but btn btn-danger btn-sm">');
+            	jDiv1.append(
+                        ' <div class="floatRight">' +
+                        '<input  value="Delete" name="'+data.result.fileName+'"  type="button" class=" del-file-but btn btn-danger btn-sm">' +
+                        '</div>');
+            	$('#foruploadedfiles').append(jDiv1);
+            	
+            	jDiv1.find(".del-file-but").on("click", deleteFile);
+               napkin.buildFileInfoList();
+            },
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#progress .bar').css(
+                        'width',
+                        progress + '%'
+                );
+            }
+        });
+        
+        function deleteFile(){
+            console.log("dqwdqw");
+            console.log($(this));
+            var thisElement=$(this);
+            $.ajax({
+                url: '../remove-file/'+orderId+'/'+thisElement.attr("name"),
+            success: function(result){
+            console.log("dqwdqw"); 
+            napkin.buildFileInfoList();
+            thisElement.parent().parent().remove();
+            }});
+       	
+        };
+	};
+	
+	
+	napkin.comFilApproveSubmit = function(){
+		
+	}
+	
+	
+	
+	
 })(napkin);
 
+
+//function deleteFile(){
+//    console.log("dqwdqw");
+//    console.log($(this));
+//    var thisElement=$(this);
+//    $.ajax({
+//        url: '../remove-file/'+$('#fileupload').attr("orderId")+'/'+thisElement.attr("name"),
+//    success: function(result){
+//    console.log("dqwdqw"); 
+//    napkin.buildFileInfoList();
+//    thisElement.parent().parent().remove();
+//    }});
+	
+//};
