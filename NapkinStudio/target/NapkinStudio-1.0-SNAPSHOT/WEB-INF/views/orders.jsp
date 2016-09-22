@@ -28,9 +28,17 @@
     </style>
 </head>
 <body>
+               <c:if test="${
+                            (theOrder.SAPstatus.id==7&&user.roles[0].id==2)
+                 }">
+                    ChanwfwefgeStatus
+                </c:if>
+               <c:if test="true">
+                    ChangeStatus
+                </c:if>
 
 <a href="<c:url value="/logout"/>"> Logout </a>
-<p>You are logged in as ${user.roles[0].name}</p>
+<p>You are logged in as ${user.role.name}</p>
 <div>
     <section>
         <a id="all" class="ordersFilter" style="margin-left: 15px">All orders (${fn:length(userOrders)})</a>
@@ -54,11 +62,17 @@
                 <th>Item number</th>
                 <th>Status</th>
                 <th>Print name</th>
-                <th>Delivery date
-                </td>
+                <th>Delivery date                </td>
                 <th>Last modification</th>
-                <th>Go to orers</th>
-                <th>Send email</th>
+                <th>Go to orders</th>
+<!--                 <th>Send email</th> -->
+               <c:if test="${
+                            (theOrder.SAPstatus.id==7&&user.roles[0].id==2)||
+                            (theOrder.SAPstatus.id==5&&user.roles[0].id==4&&theOrder.processId==5)
+                 }">
+                    <th>ChangeStatus</th>
+                </c:if>
+
             </tr>
             <c:forEach items="${userOrders}" var="userOrder"  varStatus="loop">
                 <tr>
@@ -93,14 +107,26 @@
 " class="btn btn-primary  custom-width">GO</a>
                     </td>
 
-                    <td>
-                            <%--<c:set var="orderId" value=""></c:set>--%>
-                 <a href="<spring:url value="orders/sendEmail/{index}">
-                    <spring:param name="index" value ="${loop.index}"/>
-                </spring:url>
+                    <%--<td>--%>
+                            <%--&lt;%&ndash;<c:set var="orderId" value=""></c:set>&ndash;%&gt;--%>
+                 <%--<a href="<spring:url value="orders/sendEmail/{index}">--%>
+                    <%--<spring:param name="index" value ="${loop.index}"/>--%>
+                <%--</spring:url>--%>
 
-" class="btn btn-primary  custom-width">GO</a>
-                    </td>
+<%--" class="btn btn-primary  custom-width">GO</a>--%>
+                    <%--</td>--%>
+                    <c:if test="${(theOrder.SAPstatus.id==5&&user.roles[0].id==4&&theOrder.processId==5)}">
+                        <td><a href="<spring:url value="/orders/{orderId}/yes">
+                                    <spring:param name="orderId" value ="${userOrder.order.orderId}"/>
+                                 </spring:url>
+                        " class="btn btn-success  custom-width">Stamps ordered</a></td>
+                    </c:if>
+                    <c:if test="${(theOrder.SAPstatus.id==7&&user.roles[0].id==2)}">
+                        <td><a href="<spring:url value="/orders/{orderId}/yes">
+                                    <spring:param name="orderId" value ="${userOrder.order.orderId}"/>
+                                 </spring:url>
+                        " class="btn btn-success  custom-width">Stamps received</a></td>
+                    </c:if>
                 </tr>
             </c:forEach>
 

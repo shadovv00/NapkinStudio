@@ -23,7 +23,7 @@ import java.util.Date;
         @NamedQuery(name = "User.findAllByLastName", query = "SELECT u FROM  User  u  WHERE u.lastName  =:lastName"),
 
         @NamedQuery(name = "User.findByLogin", query = "SELECT u FROM  User  u  WHERE u.login =:login"),
-        @NamedQuery(name = "User.findByEmail", query = "SELECT user FROM  User  user  WHERE user.email =:email"),
+        @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM  User  u  WHERE u.email =:email"),
 
 
         @NamedQuery(name = "User.deleteById", query = "DELETE FROM User u WHERE u.userId = ?1"),

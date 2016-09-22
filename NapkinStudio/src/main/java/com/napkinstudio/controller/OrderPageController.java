@@ -3,28 +3,38 @@ package com.napkinstudio.controller;
 
 import com.napkinstudio.entity.*;
 import com.napkinstudio.manager.*;
+import com.napkinstudio.simplemodel.FileInfo;
 import com.napkinstudio.util.MultiFileValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.security.Principal;
 import java.util.*;
 
 
 @Controller
 public class OrderPageController {
-
-    private int ordId;
-
-    private final static String UPLOAD_LOCATION = "C:/mytemp/";
+	
+    private final static String USER_HOME = System.getProperty("user.home");
+    
+    private final static String FILE_SEPARATOR = System.getProperty("file.separator");
+    
+    private final static String UPLOAD_DIRECTORY = "napkinStorage";
+    
+    private final static String ORDERS_DIRECTORY = "orders";
 
     @Autowired
     private UserManager userManager;
@@ -101,7 +111,6 @@ public class OrderPageController {
 
     @RequestMapping(value = "/orders/{orderId}")
     public String goToOrders(Model model, @PathVariable("orderId") int orderId, @ModelAttribute("user") User user) {
-        ordId = orderId;
         Order theOrder = orderManager.findById(orderId);
         Integer SSId = theOrder.getSAPstatus().getId();
         Integer roleId = user.getRole().getId();
@@ -465,6 +474,18 @@ public class OrderPageController {
                                                     statusChange.setSAPstatus(newSAPStatus);
                                                     statusChangeManager.save(statusChange);
                                                 }
+                                            }else
+
+//__12
+                                            if (theOrder.getSapStatus().getId() == 7 && role.getId() == 2) {
+                                                if (answer.equals("yes")) {
+                                                    newSAPStatus = sapStatusManager.findById(8);
+                                                    theOrder.setSAPstatus(newSAPStatus);
+                                                    orderManager.save(theOrder);
+                                                    statusChange.setOrder(theOrder);
+                                                    statusChange.setSAPstatus(newSAPStatus);
+                                                    statusChangeManager.save(statusChange);
+                                                }
                                             }
 
 
@@ -509,7 +530,38 @@ public class OrderPageController {
             comment.setOrder(theOrder);
             commentsManager.save(comment);
         }
-                  mailManager.sendEmail(theOrder);
+
+        mailManager.sendEmail(theOrder);
+
+//        User userTo = comment.getToUser();
+//        List<Role> UserToRoles = roleManager.findByUserId(userTo.getUserId());
+//        userTo.setRoles(UserToRoles);
+////        try {
+////            Integer userToRoleId = UserToRoles.get(0).getId();
+////            Integer SSId = comment.getOrder().getSAPstatus().getId();
+////
+////            StatusSAPStatusRole statusSAPStatusRole = statusSAPStatusRoleManager.findStatusByRoleIdAndSAPStatusId(userToRoleId, SSId);
+////
+////            List<StatusSAPStatusRole> statusSAPStatusRolesList = new ArrayList<>();
+////            statusSAPStatusRolesList.add(statusSAPStatusRole);
+////
+////            theOrder.getSAPstatus().setStatusSAPStatuseRoles(statusSAPStatusRolesList);
+////        } catch (NullPointerException e) {
+////            System.out.println(e.getStackTrace());
+////        }
+//
+//
+//        comment.setToUser(userTo);
+//        comment.setForRole(role);
+//
+//        commentsManager.save(comment);
+//        Map<Comments, MultiFile> notification = new HashMap<>();
+//        notification.put(comment, null);
+//        mailManager.sendEmail(notification);
+//
+//
+////        model.addAttribute("theOrder",theOrder);
+
 
 //        if (result.hasErrors()) {
         System.out.println("validation errors in multi upload");
@@ -532,16 +584,16 @@ public class OrderPageController {
 //        if (!directory.exists()) {
 //            // ...
 //        }
-//        new File("C:/folder1")
+        
         try {
-//            FileCopyUtils.copy(multipartFile.getBytes(), new File(UPLOAD_LOCATION + fileName));
-            File file = new File(UPLOAD_LOCATION + orderId + "/" + multipartFile.getOriginalFilename());
+
+            File file = new File(USER_HOME + FILE_SEPARATOR + UPLOAD_DIRECTORY + FILE_SEPARATOR + ORDERS_DIRECTORY + FILE_SEPARATOR + orderId + FILE_SEPARATOR + multipartFile.getOriginalFilename());
             file.getParentFile().mkdirs();
             multipartFile.transferTo(file);
             fileMeta.setFileName(multipartFile.getOriginalFilename());
-            fileMeta.setFileSize(multipartFile.getSize() / 1024 + " Kb");
+            fileMeta.setFileSize(multipartFile.getSize() /1024 + " Kb");
             fileMeta.setFileType(multipartFile.getContentType());
-            fileMeta.setBytes(multipartFile.getBytes());
+//            fileMeta.setBytes(multipartFile.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -554,11 +606,10 @@ public class OrderPageController {
     void doRemove(@PathVariable int orderId, @PathVariable String fileName) {
         System.out.println("/remove-file");
         System.out.println(fileName);
-        try {
-            File file = new File(UPLOAD_LOCATION + orderId + "/" + fileName);
-            if (file.delete()) {
-                System.out.println(file.getName() + " is deleted!");
-            }
+
+        try{
+            File file = new File(USER_HOME + FILE_SEPARATOR + UPLOAD_DIRECTORY + FILE_SEPARATOR + ORDERS_DIRECTORY + FILE_SEPARATOR + orderId + FILE_SEPARATOR + fileName);
+            if(file.delete()){System.out.println(file.getName() + " is deleted!");}
 //            else{System.out.println("Delete operation is failed.");}
         } catch (Exception e) {
             e.printStackTrace();
@@ -600,6 +651,107 @@ public class OrderPageController {
 //
 //        return "redirect:/orders/{orderId}";
 //    }
+
+
+	@RequestMapping(value = "/orders/{orderId}/order_attachments", method = RequestMethod.GET)
+	public @ResponseBody ArrayList<FileInfo> getAllOrderAttachments(@PathVariable String orderId) {
+		
+		ArrayList<FileInfo> fileInfoList = new ArrayList<>();
+		FileInfo fileInfo;
+		File file;
+		
+		System.out.println(USER_HOME + FILE_SEPARATOR + UPLOAD_DIRECTORY + FILE_SEPARATOR + ORDERS_DIRECTORY + FILE_SEPARATOR + orderId);
+		File folder = new File(USER_HOME + FILE_SEPARATOR + UPLOAD_DIRECTORY + FILE_SEPARATOR + ORDERS_DIRECTORY + FILE_SEPARATOR + orderId);
+		if(folder.exists()) {
+			File[] listOfFiles = folder.listFiles();
+			for (int i = 0; i < listOfFiles.length; i++) {
+				file = listOfFiles[i];
+				if (file.isFile()) {
+					System.out.println("File: " + file.getName());
+					fileInfo = new FileInfo();
+					fileInfo.setName(file.getName());
+					fileInfo.setSize(file.length());
+					fileInfo.setLastModified(new Date(file.lastModified()));
+					fileInfoList.add(fileInfo);
+				} else if (file.isDirectory()) {
+					System.out.println("Directory " + file.getName());
+				}
+			}
+		} else {
+			System.out.println("for this order any attachment is not available!");
+		}
+		
+		return fileInfoList;
+	}
+
+
+	@RequestMapping(value = "/orders/{orderId}/order_attachments/{file:.*}", method = RequestMethod.GET)
+	public void downloadFile(HttpServletResponse response, @PathVariable String orderId, @PathVariable("file") String fileName) throws IOException {
+		System.out.println("!! DOWNLOAD !!");
+		File file = null;
+		System.out.println(USER_HOME + FILE_SEPARATOR + UPLOAD_DIRECTORY + FILE_SEPARATOR + ORDERS_DIRECTORY + FILE_SEPARATOR + orderId + FILE_SEPARATOR + fileName + "]");
+		file = new File(USER_HOME + FILE_SEPARATOR + UPLOAD_DIRECTORY + FILE_SEPARATOR + ORDERS_DIRECTORY + FILE_SEPARATOR + orderId + FILE_SEPARATOR + fileName);
+
+		if (!file.exists()) {
+			String errorMessage = "Sorry. The file you are looking for does not exist";
+			System.out.println(errorMessage);
+			OutputStream outputStream = response.getOutputStream();
+			outputStream.write(errorMessage.getBytes(Charset.forName("UTF-8")));
+			outputStream.close();
+			return;
+		}
+
+		String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+		if (mimeType == null) {
+			System.out.println("mimetype is not detectable, will take default");
+			mimeType = "application/octet-stream";
+		}
+
+		System.out.println("mimetype : " + mimeType);
+
+		response.setContentType(mimeType);
+
+		/*
+		 * "Content-Disposition : inline" will show viewable types [like
+		 * images/text/pdf/anything viewable by browser] right on browser while
+		 * others(zip e.g) will be directly downloaded [may provide save as
+		 * popup, based on your browser setting.]
+		 */
+		response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() + "\""));
+
+		/*
+		 * "Content-Disposition : attachment" will be directly download, may
+		 * provide save as popup, based on your browser setting
+		 */
+		// response.setHeader("Content-Disposition", String.format("attachment;
+		// filename=\"%s\"", file.getName()));
+
+		response.setContentLength((int) file.length());
+
+		InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+
+		// Copy bytes from source to destination(outputstream in this example),
+		// closes both streams.
+		FileCopyUtils.copy(inputStream, response.getOutputStream());
+	}
+	
+	@RequestMapping(value = "/orders/{orderId}/order_attachments/remove/{fileName:.*}", method = RequestMethod.DELETE)
+	public @ResponseBody ResponseEntity<String> removeOrderAttachments(@PathVariable String orderId, @PathVariable String fileName) {
+		
+		String path = USER_HOME + FILE_SEPARATOR + UPLOAD_DIRECTORY + FILE_SEPARATOR + ORDERS_DIRECTORY + FILE_SEPARATOR + orderId + FILE_SEPARATOR + fileName;
+		System.out.println(path);
+		File file = new File(path);
+		if(file.exists()) {
+			if(file.delete()) {
+				return new ResponseEntity<String>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<String>(HttpStatus.CONFLICT);
+			}
+		} else {
+			System.out.println("file not found!");
+			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+		}
+	}
 
 
 }

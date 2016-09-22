@@ -1,15 +1,15 @@
 package com.napkinstudio.manager;
 
 
-import com.napkinstudio.dao.IProgresBarFieldsDao;
-import com.napkinstudio.entity.Order;
-import com.napkinstudio.entity.ProgresBarFields;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import com.napkinstudio.dao.IProgresBarFieldsDao;
+import com.napkinstudio.entity.ProgresBarFields;
 
 @Service
 public class ProgresBarFieldsManager {

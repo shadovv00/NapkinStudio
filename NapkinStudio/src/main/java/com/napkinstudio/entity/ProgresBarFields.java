@@ -1,27 +1,44 @@
 package com.napkinstudio.entity;
 
-import javax.persistence.*;
-import com.napkinstudio.entity.StatusChange;
-import java.util.List;
-
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.REMOVE;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.Table;
 
 //@NamedQueries(
 @NamedNativeQuery(name = "ProgresBarFields.findBarByRolePVICheckReject",
-                query = "SELECT s.name as name, MAX(tm.lastdate) as date " +
-                        "FROM progresbar_fields AS pbf " +
-                        "INNER JOIN role AS r ON pbf.ROLE_ID = r.id " +
-                        "INNER JOIN status AS s ON s.id = pbf.STATUS_ID " +
-                        "INNER JOIN sapstatus ss ON ss.id = pbf.SAPSTATUS_ID " +
-                        "LEFT JOIN " +
-                            "(SELECT sc.sapStatus_id AS reid, sc.dateTime AS lastdate " +
-                            "FROM status_changes AS sc " +
-                            "INNER JOIN orders AS o ON o.orderId = sc.order_orderId " +
-                            "WHERE o.orderId =:orderId " +
-                            ") tm ON ss.id = tm.reid " +
-                        "WHERE r.id = :roleId AND pbf.pVIcheckScen =:pVIcheckScen AND pbf.rejected =:rejected " +
-                        "GROUP BY s.name order by pbf.id "
+//                query = "SELECT s.name as name, MAX(tm.lastdate) as date " +
+//                        "FROM progresbar_fields AS pbf " +
+//                        "INNER JOIN role AS r ON pbf.ROLE_ID = r.id " +
+//                        "INNER JOIN status AS s ON s.id = pbf.STATUS_ID " +
+//                        "INNER JOIN sapstatus ss ON ss.id = pbf.SAPSTATUS_ID " +
+//                        "LEFT JOIN " +
+//                            "(SELECT sc.sapStatus_id AS reid, sc.dateTime AS lastdate " +
+//                            "FROM status_changes AS sc " +
+//                            "INNER JOIN orders AS o ON o.orderId = sc.order_orderId " +
+//                            "WHERE o.orderId =:orderId " +
+//                            ") tm ON ss.id = tm.reid " +
+//                        "WHERE r.id = :roleId AND pbf.pVIcheckScen =:pVIcheckScen AND pbf.rejected =:rejected " +
+//                        "GROUP BY s.name order by pbf.id "
+query = "SELECT s.name as name, MAX(tm.lastdate) as date " +
+        "FROM progresbar_fields AS pbf " +
+        "INNER JOIN Role AS r ON pbf.ROLE_ID = r.id " +
+        "INNER JOIN Status AS s ON s.id = pbf.STATUS_ID " +
+        "INNER JOIN SAPstatus ss ON ss.id = pbf.SAPSTATUS_ID " +
+        "LEFT JOIN " +
+            "(SELECT sc.sapStatus_id AS reid, sc.dateTime AS lastdate " +
+            "FROM status_changes AS sc " +
+            "INNER JOIN orders AS o ON o.orderId = sc.order_orderId " +
+            "WHERE o.orderId =:orderId " +
+            ") tm ON ss.id = tm.reid " +
+        "WHERE r.id = :roleId AND pbf.pVIcheckScen =:pVIcheckScen AND pbf.rejected =:rejected " +
+        "GROUP BY s.name order by pbf.id "
+
 //        , resultClass = Object[].class
 
 

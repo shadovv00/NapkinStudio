@@ -7,9 +7,9 @@ import javax.persistence.*;
  */
 
 @NamedQueries(
-        @NamedQuery(name = "StatusSAPStatusRole.findStatusByRoleIdAndSAPStatusId",query = "select statusSAPStatusRole from StatusSAPStatusRole statusSAPStatusRole " +
-                "inner join statusSAPStatusRole.role r " +
-                "inner join statusSAPStatusRole.SAPStatus ss where r.id =:roleId and ss.id =:sapStatusId ")
+        @NamedQuery(name = "StatusSAPStatusRole.findStatusByRoleIdAndSAPStatusId",query = "select s from StatusSAPStatusRole s " +
+                "inner join s.role r " +
+                "inner join s.SAPStatus ss where r.id =:roleId and ss.id =:sapStatusId ")
 )
 @Entity
 @Table(name = "STATUS_SAPSTATUS_ROLE")

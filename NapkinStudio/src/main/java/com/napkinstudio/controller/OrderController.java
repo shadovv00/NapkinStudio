@@ -1,20 +1,35 @@
 package com.napkinstudio.controller;
 
 
+
 import com.napkinstudio.entity.Role;
 import com.napkinstudio.entity.StatusSAPStatusRole;
 import com.napkinstudio.entity.User;
 import com.napkinstudio.entity.UserOrder;
 import com.napkinstudio.manager.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.napkinstudio.entity.Order;
+import com.napkinstudio.entity.Role;
+import com.napkinstudio.entity.StatusSAPStatusRole;
+import com.napkinstudio.entity.User;
+import com.napkinstudio.entity.UserOrder;
+import com.napkinstudio.manager.MailManager;
+import com.napkinstudio.manager.OrderManager;
+import com.napkinstudio.manager.RoleManager;
+import com.napkinstudio.manager.StatusManager;
+import com.napkinstudio.manager.StatusSAPStatusRoleManager;
+import com.napkinstudio.manager.UserManager;
+import com.napkinstudio.manager.UserOrderManager;
 
 /**
  * Created by User1 on 23.08.2016.
@@ -37,7 +52,7 @@ public class OrderController {
 
     @Autowired
     private UserOrderManager userOrderManager;
-
+    
     @Autowired
     private StatusSAPStatusRoleManager statusSAPStatusRoleManager;
 
@@ -58,7 +73,7 @@ public class OrderController {
     @ModelAttribute("userOrders")
     List<UserOrder> UserOrders(@ModelAttribute("user") User user) {
 
-        System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+
 
         Integer roleId = user.getRole().getId();
         List<UserOrder> userOrders = userOrderManager.findOrdersByUserId(user.getUserId());
@@ -69,6 +84,7 @@ public class OrderController {
             StatusSAPStatusRole statusSAPStatusRole;
             try{
                 statusSAPStatusRole =  statusSAPStatusRoleManager.findStatusByRoleIdAndSAPStatusId(roleId,SSId);
+                System.out.println(statusSAPStatusRole.getStatus().getName());
                 List<StatusSAPStatusRole> statusSAPStatusRolesList = new ArrayList<>();
                 statusSAPStatusRolesList.add(statusSAPStatusRole);
                 userOrder.getOrder().getSAPstatus().setStatusSAPStatuseRoles(statusSAPStatusRolesList);

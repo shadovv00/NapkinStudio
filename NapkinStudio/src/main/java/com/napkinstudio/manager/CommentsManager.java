@@ -2,14 +2,12 @@ package com.napkinstudio.manager;
 
 import com.napkinstudio.dao.ICommentsDao;
 import com.napkinstudio.entity.Comments;
+import com.napkinstudio.entity.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Service
@@ -17,6 +15,8 @@ public class CommentsManager {
 
 @Autowired
 private ICommentsDao commentsDao;
+@Autowired
+private OrderManager orderManager;
 
 //    @Transactional
 //    public List<Comments> findByRoleId(Integer id) {
@@ -46,5 +46,10 @@ private ICommentsDao commentsDao;
     @Transactional
     public void save(Comments comment) {
         commentsDao.save(comment);
+        Order theOrder = comment.getOrder();
+        System.out.println(theOrder.getOrderId());
+        theOrder.setLastModifiedDate(new Date());
+        orderManager.save(theOrder);
+
     }
 }

@@ -13,6 +13,7 @@ C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napk
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\entity\Customer.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\entity\UserOrder.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\dao\IStatusSAPStatusRole.java
+C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\entity\MultiFile.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\entity\MultiFileBucket.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\dao\IStatusChangeDao.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\manager\ProgresBarFieldsManager.java
@@ -27,8 +28,10 @@ C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napk
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\manager\RoleManager.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\manager\StatusChangeManager.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\manager\CustomerManager.java
+C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\simplemodel\FileInfo.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\config\AppConfig.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\controller\HomeController.java
+C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\entity\FileUpload.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\entity\StatusChange.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\manager\InitDBManager.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\config\security\SecurityConfig.java
@@ -39,6 +42,7 @@ C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napk
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\entity\ProgresBarFields.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\entity\User.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\config\security\SecurityWebAppInitializer.java
+C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\entity\FileMeta.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\dao\HibernateTokenRepositoryImpl.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\dao\IPersistentLoginDao.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\dao\AbstractDao.java
@@ -49,7 +53,6 @@ C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napk
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\entity\SynchronizationDate.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\manager\SAPstatusManager.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\entity\Article.java
-C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\controller\FileUploadController.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\dao\IRoleDao.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\dao\ICustomerDao.java
 C:\Users\User1\Documents\GitHub\NapkinStudio\NapkinStudio\src\main\java\com\napkinstudio\manager\UserOrderManager.java

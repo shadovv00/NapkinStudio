@@ -38,7 +38,7 @@ public class Comments extends AbstractEntity {
 	private Role forRole;
     
     
-	private String commText;
+	@Column(name = "commText",columnDefinition="TEXT")	private String commText;
 	private Date dateTime;
 	private Boolean deleted;
 	private static final long serialVersionUID = 1L;

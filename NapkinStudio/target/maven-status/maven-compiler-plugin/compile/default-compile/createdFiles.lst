@@ -4,11 +4,11 @@ com\napkinstudio\dao\IStatusChangeDao.class
 com\napkinstudio\config\security\CustomUserDetailsService.class
 com\napkinstudio\entity\AbstractEntity.class
 com\napkinstudio\config\JPAConfig.class
-com\napkinstudio\controller\FileUploadController.class
 com\napkinstudio\util\Listener.class
 com\napkinstudio\dao\ICustomerDao.class
 com\napkinstudio\util\FileValidator.class
 com\napkinstudio\dao\IProgresBarFieldsDao.class
+com\napkinstudio\entity\MultiFile.class
 com\napkinstudio\manager\SAPstatusManager.class
 com\napkinstudio\manager\MailManager.class
 com\napkinstudio\manager\CommentsManager.class
@@ -17,6 +17,7 @@ com\napkinstudio\manager\FTPManager.class
 com\napkinstudio\entity\FileBucket.class
 com\napkinstudio\entity\ProgresBarFields.class
 com\napkinstudio\manager\StatusChangeManager.class
+com\napkinstudio\entity\FileMeta.class
 com\napkinstudio\manager\InitDBManager.class
 com\napkinstudio\entity\StatusChange.class
 com\napkinstudio\manager\ArticleManager.class
@@ -40,10 +41,12 @@ com\napkinstudio\entity\Article.class
 com\napkinstudio\dao\IArticleDao.class
 com\napkinstudio\dao\IPersistentLoginDao.class
 com\napkinstudio\controller\LoginController.class
+com\napkinstudio\entity\FileUpload.class
 com\napkinstudio\entity\SynchronizationDate.class
 com\napkinstudio\manager\OrderManager.class
 com\napkinstudio\entity\Status.class
 com\napkinstudio\manager\MailManager$1.class
+com\napkinstudio\simplemodel\FileInfo.class
 com\napkinstudio\manager\UserManager.class
 com\napkinstudio\dao\HibernateTokenRepositoryImpl.class
 com\napkinstudio\manager\SynchronizationDateManager.class

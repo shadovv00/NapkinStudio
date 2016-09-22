@@ -10,12 +10,14 @@
 </script>
 <html>
 <head>
-
     <title>NapkinStudio</title>
+    
     <link href="<c:url value='/static/css/bootstrap.css' />" rel="stylesheet"></link>
     <link href="<c:url value='/static/css/app.css' />" rel="stylesheet"></link>
-    <link rel="stylesheet" type="text/css"
-          href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.css"/>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
     <%--TODO: dowload files and set path--%>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -33,7 +35,6 @@
     <%--<span style="margin-left: 100px"> ${theOrder.orderId} order id </span>--%>
     <%--&lt;%&ndash;<p display="inline">You are logged in as ${user.roles[0].name}</p>&ndash;%&gt;--%>
     <%--</nav>%--<a href="<c:url value="/logout"/>"> Logout </a>--%>
-
 </head>
 <body style="overflow-y: auto">
 
@@ -206,7 +207,7 @@
                                         <%--</div>--%>
                                         <%--</div>--%>
                                         <%--</c:if>--%>
-                                        <form:form commandName="comment" method="post" action="/addComment"
+                                        <form:form commandName="comment" method="post" action="/NapkinStudio/addComment"
                                                    cssClass="form-horizontal addCommentForm">
                                             <div class="form-group">
                                                 <div class="col-sm-5">
@@ -280,7 +281,7 @@
                                         <%--</div>--%>
                                         <%--</div>--%>
                                         <%--</c:if>--%>
-                                        <form:form commandName="comment" method="post" action="/addComment"
+                                        <form:form commandName="comment" method="post" action="/NapkinStudio/addComment"
                                                    cssClass="form-horizontal addCommentForm">
                                             <div class="form-group">
                                                 <div class="col-sm-5">
@@ -350,7 +351,7 @@
                                         <%--</div>--%>
                                         <%--</div>--%>
                                         <%--</c:if>--%>
-                                        <form:form commandName="comment" method="post" action="/addComment"
+                                        <form:form commandName="comment" method="post" action="/NapkinStudio/addComment"
                                                    cssClass="form-horizontal addCommentForm">
                                             <div class="form-group">
                                                 <div class="col-sm-5">
@@ -419,7 +420,7 @@
                                         <%--</div>--%>
                                         <%--</div>--%>
                                         <%--</c:if>--%>
-                                        <form:form commandName="comment" method="post" action="/addComment"
+                                        <form:form commandName="comment" method="post" action="/NapkinStudio/addComment"
                                                    cssClass="form-horizontal addCommentForm">
                                             <div class="form-group">
                                                 <div class="col-sm-5">
@@ -488,7 +489,7 @@
                                         <%--</div>--%>
                                         <%--</div>--%>
                                         <%--</c:if>--%>
-                                        <form:form commandName="comment" method="post" action="/addComment"
+                                        <form:form commandName="comment" method="post" action="/NapkinStudio/addComment"
                                                    cssClass="form-horizontal addCommentForm">
                                             <div class="form-group">
                                                 <div class="col-sm-5">
@@ -557,7 +558,7 @@
                                         <%--</div>--%>
                                         <%--</div>--%>
                                         <%--</c:if>--%>
-                                        <form:form commandName="comment" method="post" action="/addComment"
+                                        <form:form commandName="comment" method="post" action="/NapkinStudio/addComment"
                                                    cssClass="form-horizontal addCommentForm">
                                             <div class="form-group">
                                                 <div class="col-sm-5">
@@ -596,28 +597,28 @@
                     </li>
                 </ul>
             </div>
-            <div width="100%" style="margin-bottom: 10px">
-                <b>Opmerkingen</b>
-                <ul>
-                    <li>some files</li>
-                </ul>
-            </div>
-            <input type="checkbox" name="check0" value="a2">Drukproef eerst door PVI laten controleren.<Br>
+            <div width="100%" style="margin-bottom: 10px" class="order-attachment" orderId="${theOrder.orderId}"></div>
+            <label>
+				<input type="checkbox" name="check0" value="a2">Drukproef eerst door PVI laten controleren.
+			</label>
+<!--             <input type="checkbox" name="check0" value="a2">Drukproef eerst door PVI laten controleren.<Br> -->
             <div display="inline" style="margin-bottom: 10px">
 
                 <%--Appove without comments and files adding--%>
                 <c:if test="${
-                            (theOrder.SAPstatus.id==6&&user.role.id==2)||
 
+                            (theOrder.SAPstatus.id==6&&user.role.id==2)||
                             (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
                             (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Deptor')||
                             (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
                             (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==1)||
                             (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==2)||
                             (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.processId==3)||
-                            (theOrder.SAPstatus.id==5&&user.role.id==2&&theOrder.processId==4)
+                            (theOrder.SAPstatus.id==5&&user.role.id==2&&theOrder.processId==4)||
+                            (theOrder.SAPstatus.id==7&&user.role.id==2)
+
                  }">
-                <a href="<c:url value='/changestatus/${theOrder.orderId}/yes' />"
+                <a href="<c:url value='/NapkinStudio/changestatus/${theOrder.orderId}/yes' />"
                    class="btn btn-success custom-width">Approve</a>
                 </c:if>
                 <%--Discard without comments and files adding--%>
@@ -625,7 +626,7 @@
                             (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
                             (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.processId==3)
                  }">
-                <a href="<c:url value='/changestatus/${theOrder.orderId}/no' />"
+                <a href="<c:url value='/NapkinStudio/changestatus/${theOrder.orderId}/no' />"
                    class="btn btn-danger custom-width">Discard</a>
                 </c:if>
                 <%--Appove with comments and files adding--%>
@@ -648,29 +649,8 @@
                             <div class="modal-body">
                                 <p>Please add some comment and documentation</p>
                                 <div class="form-container">
-                                        <%--<form:form action='/changestatus/${theOrder.orderId}/yes' method="POST"--%>
-                                        <%--modelAttribute="multiFileBucket" enctype="multipart/form-data"--%>
-                                        <%--class="form-horizontal">--%>
-                                        <%--<c:forEach var="v" varStatus="vs" items="${multiFileBucket.files}">--%>
-                                        <%--<form:input type="file" path="files[${vs.index}].file"--%>
-                                        <%--id="files[${vs.index}].file"--%>
-                                        <%--class="form-control input-sm"/>--%>
-                                        <%--<div class="has-error">--%>
-                                        <%--<form:errors path="files[${vs.index}].file" class="help-inline"/>--%>
-                                        <%--</div>--%>
-                                        <%--</c:forEach>--%>
-                                        <%--<br/>--%>
-
-                                        <%--<div class="row">--%>
-                                        <%--<div class="form-actions floatRight">--%>
-                                        <%--<input type="submit" value="Approve" class="btn btn-success btn-sm">`--%>
-                                        <%--</div>--%>
-                                        <%--</div>--%>
-                                        <%--</form:form>--%>
-
-                                        <%--</div>--%>
                                     <form:form commandName="comment" method="post"
-                                               action="/changestatus/${theOrder.orderId}/yes"
+                                               action="/NapkinStudio/changestatus/${theOrder.orderId}/yes"
                                                cssClass="form-horizontal">
                                         <div class="form-group">
                                             <div class="col-sm-5">
@@ -700,8 +680,8 @@
                                     </form:form>
                                 </div>
                                 <div id="foruploadedfiles">
-                                    <input id="fileupload" type="file" name="files[]"
-                                           data-url='/save-file/${theOrder.orderId}' multiple>
+                                    <input id="fileupload" type="file" name="files[]" orderId="${theOrder.orderId}"
+                                           data-url='<c:url value='/save-file/${theOrder.orderId}' />' multiple>
                                     <div id="progress">
                                         <div class="bar" style="width: 0%; height: 18px; background: green;"></div>
                                     </div>
@@ -744,29 +724,8 @@
                                     <div class="modal-body">
                                         <p>Please add some comment and documentation</p>
                                         <div class="form-container">
-                                                <%--<form:form action='/changestatus/${theOrder.orderId}/no' method="POST"--%>
-                                                <%--modelAttribute="multiFileBucket" enctype="multipart/form-data"--%>
-                                                <%--class="form-horizontal">--%>
-                                                <%--<c:forEach var="v" varStatus="vs" items="${multiFileBucket.files}">--%>
-                                                <%--<form:input type="file" path="files[${vs.index}].file"--%>
-                                                <%--id="files[${vs.index}].file"--%>
-                                                <%--class="form-control input-sm"/>--%>
-                                                <%--<div class="has-error">--%>
-                                                <%--<form:errors path="files[${vs.index}].file"--%>
-                                                <%--class="help-inline"/>--%>
-                                                <%--</div>--%>
-                                                <%--</c:forEach>--%>
-                                                <%--<br/>--%>
-                                                <%--<div class="row">--%>
-                                                <%--<div class="form-actions floatRight">--%>
-                                                <%--<input type="submit" value="Discard"--%>
-                                                <%--class="btn btn-danger btn-sm">--%>
-                                                <%--</div>--%>
-                                                <%--</div>--%>
-                                                <%--</form:form>--%>
-
-                                            <form:form commandName="comment" method="post"
-                                                       action="/changestatus/${theOrder.orderId}/no"
+                                             <form:form commandName="comment" method="post"
+                                                       action="/NapkinStudio/changestatus/${theOrder.orderId}/no"
                                                        cssClass="form-horizontal">
                                                 <div class="form-group">
                                                     <div class="col-sm-5">
@@ -785,7 +744,6 @@
                                                                 <%--value="${theOrder.printName}"/>--%>
                                                             <%--<input name="deleted" type="hidden" value="true"/>--%>
                                                     </div>
-
                                                 </div>
                                                 <%--<div class="modal-footer col-sm-5">--%>
                                                 <div class="col-sm-5">
@@ -804,16 +762,23 @@
                                             </form:form>
 
                                         </div>
+                                                    <div id="foruploadedfiles">
+                                                        <input id="fileupload" type="file" name="files[]" orderId="${theOrder.orderId}"
+                                           					   data-url='<c:url value='/save-file/${theOrder.orderId}' />' multiple>
+                                                        <div id="progress">
+                                                            <div class="bar" style="width: 0%; height: 18px; background: green;"></div>
+                                                        </div>
+                                                    </div>
 
                                     </div>
-                                        <%--<div class="modal-footer">--%>
+<!--                                         <div class="modal-footer"> -->
                                         <%--&lt;%&ndash;<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>&ndash;%&gt;--%>
                                         <%--&lt;%&ndash;<a href="<c:url value='/changestatus/${theOrder.orderId}/no' />"&ndash;%&gt;--%>
                                         <%--&lt;%&ndash;class="btn btn-danger custom-width">Discard</a>&ndash;%&gt;--%>
-                                        <%--<div class="form-actions floatRight">--%>
-                                        <%--<input type="submit" value="Upload" class="btn btn-danger btn-sm">--%>
-                                        <%--</div>--%>
-                                        <%--</div>--%>
+<!--                                         <div class="form-actions floatRight"> -->
+<!--                                         <input value="Submit" class="btn btn-danger btn-sm"> -->
+<!--                                         </div> -->
+<!--                                         </div> -->
                                 </div>
 
                             </div>
@@ -829,6 +794,8 @@
         </td>
     </tr>
 </table>
+
+	<script src="<c:url value='/static/js/app.js' />"></script>
 </body>
 </html>
 <script>
@@ -840,39 +807,41 @@
     console.log(role + " " + status + " " + statusId);
     $(document).ready(function () {
 
-        $('#fileupload').fileupload({
-            dataType: 'json',
-            done: function (e, data) {
-//                $('<p/>').text(data.result.fileName+"   "+data.result.fileSize).insertAfter('#progress');
-                $('<div class="row" name="'+data.result.fileName+'" style="display: inline">'+data.result.fileName+' '+data.result.fileSize+
-                        ' <div class="floatRight">' +
-                        '<input  value="Delete" type="button" class=" del-file-but btn btn-danger btn-sm" >' +
-//                        '</div></div>').insertAfter('#progress');
-                        <%--' <a href="/remove-file/${theOrder.orderId}/'+data.result.fileName+'" class=" del-file-but  btn btn-danger custom-width">Discard</a> ' +--%>
-                        '</div></div>').appendTo('#foruploadedfiles');
-                //                $.each(data.files, function (index, file) {
-//                    $('<p/>').text(file.name+"   "+file.size+"Kb  "+file.lastModifiedDate).appendTo(document.body);
-//                });
-                $('<script>$(".del-file-but").click(function(){'+
-                        'console.log("dqwdqw");'+
-                        'console.log($(this));'+
-                        'var thisElement=$(this);'+
-                        '$.ajax({'+
-                        '    url: "/remove-file/${theOrder.orderId}/"+thisElement.parent().parent().attr("name"),'+
-                        'success: function(result){'+
-                        'console.log("dqwdqw");'+
-                        'thisElement.parent().parent().remove();'+
-                        '}});'+
-                        '});</s'+'cript>').appendTo(document.body);
-            },
-            progressall: function (e, data) {
-                var progress = parseInt(data.loaded / data.total * 100, 10);
-                $('#progress .bar').css(
-                        'width',
-                        progress + '%'
-                );
-            }
-        });
+//         $('#fileupload').fileupload({
+//             dataType: 'json',
+//             done: function (e, data) {
+// //                $('<p/>').text(data.result.fileName+"   "+data.result.fileSize).insertAfter('#progress');
+//                 $('<div class="row" name="'+data.result.fileName+'" style="display: inline">'+data.result.fileName+' '+data.result.fileSize+
+//                         ' <div class="floatRight">' +
+//                         '<input  value="Delete" type="button" class=" del-file-but btn btn-danger btn-sm" >' +
+// //                        '</div></div>').insertAfter('#progress');
+<%--                         ' <a href="/remove-file/${theOrder.orderId}/'+data.result.fileName+'" class=" del-file-but  btn btn-danger custom-width">Discard</a> ' + --%>
+//                         '</div></div>').appendTo('#foruploadedfiles');
+//                 //                $.each(data.files, function (index, file) {
+// //                    $('<p/>').text(file.name+"   "+file.size+"Kb  "+file.lastModifiedDate).appendTo(document.body);
+// //                });
+//                 var orderId=$('#fileupload').attr("orderId");
+//                 $('<script>$(".del-file-but").click(function(){'+
+//                         'console.log("dqwdqw");'+
+//                         'console.log($(this));'+
+//                         'var thisElement=$(this);'+
+//                         '$.ajax({'+
+//                         '    url: 'remove-file/${theOrder.orderId}/"+thisElement.parent().parent().attr("name")','+
+//                         'success: function(result){'+
+//                         'console.log("dqwdqw"); napkin.buildFileInfoList();'+
+//                         'thisElement.parent().parent().remove();'+
+//                         '}});'+
+//                         '});</s'+'cript>').appendTo(document.body);
+//                 napkin.buildFileInfoList();
+//             },
+//             progressall: function (e, data) {
+//                 var progress = parseInt(data.loaded / data.total * 100, 10);
+//                 $('#progress .bar').css(
+//                         'width',
+//                         progress + '%'
+//                 );
+//             }
+//         });
 
 
         $(".addCommentForm").hide();
@@ -926,6 +895,8 @@
 
         if (statusId > 6 && status !== "Rejected")
             $(".add-comment-btn").hide();
+        napkin.uploadFile();
+        napkin.buildFileInfoList();
     });
-
+	
 </script>
