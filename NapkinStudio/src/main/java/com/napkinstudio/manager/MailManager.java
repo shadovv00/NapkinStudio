@@ -1,7 +1,6 @@
 package com.napkinstudio.manager;
 
 import com.napkinstudio.entity.Comments;
-import com.napkinstudio.entity.MultiFile;
 import com.napkinstudio.entity.Order;
 import freemarker.template.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,10 @@ public class MailManager {
     @Autowired
     Configuration freemarkerConfiguration;
 
-    public void sendEmail(Object  object) {
+    public void sendEmail(Object object) {
+
+//        if (comment.getCommText() != "")
+//            comment.setCommText("Comment: " + comment.getCommText());
 
         MimeMessagePreparator preparator = getMessagePreparator(object);
 
@@ -41,7 +43,6 @@ public class MailManager {
         }
     }
 
-
     private MimeMessagePreparator getMessagePreparator(final Object object) {
 
         MimeMessagePreparator preparator = new MimeMessagePreparator() {
@@ -49,62 +50,64 @@ public class MailManager {
             public void prepare(MimeMessage mimeMessage) throws Exception {
                 MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
                 Map<String, Object> model = new HashMap<String, Object>();
-                String text="";
+                String text = "";
                 Order order = null;
-                if(object instanceof Comments) {
+                if (object instanceof Comments) {
                     Comments comment = (Comments) object;
                     order = comment.getOrder();
-
+                    String link = "http://10.4.0.66:8080/orders/" + order.getOrderId().toString();
                     helper.setTo(comment.getToUser().getEmail());
+
+
                     model.put("comment", comment);
+                    model.put("link", link);
 
-                    text = getFreeMarkerTemplateCommentContent(model);//Use Freemarker or Velocity
+                    text = getFreeMarkerTemplateCommentContent(model);
+//                if (comment.getOrder().getSAPstatus().getStatusSAPStatuseRoles() == null)
+//
+//                else
+//                    text = getFreeMarkerTemplateCommentWithAttachmentContent(model);
 
-                }else if(object instanceof Order) {
+
+                } else if (object instanceof Order) {
                     order = (Order) object;
-
+                    String link = "http://10.4.0.66:8080/orders/" + order.getOrderId().toString();
                     helper.setTo(order.getItsUsers().get(0).getUser().getEmail());
                     model.put("order", order);
-                    String link = "http://10.4.0.66:8080/changestatus/" + order.getOrderId().toString() + "/yes";
                     model.put("link", link);
 
                     text = getFreeMarkerTemplateOrderContent(model);//Use Freemarker or Velocity
 
-                }else if(object instanceof Map) {
-
-
-                        HashMap<Comments, MultiFile> rejectedNotification = (HashMap<Comments, MultiFile>) object;
-
-                        Comments comment = rejectedNotification.entrySet().iterator().next().getKey();
-//                    MultiFile attachment = rejectedNotification.get(comment);
-                        helper.setTo(comment.getToUser().getEmail());
-                        order = comment.getOrder();
-                        model.put("comment", comment);
-
-                        text = getFreeMarkerTemplateCommentWithAttachmentContent(model);
-
-
-
-                helper.addAttachment("cutie.png", new ClassPathResource("linux-icon.png"));
                 }
+//                else if (object instanceof Map) {
+//
+//
+//                    HashMap<Comments, MultiFile> rejectedNotification = (HashMap<Comments, MultiFile>) object;
+//
+//                    Comments comment = rejectedNotification.entrySet().iterator().next().getKey();
+////                    MultiFile attachment = rejectedNotification.get(comment);
+//                    helper.setTo(comment.getToUser().getEmail());
+//                    order = comment.getOrder();
+//                    model.put("comment", comment);
+//
+//                    text = getFreeMarkerTemplateCommentWithAttachmentContent(model);
+//
+//
+////                    helper.addAttachment("cutie.png", new ClassPathResource("linux-icon.png"));
+//                }
 
 
+                helper.setFrom("khomenkotest1@gmail.com");
+                helper.setSubject(order.getOrderId() + " " + order.getItemNum() + " " + order.getPrintName());
+                helper.setText(text, true);
 
-    helper.setFrom("khomenkotest1@gmail.com");
-    helper.setSubject(order.getOrderId() + " " + order.getItemNum() + " " + order.getPrintName());
-    helper.setText(text, true);
-
-    System.out.println("Template content : " + text);
-
-
-
+                System.out.println("Template content : " + text);
 
 
             }
         };
         return preparator;
     }
-
 
 
     public String getFreeMarkerTemplateOrderContent(Map<String, Object> model) {

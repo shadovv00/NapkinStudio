@@ -2,7 +2,6 @@ package com.napkinstudio.manager;
 
 
 import com.napkinstudio.dao.IUserOrderDao;
-import com.napkinstudio.entity.User;
 import com.napkinstudio.entity.UserOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,7 @@ public class UserOrderManager {
         return userOrderDao.findUserOrdersByOrderId(orderId);
     }
 
-    public User findUserforOrdedByRole(int orderId, int roleId) {
+    public List<UserOrder> findUserforOrdedByRole(int orderId, int roleId) {
        return userOrderDao.findUserforOrdedByRole(orderId, roleId);
     }
 }

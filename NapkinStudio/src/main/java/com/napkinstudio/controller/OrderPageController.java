@@ -66,8 +66,8 @@ public class OrderPageController {
         String login = principal.getName();
         User user = userManager.findByLogin(login);
 
-        List<Role> roles = roleManager.findByUserId(user.getUserId());
-        user.setRoles(roles);
+        Role role = roleManager.findByUserId(user.getUserId());
+        user.setRole(role);
         return user;
     }
 
@@ -104,7 +104,7 @@ public class OrderPageController {
         ordId = orderId;
         Order theOrder = orderManager.findById(orderId);
         Integer SSId = theOrder.getSAPstatus().getId();
-        Integer roleId = user.getRoles().get(0).getId();
+        Integer roleId = user.getRole().getId();
 //        Map<String, Order> modelMap = new HashMap<>();
 //        modelMap.put("theOrder",theOrder);
 //        model.mergeAttributes(modelMap);
@@ -213,7 +213,7 @@ public class OrderPageController {
     String doAddComment(@ModelAttribute("comment") Comments comment, @ModelAttribute("user") User user, BindingResult result) {
         int roleId = comment.getForRole().getId();
         int orderId = comment.getOrder().getOrderId();
-        User userTo = userOrderManager.findUserforOrdedByRole(orderId, roleId);
+        User userTo = userOrderManager.findUserforOrdedByRole(orderId, roleId).get(0).getUser();
 
         Role role = roleManager.findById(roleId);
         Order order = orderManager.findById(orderId);
@@ -224,42 +224,40 @@ public class OrderPageController {
         comment.setOrder(order);
 
 
-        if ((comment.getForRole().getId() == 2 && user.getRoles().get(0).getId() != 2) || comment.getForRole().getId() == 4) {
+        if ((comment.getForRole().getId() == 2 && user.getRole().getId() != 2) || comment.getForRole().getId() == 4) {
             Role forRole = roleManager.findById(comment.getForRole().getId());
             comment.setForRole(forRole);
             mailManager.sendEmail(comment);
 
         }
 
-
         commentsManager.save(comment);
 
         return "redirect:/orders/" + orderId + ".html?success=true";
     }
 
-    //    @RequestMapping(value = "/changestatus/{orderId}/{answer}")
-//    public String changeOrderStatus(Model model, @PathVariable int orderId, @PathVariable String answer, Principal principal) {
+    //
     @RequestMapping(value = "/changestatus/{orderId}/{answer}")
-//    public String changeOrderStatus(Model model, @PathVariable int orderId, @PathVariable String answer, Principal principal) {
-////        public String multiFileUpload(@Valid MultiFileBucket multiFileBucket,
-////                BindingResult result, ModelMap model) throws IOException {
-////    public String changeOrderStatus(@Valid MultiFileBucket multiFileBucket,
-////                    BindingResult result,Model model, @PathVariable int orderId, @PathVariable String answer, Principal principal) throws IOException {
-//
-//        String login = principal.getName();
-//        System.out.println("/////////////////changestatus/////////////////");
-//        System.out.println(orderId);
-//        System.out.println(answer);
-//        User user = userManager.findByLogin(login);
-//        List<Role> roles = roleManager.findByUserId(user.getUserId());
-//        user.setRoles(roles);
-//        Order theOrder = orderManager.findById(orderId);
-//        model.addAttribute("theOrder", theOrder);
-//
-//        statusChanginLogic(theOrder,  roles, answer);
-//
-//        return "redirect:/orders/{orderId}";
-//    }
+    public String changeOrderStatus(Model model, @PathVariable int orderId, @PathVariable String answer, @ModelAttribute("user") User user) {
+
+//        Comments comment = new Comments();
+//        comment.setFromUser(user);
+//        comment.setCommText("");
+
+
+        Role role = user.getRole();
+
+        Order theOrder = orderManager.findById(orderId);
+
+        model.addAttribute("theOrder", theOrder);
+
+        statusChanginLogic(theOrder,  role, answer);
+
+        if(theOrder.getItsUsers() != null)
+        mailManager.sendEmail(theOrder);
+
+        return "redirect:/orders/{orderId}";
+    }
 
 
     @InitBinder("multiFileBucket")
@@ -268,45 +266,57 @@ public class OrderPageController {
     }
 
     // functions for internal use
-    public Comments statusChanginLogic(Order theOrder, Comments comment, List<Role> roles, String answer) {
-        User userTo;
+    public void statusChanginLogic(Order theOrder,  Role role, String answer) {
+//       List<UserOrder>  userTo = null;
+//        UserOrder userToOrder;
+//        List<UserOrder> UserOrdersList;
         SAPstatus newSAPStatus;
         StatusChange statusChange = new StatusChange();
         statusChange.setDateTime(new Date());
         System.out.println(theOrder.getOrderId());
 //__1
-        if ((theOrder.getSapStatus().getId() == 1) && roles.get(0).getId() == 2) {
+        if ((theOrder.getSapStatus().getId() == 1) && role.getId() == 2) {
             if (answer.equals("yes")) {
                 newSAPStatus = sapStatusManager.findById(2);
                 theOrder.setSAPstatus(newSAPStatus);
                 theOrder.setRejected(false);
-                userTo = userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 4);
-                comment.setToUser(userTo);
-                comment.setOrder(theOrder);
+                theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 4));
+
+                prepareOrder(theOrder);
                 orderManager.save(theOrder);
+
                 statusChange.setOrder(theOrder);
                 statusChange.setSAPstatus(newSAPStatus);
                 statusChangeManager.save(statusChange);
+
             }
         } else
 //__2
-            if (theOrder.getSapStatus().getId() == 2 && roles.get(0).getId() == 4) {
+            if (theOrder.getSapStatus().getId() == 2 && role.getId() == 4) {
                 if (answer.equals("yes")) {
                     if (theOrder.getPVIcheckScen()) {
                         newSAPStatus = sapStatusManager.findById(3);
-                        userTo = userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 2);
+                        theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 2));
+
+//                        mailManager.sendEmail(theOrder);
                     } else {
                         newSAPStatus = sapStatusManager.findById(4);
-                        userTo = userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 1);
-                    }
-                    if (theOrder.getApprovalBy().equals("Customer") && theOrder.getDebCheckScen()) {
-                        theOrder.setProcessId((byte) 1);
+                        if (theOrder.getApprovalBy().equals("Deptor"))
+                            theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(),  1));
+                        else if (theOrder.getApprovalBy().equals("Customer") && !theOrder.getDebCheckScen()) {
+                            theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 5));
+                        } if (theOrder.getApprovalBy().equals("Customer") && theOrder.getDebCheckScen()) {
+                            theOrder.setProcessId((byte) 1);
+                            theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(),  1));
+                        }
+//
+//                        mailManager.sendEmail(theOrder);
                     }
 
 
                     theOrder.setSAPstatus(newSAPStatus);
-                    comment.setToUser(userTo);
-                    comment.setOrder(theOrder);
+
+                     prepareOrder(theOrder);
                     orderManager.save(theOrder);
                     statusChange.setOrder(theOrder);
                     statusChange.setSAPstatus(newSAPStatus);
@@ -314,24 +324,40 @@ public class OrderPageController {
                 }
             } else
 //__3
-                if (theOrder.getSapStatus().getId() == 3 && roles.get(0).getId() == 2 && theOrder.getPVIcheckScen()) {
+                if (theOrder.getSapStatus().getId() == 3 && role.getId() == 2 && theOrder.getPVIcheckScen()) {
+
+
                     if (answer.equals("yes")) {
                         newSAPStatus = sapStatusManager.findById(4);
+
+
                         theOrder.setSAPstatus(newSAPStatus);
                         theOrder.setRejected(false);
+
+
+                        if (theOrder.getApprovalBy().equals("Deptor"))
+                            theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 1));
+                        else if (theOrder.getApprovalBy().equals("Customer") && !theOrder.getDebCheckScen()) {
+                            theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(),  5));
+                        } else if (theOrder.getApprovalBy().equals("Customer") && theOrder.getDebCheckScen())
+                            theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 1));
+
+                       prepareOrder(  theOrder);
                         orderManager.save(theOrder);
                         statusChange.setOrder(theOrder);
                         statusChange.setSAPstatus(newSAPStatus);
                         statusChangeManager.save(statusChange);
                     } else if (answer.equals("no")) {
+                        theOrder.setItsUsers(null);
                         discardOrders(theOrder, statusChange);
                     }
 
                 } else
 //__4
-                    if (theOrder.getSapStatus().getId() == 4 && roles.get(0).getId() == 1 && theOrder.getApprovalBy().equals("Deptor")) {
+                    if (theOrder.getSapStatus().getId() == 4 && role.getId() == 1 && theOrder.getApprovalBy().equals("Deptor")) {
                         if (answer.equals("yes")) {
                             approveOrders(theOrder, statusChange);
+
 //                newSAPStatus=sapStatusManager.findById(7);
 //                theOrder.setSAPstatus(newSAPStatus);
 //                orderManager.save(theOrder);
@@ -340,6 +366,7 @@ public class OrderPageController {
 //                statusChangeManager.save(statusChange);
                         } else if (answer.equals("no")) {
                             discardOrders(theOrder, statusChange);
+
 //                newSAPStatus=sapStatusManager.findById(6);
 //                theOrder.setSAPstatus(newSAPStatus);
 //                theOrder.setRejected(true);
@@ -348,44 +375,58 @@ public class OrderPageController {
 //                statusChange.setSAPstatus(newSAPStatus);
 //                statusChangeManager.save(statusChange);
                         }
+                        theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(),  2));
+                        prepareOrder(theOrder);
 
                     } else
-//__5&7
-                        if (theOrder.getSapStatus().getId() == 4 && roles.get(0).getId() == 5 && theOrder.getApprovalBy().equals("Customer")
+//5 and 7
+                        if (theOrder.getSapStatus().getId() == 4 && role.getId() == 5 && theOrder.getApprovalBy().equals("Customer")
                                 && (!theOrder.getDebCheckScen() || (theOrder.getDebCheckScen() && theOrder.getProcessId() == 2))) {
                             if (answer.equals("yes")) {
                                 approveOrders(theOrder, statusChange);
+                                theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 2));
+
                             } else if (answer.equals("no")) {
                                 theOrder.setProcessId((byte) 3);
+                                theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 1));
+
                                 orderManager.save(theOrder);
                             }
-
+                            prepareOrder(  theOrder);
                         } else
 //__6
-                            if (theOrder.getSapStatus().getId() == 4 && roles.get(0).getId() == 1 && theOrder.getApprovalBy().equals("Customer") && theOrder.getDebCheckScen() && theOrder.getProcessId() == 1) {
+                            if (theOrder.getSapStatus().getId() == 4 && role.getId() == 1 && theOrder.getApprovalBy().equals("Customer") && theOrder.getDebCheckScen() && theOrder.getProcessId() == 1) {
                                 if (answer.equals("yes")) {
                                     theOrder.setProcessId((byte) 2);
+                                    theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(),  5));
+
                                     orderManager.save(theOrder);
                                 } else if (answer.equals("no")) {
                                     discardOrders(theOrder, statusChange);
+                                    theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(),  2));
                                 }
+                                prepareOrder(  theOrder);
 
                             } else
 //__8
-                                if (theOrder.getSapStatus().getId() == 4 && roles.get(0).getId() == 1 && theOrder.getApprovalBy().equals("Customer") && theOrder.getProcessId() == 3) {
+                                if (theOrder.getSapStatus().getId() == 4 && role.getId() == 1 && theOrder.getApprovalBy().equals("Customer") && theOrder.getProcessId() == 3) {
                                     if (answer.equals("yes")) {
                                         approveOrders(theOrder, statusChange);
+
                                     } else if (answer.equals("no")) {
                                         discardOrders(theOrder, statusChange);
                                     }
+                                    theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(),  2));
+                                    prepareOrder(  theOrder);
 
                                 } else
 //__9
-                                    if (theOrder.getSapStatus().getId() == 6 && roles.get(0).getId() == 2) {
+                                    if (theOrder.getSapStatus().getId() == 6 && role.getId() == 2) {
                                         if (answer.equals("yes")) {
 //                TODO: Check what todo next
                                             newSAPStatus = sapStatusManager.findById(1);
                                             theOrder.setSAPstatus(newSAPStatus);
+                                            theOrder.setItsUsers(null);
                                             orderManager.save(theOrder);
                                             statusChange.setOrder(theOrder);
                                             statusChange.setSAPstatus(newSAPStatus);
@@ -393,6 +434,8 @@ public class OrderPageController {
                                         } else if (answer.equals("no")) {
                                             newSAPStatus = sapStatusManager.findById(2);
                                             theOrder.setSAPstatus(newSAPStatus);
+                                            theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(),  4));
+                                            prepareOrder(theOrder);
                                             orderManager.save(theOrder);
                                             statusChange.setOrder(theOrder);
                                             statusChange.setSAPstatus(newSAPStatus);
@@ -401,111 +444,85 @@ public class OrderPageController {
                                     } else
 
 //__10
-                                        if (theOrder.getSapStatus().getId() == 5 && roles.get(0).getId() == 2 && theOrder.getProcessId() == 4) {
+                                        if (theOrder.getSapStatus().getId() == 5 && role.getId() == 2 && theOrder.getProcessId() == 4) {
                                             if (answer.equals("yes")) {
                                                 theOrder.setProcessId((byte) 5);
+                                                theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(),  4));
+                                                prepareOrder(theOrder);
                                                 orderManager.save(theOrder);
                                             }
                                         } else
 
 //__11
-                                            if (theOrder.getSapStatus().getId() == 5 && roles.get(0).getId() == 4 && theOrder.getProcessId() == 5) {
+                                            if (theOrder.getSapStatus().getId() == 5 && role.getId() == 4 && theOrder.getProcessId() == 5) {
                                                 if (answer.equals("yes")) {
                                                     newSAPStatus = sapStatusManager.findById(7);
                                                     theOrder.setSAPstatus(newSAPStatus);
+                                                    theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 4));
+                                                    prepareOrder(theOrder);
                                                     orderManager.save(theOrder);
                                                     statusChange.setOrder(theOrder);
                                                     statusChange.setSAPstatus(newSAPStatus);
                                                     statusChangeManager.save(statusChange);
                                                 }
                                             }
-        return comment;
+
 
 
     }
 
+    private void prepareOrder(Order theOrder) {
+
+            User userTo = theOrder.getItsUsers().get(0).getUser();
+            Role userToRoles = roleManager.findByUserId(userTo.getUserId());
+//            userTo.setRole(userToRoles);
+
+            try {
+                Integer userToRoleId = userToRoles.getId();
+                Integer SSId = theOrder.getSAPstatus().getId();
+
+                StatusSAPStatusRole statusSAPStatusRole = statusSAPStatusRoleManager.findStatusByRoleIdAndSAPStatusId(userToRoleId, SSId);
+
+                List<StatusSAPStatusRole> statusSAPStatusRolesList = new ArrayList<>();
+                statusSAPStatusRolesList.add(statusSAPStatusRole);
+
+                theOrder.getSAPstatus().setStatusSAPStatuseRoles(statusSAPStatusRolesList);
+            } catch (NullPointerException e) {
+                System.out.println(e.getStackTrace());
+            }
+
+//       commentsManager.save(comment);
+
+    }
 
     @RequestMapping(value = "/changestatus/{orderId}/{answer}", method = RequestMethod.POST)
-//    public String changeOrderStatus(Model model, @PathVariable int orderId, @PathVariable String answer, Principal principal) {
-//        public String multiFileUpload(@Valid MultiFileBucket multiFileBucket,
-//                BindingResult result, ModelMap model) throws IOException {
     public String changeOrderStatusAndUpload(@Valid MultiFileBucket multiFileBucket,
                                              BindingResult result, Model model, @PathVariable int orderId, @PathVariable String answer, @ModelAttribute("user") User user, @ModelAttribute("comment") Comments comment) throws IOException {
-
-
-        List<Role> roles = user.getRoles();
-        Role role = roles.get(0);
         Order theOrder = orderManager.findById(orderId);
-        comment = statusChanginLogic(theOrder, comment, roles, answer);
-        comment.setFromUser(user);
+        Role role = user.getRole();
 
-
-        User userTo = comment.getToUser();
-        List<Role> UserToRoles = roleManager.findByUserId(userTo.getUserId());
-        userTo.setRoles(UserToRoles);
-        try {
-            Integer userToRoleId = UserToRoles.get(0).getId();
-            Integer SSId = comment.getOrder().getSAPstatus().getId();
-
-            StatusSAPStatusRole statusSAPStatusRole = statusSAPStatusRoleManager.findStatusByRoleIdAndSAPStatusId(userToRoleId, SSId);
-
-            List<StatusSAPStatusRole> statusSAPStatusRolesList = new ArrayList<>();
-            statusSAPStatusRolesList.add(statusSAPStatusRole);
-
-            theOrder.getSAPstatus().setStatusSAPStatuseRoles(statusSAPStatusRolesList);
-        } catch (NullPointerException e) {
-            System.out.println(e.getStackTrace());
+        statusChanginLogic(theOrder,  role, answer);
+        if(comment.getCommText() != "") {
+            comment.setFromUser(user);
+            comment.setToUser(theOrder.getItsUsers().get(0).getUser());
+            comment.setForRole(theOrder.getSAPstatus().getStatusSAPStatuseRoles().get(0).getRole());
+            comment.setOrder(theOrder);
+            commentsManager.save(comment);
         }
-
-
-        comment.setToUser(userTo);
-        comment.setForRole(role);
-
-        commentsManager.save(comment);
-        Map<Comments, MultiFile> notification = new HashMap<>();
-        notification.put(comment, null);
-        mailManager.sendEmail(notification);
-
-
-//        model.addAttribute("theOrder",theOrder);
+                  mailManager.sendEmail(theOrder);
 
 //        if (result.hasErrors()) {
         System.out.println("validation errors in multi upload");
         System.out.println(result.hasErrors());
-//            return "multiFileUploader";
-//            return "redirect:/orders/{orderId}";
-//        } else {
-//        System.out.println("Fetching files");
-//        List<String> fileNames = new ArrayList<String>();
-        // Now do something with file...
-//            for (FileBucket bucket : multiFileBucket.getFiles()) {
-//                FileCopyUtils.copy(bucket.getFile().getBytes(), new File(UPLOAD_LOCATION + bucket.getFile().getOriginalFilename()));
-//                fileNames.add(bucket.getFile().getOriginalFilename());
-//                System.out.println("File saved "+bucket.getFile().getOriginalFilename());
-//            }
-//        for(FileBucket bucket : multiFileBucket.getFiles()){
-//            System.out.println("buckets");
-//            if(bucket.getFile()!=null){
-//                System.out.println("!=null");
-//                if (bucket.getFile().getSize() != 0) {
-//                    System.out.println("!=0");
-//                    FileCopyUtils.copy(bucket.getFile().getBytes(), new File(UPLOAD_LOCATION + bucket.getFile().getOriginalFilename()));
-//                    fileNames.add(bucket.getFile().getOriginalFilename());
-//                    System.out.println("File saved "+bucket.getFile().getOriginalFilename());
-//                }
-//            }
-//        }
-
-
-//        model.addAttribute("fileNames", fileNames);
-//            return "singleFileUploader";
         return "redirect:/orders/{orderId}";
 //        }
 
     }
 
     @RequestMapping(value = "/save-file/{orderId}", method = RequestMethod.POST)
-    public @ResponseBody FileMeta doUpload(@RequestParam("files[]") MultipartFile multipartFile, @PathVariable int orderId) {
+    public
+    @ResponseBody
+    FileMeta doUpload(@RequestParam("files[]") MultipartFile multipartFile, @PathVariable int orderId) {
         System.out.println("/save-file");
         System.out.println(multipartFile.getOriginalFilename());
 //        File file = new File("my-file.txt");
@@ -518,11 +535,11 @@ public class OrderPageController {
 //        new File("C:/folder1")
         try {
 //            FileCopyUtils.copy(multipartFile.getBytes(), new File(UPLOAD_LOCATION + fileName));
-            File file = new File(UPLOAD_LOCATION +orderId+"/"+ multipartFile.getOriginalFilename());
+            File file = new File(UPLOAD_LOCATION + orderId + "/" + multipartFile.getOriginalFilename());
             file.getParentFile().mkdirs();
             multipartFile.transferTo(file);
             fileMeta.setFileName(multipartFile.getOriginalFilename());
-            fileMeta.setFileSize(multipartFile.getSize()/1024+" Kb");
+            fileMeta.setFileSize(multipartFile.getSize() / 1024 + " Kb");
             fileMeta.setFileType(multipartFile.getContentType());
             fileMeta.setBytes(multipartFile.getBytes());
         } catch (IOException e) {
@@ -530,31 +547,38 @@ public class OrderPageController {
         }
         return fileMeta;
     }
+
     @RequestMapping(value = "/remove-file/{orderId}/{fileName:.*}")
-    public @ResponseBody void doRemove(@PathVariable int orderId,@PathVariable String fileName) {
+    public
+    @ResponseBody
+    void doRemove(@PathVariable int orderId, @PathVariable String fileName) {
         System.out.println("/remove-file");
         System.out.println(fileName);
-        try{
-            File file = new File(UPLOAD_LOCATION +orderId+"/"+ fileName);
-            if(file.delete()){System.out.println(file.getName() + " is deleted!");}
+        try {
+            File file = new File(UPLOAD_LOCATION + orderId + "/" + fileName);
+            if (file.delete()) {
+                System.out.println(file.getName() + " is deleted!");
+            }
 //            else{System.out.println("Delete operation is failed.");}
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
     // functions for internal use
-    public void approveOrders(Order theOrder, StatusChange statusChange) {
+    public Order approveOrders(Order theOrder, StatusChange statusChange) {
         SAPstatus newSAPStatus = sapStatusManager.findById(5);
         theOrder.setSAPstatus(newSAPStatus);
+        theOrder.setProcessId((byte) 4);
         orderManager.save(theOrder);
         statusChange.setOrder(theOrder);
         statusChange.setSAPstatus(newSAPStatus);
         statusChangeManager.save(statusChange);
+        return theOrder;
     }
 
-    public void discardOrders(Order theOrder, StatusChange statusChange) {
+    public Order discardOrders(Order theOrder, StatusChange statusChange) {
         SAPstatus newSAPStatus = sapStatusManager.findById(6);
         theOrder.setSAPstatus(newSAPStatus);
         theOrder.setRejected(true);
@@ -562,6 +586,7 @@ public class OrderPageController {
         statusChange.setOrder(theOrder);
         statusChange.setSAPstatus(newSAPStatus);
         statusChangeManager.save(statusChange);
+        return theOrder;
     }
 
 
@@ -575,7 +600,6 @@ public class OrderPageController {
 //
 //        return "redirect:/orders/{orderId}";
 //    }
-
 
 
 }

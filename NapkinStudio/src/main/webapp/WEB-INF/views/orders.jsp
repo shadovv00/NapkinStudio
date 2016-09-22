@@ -30,7 +30,7 @@
 <body>
 
 <a href="<c:url value="/logout"/>"> Logout </a>
-<p>You are logged in as ${user.roles[0].name}</p>
+<p>You are logged in as ${user.role.name}</p>
 <div>
     <section>
         <a id="all" class="ordersFilter" style="margin-left: 15px">All orders (${fn:length(userOrders)})</a>

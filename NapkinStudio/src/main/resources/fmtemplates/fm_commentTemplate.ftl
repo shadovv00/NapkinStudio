@@ -2,9 +2,11 @@
 <body>
 <h3>Dear ${comment.toUser.firstName} </h3>
 <div>
-    Comment was added to your comment group  ${comment.forRole.name}
+    Comment was added to order number ${comment.order.orderId}
 </div>
-<span> ${comment.commText}</span>
+<div>
+    <a href="${link}">To Order</a>
+</div>
 
 </body>
 </html>

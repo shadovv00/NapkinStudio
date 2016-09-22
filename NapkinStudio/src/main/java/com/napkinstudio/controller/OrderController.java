@@ -1,12 +1,14 @@
 package com.napkinstudio.controller;
 
 
-import com.napkinstudio.entity.*;
+import com.napkinstudio.entity.Role;
+import com.napkinstudio.entity.StatusSAPStatusRole;
+import com.napkinstudio.entity.User;
+import com.napkinstudio.entity.UserOrder;
 import com.napkinstudio.manager.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
@@ -48,15 +50,17 @@ public class OrderController {
         String login = principal.getName();
         User user = userManager.findByLogin(login);
 
-        List<Role> roles = roleManager.findByUserId(user.getUserId());
-        user.setRoles(roles);
+        Role role = roleManager.findByUserId(user.getUserId());
+        user.setRole(role);
         return user;
     }
 
     @ModelAttribute("userOrders")
     List<UserOrder> UserOrders(@ModelAttribute("user") User user) {
 
-        Integer roleId = user.getRoles().get(0).getId();
+        System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+
+        Integer roleId = user.getRole().getId();
         List<UserOrder> userOrders = userOrderManager.findOrdersByUserId(user.getUserId());
 
         for (Iterator<UserOrder> iterator = userOrders.iterator(); iterator.hasNext();) {
@@ -79,19 +83,19 @@ public class OrderController {
     }
 
 
-    @RequestMapping("orders/sendEmail/{index}")
-    public String sentMail(@ModelAttribute("userOrders") UserOrder userOrders, @PathVariable("index") int index ){
-        System.out.println(index);
-
-        System.out.println(userOrders.getOrder().getOrderId());
-          Order order =  userOrders.getOrder();
-        List<UserOrder> userOrderList = userOrderManager.findUserOrdersByOrderId(order.getOrderId());
-        order.setItsUsers(userOrderList);
-
-        System.out.println(order.getItsUsers().get(0).getUser().getEmail());
-         mailManager.sendEmail(order);
-        return "redirect:/orders";
-    }
+//    @RequestMapping("orders/sendEmail/{index}")
+//    public String sentMail(@ModelAttribute("userOrders") UserOrder userOrders, @PathVariable("index") int index ){
+//        System.out.println(index);
+//
+//        System.out.println(userOrders.getOrder().getOrderId());
+//          Order order =  userOrders.getOrder();
+//        List<UserOrder> userOrderList = userOrderManager.findUserOrdersByOrderId(order.getOrderId());
+//        order.setItsUsers(userOrderList);
+//
+//        System.out.println(order.getItsUsers().get(0).getUser().getEmail());
+//         mailManager.sendEmail();
+//        return "redirect:/orders";
+//    }
 
     @RequestMapping(value = "/orders")
     public String goToOrders() {

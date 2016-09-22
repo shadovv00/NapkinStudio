@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 /**
  * Created by User1 on 02.08.2016.
  */
@@ -29,7 +27,7 @@ public class RoleManager {
     }
 
     @Transactional
-    public List<Role> findByUserId(Integer id) {
+    public Role findByUserId(Integer id) {
         return roleDao.findByUserId(id);
     }
 

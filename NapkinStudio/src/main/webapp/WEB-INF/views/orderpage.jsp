@@ -607,32 +607,32 @@
 
                 <%--Appove without comments and files adding--%>
                 <c:if test="${
-                            (theOrder.SAPstatus.id==6&&user.roles[0].id==2)||
+                            (theOrder.SAPstatus.id==6&&user.role.id==2)||
 
-                            (theOrder.SAPstatus.id==3&&user.roles[0].id==2&&orderPviCheck)||
-                            (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.approvalBy=='Deptor')||
-                            (theOrder.SAPstatus.id==4&&user.roles[0].id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
-                            (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==1)||
-                            (theOrder.SAPstatus.id==4&&user.roles[0].id==5&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==2)||
-                            (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.approvalBy=='Customer'&&theOrder.processId==3)||
-                            (theOrder.SAPstatus.id==5&&user.roles[0].id==2&&theOrder.processId==4)
+                            (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
+                            (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Deptor')||
+                            (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
+                            (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==1)||
+                            (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==2)||
+                            (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.processId==3)||
+                            (theOrder.SAPstatus.id==5&&user.role.id==2&&theOrder.processId==4)
                  }">
                 <a href="<c:url value='/changestatus/${theOrder.orderId}/yes' />"
                    class="btn btn-success custom-width">Approve</a>
                 </c:if>
                 <%--Discard without comments and files adding--%>
                 <c:if test="${
-                            (theOrder.SAPstatus.id==3&&user.roles[0].id==2&&orderPviCheck)||
-                            (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.approvalBy=='Customer'&&theOrder.processId==3)
+                            (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
+                            (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.processId==3)
                  }">
                 <a href="<c:url value='/changestatus/${theOrder.orderId}/no' />"
                    class="btn btn-danger custom-width">Discard</a>
                 </c:if>
                 <%--Appove with comments and files adding--%>
                 <c:if test="${
-                            ((theOrder.SAPstatus.id==1)&&user.roles[0].id==2)||
-                            (theOrder.SAPstatus.id==2&&user.roles[0].id==4)||
-                            (theOrder.SAPstatus.id==5&&user.roles[0].id==4&&theOrder.processId==5)
+                            ((theOrder.SAPstatus.id==1)&&user.role.id==2)||
+                            (theOrder.SAPstatus.id==2&&user.role.id==4)||
+                            (theOrder.SAPstatus.id==5&&user.role.id==4&&theOrder.processId==5)
                  }">
                 <button type="button" class="btn btn-success btn-lg" data-toggle="modal"
                         data-target="#approveOrder">Approve
@@ -676,17 +676,17 @@
                                             <div class="col-sm-5">
                                                 <form:textarea path="commText"
                                                                cssClass="form-control"></form:textarea>
-                                                <form:hidden path="forRole.id"
-                                                             value="7"/>
-                                                <form:hidden path="order.orderId"
-                                                             value="${theOrder.orderId}"/>
-                                                <form:hidden
-                                                        path="order.itemNum"
-                                                        value="${theOrder.itemNum}"/>
+                                                <%--<form:hidden path="forRole.id"--%>
+                                                             <%--value="7"/>--%>
+                                                <%--<form:hidden path="order.orderId"--%>
+                                                             <%--value="${theOrder.orderId}"/>--%>
+                                                <%--<form:hidden--%>
+                                                        <%--path="order.itemNum"--%>
+                                                        <%--value="${theOrder.itemNum}"/>--%>
 
-                                                <form:hidden
-                                                        path="order.printName"
-                                                        value="${theOrder.printName}"/>
+                                                <%--<form:hidden--%>
+                                                        <%--path="order.printName"--%>
+                                                        <%--value="${theOrder.printName}"/>--%>
                                                     <%--<input name="deleted" type="hidden" value="true"/>--%>
                                             </div>
                                         </div>
@@ -723,11 +723,11 @@
                     </c:if>
                     <%--Discard with comments and files adding--%>
                     <c:if test="${
-                            (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.approvalBy=='Deptor')||
-                            (theOrder.SAPstatus.id==4&&user.roles[0].id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
-                            (theOrder.SAPstatus.id==4&&user.roles[0].id==1&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==1)||
-                            (theOrder.SAPstatus.id==4&&user.roles[0].id==5&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==2)||
-                            (theOrder.SAPstatus.id==6&&user.roles[0].id==2)
+                            (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Deptor')||
+                            (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
+                            (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==1)||
+                            (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==2)||
+                            (theOrder.SAPstatus.id==6&&user.role.id==2)
                  }">
                         <button type="button" class="btn btn-danger btn-lg" data-toggle="modal"
                                 data-target="#discardModal">
@@ -772,26 +772,20 @@
                                                     <div class="col-sm-5">
                                                         <form:textarea path="commText"
                                                                        cssClass="form-control"></form:textarea>
-                                                        <form:hidden path="forRole.id"
-                                                                     value="7"/>
-                                                        <form:hidden path="order.orderId"
-                                                                     value="${theOrder.orderId}"/>
-                                                        <form:hidden
-                                                                path="order.itemNum"
-                                                                value="${theOrder.itemNum}"/>
+                                                        <%--<form:hidden path="forRole.id"--%>
+                                                                     <%--value="7"/>--%>
+                                                        <%--<form:hidden path="order.orderId"--%>
+                                                                     <%--value="${theOrder.orderId}"/>--%>
+                                                        <%--<form:hidden--%>
+                                                                <%--path="order.itemNum"--%>
+                                                                <%--value="${theOrder.itemNum}"/>--%>
 
-                                                        <form:hidden
-                                                                path="order.printName"
-                                                                value="${theOrder.printName}"/>
+                                                        <%--<form:hidden--%>
+                                                                <%--path="order.printName"--%>
+                                                                <%--value="${theOrder.printName}"/>--%>
                                                             <%--<input name="deleted" type="hidden" value="true"/>--%>
                                                     </div>
-                                                    <div id="foruploadedfiles">
-                                                        <input id="fileupload" type="file" name="files[]"
-                                                               data-url='/save-file/${theOrder.orderId}' multiple>
-                                                        <div id="progress">
-                                                            <div class="bar" style="width: 0%; height: 18px; background: green;"></div>
-                                                        </div>
-                                                    </div>
+
                                                 </div>
                                                 <%--<div class="modal-footer col-sm-5">--%>
                                                 <div class="col-sm-5">
@@ -800,7 +794,15 @@
                                                            class="btn btn-large btn-primary" style="float: left;">
                                                 </div>
                                                 <%--</div>--%>
+                                                <%--<div id="foruploadedfiles">--%>
+                                                    <%--<input id="fileupload" type="file" name="files[]"--%>
+                                                           <%--data-url='/save-file/${theOrder.orderId}' multiple>--%>
+                                                    <%--<div id="progress">--%>
+                                                        <%--<div class="bar" style="width: 0%; height: 18px; background: green;"></div>--%>
+                                                    <%--</div>--%>
+                                                <%--</div>--%>
                                             </form:form>
+
                                         </div>
 
                                     </div>
@@ -832,7 +834,7 @@
 <script>
 
 
-    var role = "${user.roles[0].name}";
+    var role = "${user.role.name}";
     var status = "${theOrder.sapStatus.statusSAPStatuseRoles[0].status.name}";
     var statusId = +"${theOrder.sapStatus.statusSAPStatuseRoles[0].status.id}";
     console.log(role + " " + status + " " + statusId);

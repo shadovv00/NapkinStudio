@@ -81,7 +81,7 @@ public class Order extends  AbstractEntity{
 //        return users;    }
 //    public void setUsers(List<User> users) {
 //        this.users = users;    }
-    @OneToMany(mappedBy="order",fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+    @OneToMany(mappedBy="order",fetch = FetchType.LAZY,cascade = {REMOVE})
     @XStreamImplicit
     private List<UserOrder> itsUsers;
     public List<UserOrder> getItsUsers() {

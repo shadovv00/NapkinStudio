@@ -23,7 +23,7 @@ public class SAPstatus {
     private String name;
 
     @OneToMany(mappedBy = "SAPStatus",
-            cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+            cascade = {CascadeType.REMOVE})
     private List<StatusSAPStatusRole> statusSAPStatuseRoles;
 
     public List<StatusSAPStatusRole> getUserGroups() {

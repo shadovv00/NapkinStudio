@@ -49,14 +49,12 @@ public class User extends AbstractEntity {
     private String email;
     private Boolean enabled;
     private Date lastSession;
-    
-    @ManyToMany(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
-    @JoinTable
-    private List<Role> roles;
-    public List<Role> getRoles() {
-        return roles;    }
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;    }
+
+
+
+    @ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+    @JoinColumn
+    private Role role;
 
 //    @ManyToMany(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
 //    @JoinTable
@@ -78,7 +76,13 @@ public class User extends AbstractEntity {
     public void setMyOrders(List<UserOrder> myOrders) {
         this.myOrders = myOrders;    }
 
-    
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
     
     
     

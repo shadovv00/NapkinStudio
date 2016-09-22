@@ -7,7 +7,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -393,9 +392,10 @@ public class InitDBManager {
         debtor.setLogin("deptor1");
         debtor.setPassword(encoder.encode("deptor1"));
         debtor.setEnabled(true);
-        List<Role> roles = new ArrayList<Role>();
-        roles.add(debtorRole);
-        debtor.setRoles(roles);
+//        List<Role> roles = new ArrayList<Role>();
+//        roles.add(debtorRole);
+//        debtor.setRoles(roles);
+        debtor.setRole(debtorRole);
 
         User PVI = new User();
         PVI.setFirstName("Mark");
@@ -403,9 +403,10 @@ public class InitDBManager {
         PVI.setLogin("PVI1");
         PVI.setPassword(encoder.encode("PVI1"));
         PVI.setEnabled(true);
-        List<Role> roles2 = new ArrayList<Role>();
-        roles2.add(PVIRole);
-        PVI.setRoles(roles2);
+//        List<Role> roles2 = new ArrayList<Role>();
+//        roles2.add(PVIRole);
+//        PVI.setRoles(roles2);
+        PVI.setRole(PVIRole);
 
 
         User DTP = new User();
@@ -414,9 +415,10 @@ public class InitDBManager {
         DTP.setLogin("DTP");
         DTP.setPassword(encoder.encode("DTP"));
         DTP.setEnabled(true);
-        List<Role> roles3 = new ArrayList<Role>();
-        roles3.add(DTPRole);
-        DTP.setRoles(roles3);
+//        List<Role> roles3 = new ArrayList<Role>();
+//        roles3.add(DTPRole);
+//        DTP.setRoles(roles3);
+        DTP.setRole(DTPRole);
 
         User ftpUser = new User();
         ftpUser.setFirstName("ftp");
@@ -424,9 +426,10 @@ public class InitDBManager {
         ftpUser.setLogin("ftp");
         ftpUser.setPassword("ftp");
         ftpUser.setEnabled(true);
-        List<Role> roles4 = new ArrayList<Role>();
-        roles4.add(ftpRole);
-        ftpUser.setRoles(roles4);
+//        List<Role> roles4 = new ArrayList<Role>();
+//        roles4.add(ftpRole);
+//        ftpUser.setRoles(roles4);
+        ftpUser.setRole(ftpRole);
 
         User CustomUser = new User();
         CustomUser.setFirstName("Customer");
@@ -434,9 +437,10 @@ public class InitDBManager {
         CustomUser.setLogin("Customer");
         CustomUser.setPassword(encoder.encode("Customer"));
         CustomUser.setEnabled(true);
-        List<Role> roles5 = new ArrayList<Role>();
-        roles5.add(CustomRole);
-        CustomUser.setRoles(roles5);
+//        List<Role> roles5 = new ArrayList<Role>();
+//        roles5.add(CustomRole);
+//        CustomUser.setRoles(roles5);
+        CustomUser.setRole(CustomRole);
 
 
         userDao.save(debtor);
@@ -459,6 +463,7 @@ public class InitDBManager {
         order1.setPVIcheckScen(false);
         order1.setRejected(false);
         order1.setApprovalBy("Deptor");
+        order1.setDebCheckScen(true);
 //        order1.setComments(commentsList);
         orderDao.save(order1);
 
@@ -562,6 +567,7 @@ public class InitDBManager {
         order3.setDeliveryDate(new Date());
         order3.setPVIcheckScen(true);
         order3.setRejected(false);
+        order3.setDebCheckScen(false);
         orderDao.save(order3);
 
         UserOrder user1Order3 = new UserOrder();
@@ -594,6 +600,7 @@ public class InitDBManager {
         order2.setDeliveryDate(new Date());
         order2.setPVIcheckScen(false);
         order2.setRejected(false);
+        order2.setDebCheckScen(false);
         orderDao.save(order2);
 
         UserOrder user1Order2 = new UserOrder();
