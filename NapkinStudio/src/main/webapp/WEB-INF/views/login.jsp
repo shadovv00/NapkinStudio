@@ -19,62 +19,70 @@
 <!-- 		<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.css" /> -->
 <!-- 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
 	</head>
-
+<header>
+	<div class="col-md-12 border" style="background-color: white">
+		<h2>Inloggen</h2>
+	</div>
+</header>
 <body onload='document.getElementById("username").focus();'>
 	
 		<div id="mainWrapper">
-			<div class="login-container">
-				<div class="login-card">
-					<div class="login-form">
-						<c:url var="loginUrl" value="/login" />
-						<form action="${loginUrl}" method="post" class="form-horizontal">
-<%-- 							<c:if test="${param.error != null}"> --%>
-<!-- 								<div class="alert alert-danger"> -->
-<!-- 									<p>Invalid username and password.</p> -->
-<!-- 								</div> -->
-<%-- 							</c:if> --%>
-							<c:if test="${not empty error}">
-								<div class="alert alert-danger">
-									<p>${error}</p>
-								</div>
-							</c:if>
-<%-- 							<c:if test="${not empty message}"> --%>
-<!-- 								<div class="alert alert-danger"> -->
-<%-- 									<p>${message}</p> --%>
-<!-- 								</div> -->
-<%-- 							</c:if> --%>
-							<c:if test="${param.logout != null}">
-								<div class="alert alert-success">
-									<p>You have been logged out successfully.</p>
-								</div>
-							</c:if>
-							
-							<div class="input-group input-sm">
-								<label class="input-group-addon" for="username"><i class="fa fa-user"></i></label>
-								<input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" required>
-							</div>
-							<div class="input-group input-sm">
-								<label class="input-group-addon" for="password"><i class="fa fa-lock"></i></label> 
-								<input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" required>
-							</div>
-							<div class="input-group input-sm">
-                              <div class="checkbox">
-                                <label><input type="checkbox" id="rememberme" name="remember-me"> Remember Me</label>  
-                              </div>
-                            </div>
-							<input type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}" />
-								
-							<div class="form-actions">
-								<input type="submit"
-									class="btn btn-block btn-primary btn-default" value="Log in"/>
+            <div class="container">
+                <div class="col-md-5 logo-image"></div>
+                <div class="login-container col-md-7">
+                    <div class="login-card">
+                        <div class="login-form">
+                            <c:url var="loginUrl" value="/login" />
+                            <form action="${loginUrl}" method="post" class="form-horizontal">
+                                <%-- 							<c:if test="${param.error != null}"> --%>
+                                <!-- 								<div class="alert alert-danger"> -->
+                                <!-- 									<p>Invalid username and password.</p> -->
+                                <!-- 								</div> -->
+                                <%-- 							</c:if> --%>
+                                <c:if test="${not empty error}">
+                                    <div class="alert alert-danger">
+                                        <p>${error}</p>
+                                    </div>
+                                </c:if>
+                                <%-- 							<c:if test="${not empty message}"> --%>
+                                <!-- 								<div class="alert alert-danger"> -->
+                                <%-- 									<p>${message}</p> --%>
+                                <!-- 								</div> -->
+                                <%-- 							</c:if> --%>
+                                <c:if test="${param.logout != null}">
+                                    <div class="alert alert-success">
+                                        <p>You have been logged out successfully.</p>
+                                    </div>
+                                </c:if>
+                                <p>Log in om bestellingen te kunnen plaatsen
+                                    en drukproeven te kunnen beoorelen.</p>
+                                <div class="input-group input-sm">
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="E-mailadres" required>
+                                </div>
+                                <div class="input-group input-sm">
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Wachtwoord" required>
+                                </div>
+                                <div class="input-group input-sm">
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" id="rememberme" name="remember-me"> Onthoud mijn gegevens</label>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}" />
 
-								<a href="<spring:url value="/register"/>" class="btn btn-block btn-primary btn-default">Register</a>
-							</div>
+                                <div class="form-actions">
+                                    <input type="submit"
+                                           class="btn btn-block btn-primary btn-default" value="Inloggen"/>
 
-						</form>
-					</div>
-				</div>
-			</div>
+                                    <a href="<spring:url value="/register"/>" class="btn btn-block btn-primary btn-default">Registreren</a>
+                                    <p>Problemen met inloggen?</p>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 		</div>
 <!-- 	<h3>NapkinStudio</h3> -->
 

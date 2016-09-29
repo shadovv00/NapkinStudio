@@ -5,8 +5,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 
-@Entity
-@Table(name = "orders")
+//@Entity
+//@Table(name = "orders")
 
 public class Process {
     @Id
