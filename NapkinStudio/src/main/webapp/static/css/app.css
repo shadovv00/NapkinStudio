@@ -537,31 +537,69 @@ ul.checkout-bar a {
     -o-transition: height 0.1s ease;
     transition: height 0.1s ease;
 }
-ul {
-    list-style-type: none;
+.order-attachment li {
+	list-style-type: none;
+	overflow: hidden;
+}
+.order-attachment a {
+	color: inherit;
+}
+.order-attachment .file-info {
+	color: #b4b4b4;
+    display: inline;
+    font-size: 0.9em;
+}
+.order-attachment .remove-attachment {
+	display: none;
+}
+remove-attachment:hover {
+	display: inline-block !important;	
+}
+.icon-align {
+	vertical-align: bottom;
+}
+.remove-icon-align {
+	vertical-align: text-top;
+    margin-left: 4px;
+    color: #b4b4b4;
+}
+.remove-icon-align:hover {
+	cursor: pointer;
+}
+.remove-icon-align:active {
+	color: #a4a4a4;
+}
+.attachment-preview:hover {
+	cursor: pointer;
+}
+.attachment-preview:active {
+	color: #8cd5ff;
 }
 .drag-n-drop-zone {
-    background-color: silver;
-/  width: 200px; /
-/  min-height: 90px; /
+	background-color: silver;
+/* 	width: 200px; */
+/* 	min-height: 90px; */
 }
-
+.progress-bar {
+	height: 2px !important;
+}
 .file-upload-status {
-    float: right;
+	float: right;
 }
 .file-upload-success {
-    color: #5cb85c;
+	color: #5cb85c;
 }
 .file-upload-error {
-    color: #d9534f;
+	color: #d9534f;
 }
 .fileinput-button {
-    position: relative;
+	position: relative;
     overflow: hidden;
     display: inline-block;
 }
+
 .fileinput-button input {
-    position: absolute;
+	position: absolute;
     top: 0;
     right: 0;
     margin: 0;
@@ -571,22 +609,25 @@ ul {
     direction: ltr;
     cursor: pointer;
 }
+
 .drag-n-drop-file-text {
-    display: inline-block;
+	display: inline-block;
     margin-left: 1rem;
     font-family: initial;
 }
+
 .file-info-text {
-    display: inline-block;
+	display: inline-block;
     margin-left: 1rem;
 }
+
 .dropzone {
-/     background: palegreen; /
-/     width: 150px; /
-/     height: 50px; /
-/     line-height: 50px; /
-/     text-align: center; /
-font-weight: bold;
+/*     background: palegreen; */
+/*     width: 150px; */
+/*     height: 50px; */
+/*     line-height: 50px; */
+/*     text-align: center; */
+    font-weight: bold;
 }
 .dropzone.in {
     width: 600px;
@@ -605,6 +646,7 @@ font-weight: bold;
     transition: all 0.3s ease-out;
     opacity: 1;
 }
+
 .fa-spin-custom, .glyphicon-spin {
     -webkit-animation: spin 1000ms infinite linear;
     animation: spin 1000ms infinite linear;

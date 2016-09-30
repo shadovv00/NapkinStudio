@@ -803,71 +803,8 @@
                                 (theOrder.SAPstatus.id==2&&user.role.id==4)||
                                 (theOrder.SAPstatus.id==5&&user.role.id==4&&theOrder.processId==5)
                      }">
-                    <button type="button" class="btn btn-success btn-lg" data-toggle="modal"
-                            data-target="#approveOrder">Approve
-                    </button>
-                    <div class="modal fade" id="approveOrder" role="dialog">
-                        <div class="modal-dialog">
-                            <!-- Modal content-->
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Appove?</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Please add some comment and documentation</p>
-                                    <div class="form-container">
-                                        <form:form commandName="comment" method="post"
-                                                   action="/NapkinStudio/changestatus/${theOrder.orderId}/yes"
-                                                   cssClass="form-horizontal">
-                                            <div class="form-group">
-                                                <div class="col-sm-5">
-                                                    <form:textarea path="commText"
-                                                                   cssClass="form-control"></form:textarea>
-                                                        <%--<form:hidden path="forRole.id"--%>
-                                                        <%--value="7"/>--%>
-                                                        <%--<form:hidden path="order.orderId"--%>
-                                                        <%--value="${theOrder.orderId}"/>--%>
-                                                        <%--<form:hidden--%>
-                                                        <%--path="order.itemNum"--%>
-                                                        <%--value="${theOrder.itemNum}"/>--%>
-
-                                                        <%--<form:hidden--%>
-                                                        <%--path="order.printName"--%>
-                                                        <%--value="${theOrder.printName}"/>--%>
-                                                        <%--<input name="deleted" type="hidden" value="true"/>--%>
-                                                </div>
-                                            </div>
-                                            <%--<div class="modal-footer col-sm-5">--%>
-                                            <div class="col-sm-5">
-                                                <input type="submit"
-                                                       value="Save"
-                                                       class="btn btn-large btn-primary" style="float: left;">
-                                            </div>
-                                            <%--</div>--%>
-                                        </form:form>
-                                    </div>
-                                    <div id="foruploadedfiles">
-                                        <input id="fileupload" type="file" name="files[]" orderId="${theOrder.orderId}"
-                                               data-url='<c:url value='/save-file/${theOrder.orderId}' />' multiple>
-                                        <div id="progress">
-                                            <div class="bar" style="width: 0%; height: 18px; background: green;"></div>
-                                        </div>
-                                    </div>
-                                        <%--<div class="modal-footer">--%>
-                                        <%--&lt;%&ndash;<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>&ndash;%&gt;--%>
-                                        <%--<a href="<c:url value='/changestatus/${theOrder.orderId}/yes' />"--%>
-                                        <%--class="btn btn-success custom-width">Approve</a>--%>
-                                        <%--&lt;%&ndash;<div class="row">&ndash;%&gt;--%>
-                                        <%--<div class="form-actions floatRight">--%>
-                                        <%--<input type="submit" value="Upload" class="btn btn-success btn-sm">--%>
-                                        <%--</div>--%>
-                                        <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                                        <%--</div>--%>
-                                </div>
-
-                            </div>
-                        </div>
+                    <button type="button" class="approve-btn btn btn-success btn-lg">Approve</button>
+                    
                         </c:if>
                         <%--Discard with comments and files adding--%>
                         <c:if test="${
@@ -1161,8 +1098,6 @@
 
         if (statusId > 6 && status !== "Rejected")
             $(".add-comment-btn").hide();
-        napkin.uploadFile();
-        napkin.buildFileInfoList();
     });
 
 </script>

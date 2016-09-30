@@ -1,15 +1,35 @@
 package com.napkinstudio.manager;
 
-import com.napkinstudio.dao.*;
-import com.napkinstudio.entity.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.napkinstudio.dao.IArticleDao;
+import com.napkinstudio.dao.ICommentsDao;
+import com.napkinstudio.dao.IOrderDao;
+import com.napkinstudio.dao.IProgresBarFieldsDao;
+import com.napkinstudio.dao.IRoleDao;
+import com.napkinstudio.dao.ISAPstatusDao;
+import com.napkinstudio.dao.IStatusChangeDao;
+import com.napkinstudio.dao.IStatusDao;
+import com.napkinstudio.dao.IStatusSAPStatusRole;
+import com.napkinstudio.dao.IUserDao;
+import com.napkinstudio.dao.IUserOrderDao;
+import com.napkinstudio.entity.Comments;
+import com.napkinstudio.entity.Order;
+import com.napkinstudio.entity.ProgresBarFields;
+import com.napkinstudio.entity.Role;
+import com.napkinstudio.entity.SAPstatus;
+import com.napkinstudio.entity.Status;
+import com.napkinstudio.entity.StatusChange;
+import com.napkinstudio.entity.StatusSAPStatusRole;
+import com.napkinstudio.entity.User;
+import com.napkinstudio.entity.UserOrder;
 
 /**
  * Created by User1 on 20.07.2016.

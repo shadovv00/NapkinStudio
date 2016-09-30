@@ -1,11 +1,18 @@
 package com.napkinstudio.entity;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import static javax.persistence.CascadeType.MERGE;
+
 import java.util.Date;
 
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.REMOVE;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 /**
  * Entity implementation class for Entity: Comments
@@ -17,12 +24,12 @@ import static javax.persistence.CascadeType.REMOVE;
 		@NamedQuery(name = "Comments.findCommentsByOrderAndRoleId", query = "select c from Comments c inner join c.order o inner join c.forRole r where o.orderId =:orderId and r.id =:roleId  order by c.lastModifiedDate desc "),
         @NamedQuery(name="Comments.findCommentsbyOrderAndRoleIDs", query = "select c from Comments c inner join c.order o inner join c.forRole r where o.orderId =:orderId and r.id  in (:roleIdList) order by c.lastModifiedDate desc "),
 		@NamedQuery(name = "Comments.countAllUnreadComments", query = "select count(c) from Comments c " +
-				"inner join c.order o inner join o.itsUsers iu inner join iu.user user where o.orderId=:orderId and user.id =:userId and c.lastModifiedDate > iu.lastLook"),
+				"inner join c.order o inner join o.itsUsers iu inner join iu.user u where o.orderId=:orderId and u.userId =:userId and c.lastModifiedDate > iu.lastLook"),
 		@NamedQuery(name = "Comments.countUnreadCommentsByRoleId", query = "select count(c) from Comments c " +
-				"inner join c.forRole r inner join c.order o inner join o.itsUsers iu inner join iu.user user where o.orderId=:orderId and user.id =:userId and c.lastModifiedDate > iu.lastLook" +
+				"inner join c.forRole r inner join c.order o inner join o.itsUsers iu inner join iu.user u where o.orderId=:orderId and u.userId =:userId and c.lastModifiedDate > iu.lastLook" +
 				" and r.id =:roleId"),
         @NamedQuery(name = "Comments.countUnreadCommentsByRoleIds", query = "select count(c) from Comments c " +
-                "inner join c.forRole r inner join c.order o inner join o.itsUsers iu inner join iu.user user where o.orderId=:orderId and user.id =:userId and c.lastModifiedDate > iu.lastLook" +
+                "inner join c.forRole r inner join c.order o inner join o.itsUsers iu inner join iu.user u where o.orderId=:orderId and u.userId =:userId and c.lastModifiedDate > iu.lastLook" +
                 " and r.id in (:roleIdList)"),
 }
 )
