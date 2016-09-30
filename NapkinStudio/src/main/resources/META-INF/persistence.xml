@@ -12,6 +12,11 @@
 		<class>com.napkinstudio.entity.StatusChange</class>
 		<class>com.napkinstudio.entity.Customer</class>
 		<class>com.napkinstudio.entity.User</class>
+		<class>com.napkinstudio.entity.Process</class>
+		<class>com.napkinstudio.entity.ProgresBarFields</class>
+		<class>com.napkinstudio.entity.StatusSAPStatusRole</class>
+		<class>com.napkinstudio.entity.SynchronizationDate</class>
+		<class>com.napkinstudio.entity.UserOrder</class>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
 			<property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>

@@ -21,20 +21,29 @@ import javax.validation.Valid;
 import java.io.*;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.nio.file.*;
 import java.security.Principal;
 import java.util.*;
 
 
 @Controller
 public class OrderPageController {
-	
+
     private final static String USER_HOME = System.getProperty("user.home");
-    
+
     private final static String FILE_SEPARATOR = System.getProperty("file.separator");
-    
+
     private final static String UPLOAD_DIRECTORY = "napkinStorage";
-    
+
     private final static String ORDERS_DIRECTORY = "orders";
+
+    private final static String SEP = System.getProperty("file.separator");
+
+    private final static String ORDERS_TMP_DIRECTORY = "temp";
+
+    private final static String ORDERS_FINAL_DIRECTORY = "final";
+
+    private final static String ORDERS_PREVIEW_DIRECTORY = "preview";
 
     @Autowired
     private UserManager userManager;
@@ -71,6 +80,8 @@ public class OrderPageController {
     @Autowired
     private MailManager mailManager;
 
+    private List<String> idList;
+
     @ModelAttribute("user")
     public User user(Principal principal) {
         String login = principal.getName();
@@ -80,6 +91,33 @@ public class OrderPageController {
         user.setRole(role);
         return user;
     }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/order-ids", method = RequestMethod.POST)
+    public String setOrderIdsList(@RequestParam(value = "IDList[]") List<String> ids) {
+
+        this.idList = ids;
+
+        return new Boolean(true).toString();
+    }
+
+
+//     }
+
+//
+//    @RequestMapping(value = "/order-ids", method = RequestMethod.POST)
+//    @ResponseBody// <== this annotation will bind Arr class and convert to json response.
+//    public Arr addAnotherAppointment(
+//              @RequestBody Arr arr,
+//
+//            BindingResult errors) {
+//        System.out.println("aaaaaaaaaaa");
+//        System.out.println(arr.getTestArray());
+//
+//        return arr;
+//    }
+
 
     @ModelAttribute("comment")
     Comments comments() {
@@ -110,10 +148,12 @@ public class OrderPageController {
 //    }
 
     @RequestMapping(value = "/orders/{orderId}")
-    public String goToOrders(Model model, @PathVariable("orderId") int orderId, @ModelAttribute("user") User user) {
+    public String goToOrders(Model model, @PathVariable("orderId") Integer orderId, @ModelAttribute("user") User user) {
         Order theOrder = orderManager.findById(orderId);
+
         Integer SSId = theOrder.getSAPstatus().getId();
         Integer roleId = user.getRole().getId();
+        Integer userId = user.getUserId();
 //        Map<String, Order> modelMap = new HashMap<>();
 //        modelMap.put("theOrder",theOrder);
 //        model.mergeAttributes(modelMap);
@@ -130,12 +170,17 @@ public class OrderPageController {
             e.printStackTrace(System.out);
         }
 
+        // setting lastlook
+        UserOrder userOrder = userOrderManager.findOrdersByUserAndOrderId(userId, orderId);
+        userOrder.setLastLook(new Date());
+        userOrderManager.save(userOrder);
+
+
 //        String login = principal.getName();
 //        User user = userManager.findByLogin(login);
 //        Order theOrder =orderManager.findById(orderId);
 
 //        List<Role> roles = roleManager.findByUserId(user.getUserId());
-//        List<UserOrder> userOrders = userOrderManager.findOrdersByUserId(user.getUserId());
 //        Integer roleId = roles.get(0).getId();
 //        Integer SSId = theOrder.getSAPstatus().getId();
 //        System.out.println("role=" + roleId + "; SSId=" + SSId);
@@ -192,22 +237,59 @@ public class OrderPageController {
                 }
             }
         }
+//
+        int prev = idList.indexOf(orderId.toString()) - 1;
+        int next = idList.indexOf(orderId.toString()) + 1;
 
+        String prevId = prev >= 0 ? idList.get(prev) : "";
+
+        String nextId = next <= (idList.size() - 1) ? idList.get(next) : "";
+
+
+        model.addAttribute("nextId", nextId);
+        model.addAttribute("prevId", prevId);
 
         try {
-            Map<Integer, List<Comments>> commentsMap = commentsManager.findCommentsbyOrderId(orderId);
 
+            List<Comments> comments = null;
+            if (user.getRole().getId() == 5) {
+                List<Comments> customerComments = commentsManager.findCommentsByOrderAndRoleId(orderId, 5);
+                model.addAttribute("CustomerComments", customerComments);
+            } else if (user.getRole().getId() == 1) {
+//                List<Comments> customerComments = commentsManager.findCommentsByOrderAndRoleId(orderId, 5);
+//                List<Comments> deptorComments = commentsManager.findCommentsByOrderAndRoleId(orderId, 1);
+                List<Integer> roleIdList = new ArrayList<>();
+                roleIdList.add(5);
+                roleIdList.add(1);
 
-            model.addAttribute("PVIComments", commentsMap.get(2));
-            model.addAttribute("DeptorComments", commentsMap.get(1));
-            model.addAttribute("DTPComments", commentsMap.get(4));
-            model.addAttribute("CustomerComments", commentsMap.get(5));
-            model.addAttribute("StampsManufacComments", commentsMap.get(6));
-            model.addAttribute("ProductionComments", commentsMap.get(7));
+                Map<Integer, List<Comments>> commentsMap = commentsManager.findCommentsbyOrderAndRoleIDs(orderId, roleIdList);
+                List<Comments> customerComments = commentsMap.get(5);
+                List<Comments> deptorComments = commentsMap.get(1);
+
+                model.addAttribute("CustomerComments", customerComments);
+                model.addAttribute("DeptorComments", deptorComments);
+
+            } else if (user.getRole().getId() == 2 || user.getRole().getId() == 4) {
+
+                Map<Integer, List<Comments>> commentsMap = commentsManager.findCommentsbyOrderId(orderId);
+
+                model.addAttribute("PVIComments", commentsMap.get(2));
+                model.addAttribute("DeptorComments", commentsMap.get(1));
+                model.addAttribute("DTPComments", commentsMap.get(4));
+                model.addAttribute("CustomerComments", commentsMap.get(5));
+                model.addAttribute("StampsManufacComments", commentsMap.get(6));
+                model.addAttribute("ProductionComments", commentsMap.get(7));
+
+            }
+
+//            model.addAttribute("count",commentsMap);
+
 
         } catch (Exception e) {
             e.printStackTrace(System.out);
         }
+
+
         //        model.addAttribute("user", user);
 //        model.addAttribute("userOrders", userOrders);
         model.addAttribute("theOrder", theOrder);
@@ -217,7 +299,7 @@ public class OrderPageController {
         return "orderpage";
     }
 
-
+    //delete NapkinSudio by commit
     @RequestMapping(value = "/addComment", method = RequestMethod.POST)
     String doAddComment(@ModelAttribute("comment") Comments comment, @ModelAttribute("user") User user, BindingResult result) {
         int roleId = comment.getForRole().getId();
@@ -233,19 +315,41 @@ public class OrderPageController {
         comment.setOrder(order);
 
 
-        if ((comment.getForRole().getId() == 2 && user.getRole().getId() != 2) || comment.getForRole().getId() == 4) {
-            Role forRole = roleManager.findById(comment.getForRole().getId());
-            comment.setForRole(forRole);
-            mailManager.sendEmail(comment);
+        if ((comment.getForRole().getId() == 2 && user.getRole().getId() != 2) || (comment.getForRole().getId() == 4 && user.getRole().getId() != 4)) {
 
+            mailManager.sendEmail(comment);
         }
+        Role forRole = roleManager.findById(comment.getForRole().getId());
+        comment.setForRole(forRole);
 
         commentsManager.save(comment);
 
         return "redirect:/orders/" + orderId + ".html?success=true";
     }
 
-    //
+    @ResponseBody
+    @RequestMapping(value = "/edit-comment", method = RequestMethod.POST)
+    public String editComment(@RequestBody Comments newComment) {
+        Integer commentId = newComment.getId();
+        Comments comment = commentsManager.findCommentById(commentId);
+        comment.setCommText(newComment.getCommText());
+        commentsManager.save(comment);
+
+        return "true";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/delete-comment", method = RequestMethod.POST)
+    public String deleteComment(@RequestParam("commentId") int id) {
+//        Integer commentId = Integer.parseInt(id);
+        System.out.println(id);
+            commentsManager.deleteById(id);
+        return "true";
+    }
+
+
+
+    ////delete NapkinSudio by commit
     @RequestMapping(value = "/changestatus/{orderId}/{answer}")
     public String changeOrderStatus(Model model, @PathVariable int orderId, @PathVariable String answer, @ModelAttribute("user") User user) {
 
@@ -260,10 +364,10 @@ public class OrderPageController {
 
         model.addAttribute("theOrder", theOrder);
 
-        statusChanginLogic(theOrder,  role, answer);
+        statusChanginLogic(theOrder, role, answer);
 
-        if(theOrder.getItsUsers() != null)
-        mailManager.sendEmail(theOrder);
+        if (theOrder.getItsUsers() != null)
+            mailManager.sendEmail(theOrder);
 
         return "redirect:/orders/{orderId}";
     }
@@ -275,7 +379,7 @@ public class OrderPageController {
     }
 
     // functions for internal use
-    public void statusChanginLogic(Order theOrder,  Role role, String answer) {
+    public void statusChanginLogic(Order theOrder, Role role, String answer) {
 //       List<UserOrder>  userTo = null;
 //        UserOrder userToOrder;
 //        List<UserOrder> UserOrdersList;
@@ -311,12 +415,13 @@ public class OrderPageController {
                     } else {
                         newSAPStatus = sapStatusManager.findById(4);
                         if (theOrder.getApprovalBy().equals("Deptor"))
-                            theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(),  1));
+                            theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 1));
                         else if (theOrder.getApprovalBy().equals("Customer") && !theOrder.getDebCheckScen()) {
                             theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 5));
-                        } if (theOrder.getApprovalBy().equals("Customer") && theOrder.getDebCheckScen()) {
+                        }
+                        if (theOrder.getApprovalBy().equals("Customer") && theOrder.getDebCheckScen()) {
                             theOrder.setProcessId((byte) 1);
-                            theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(),  1));
+                            theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 1));
                         }
 //
 //                        mailManager.sendEmail(theOrder);
@@ -325,7 +430,7 @@ public class OrderPageController {
 
                     theOrder.setSAPstatus(newSAPStatus);
 
-                     prepareOrder(theOrder);
+                    prepareOrder(theOrder);
                     orderManager.save(theOrder);
                     statusChange.setOrder(theOrder);
                     statusChange.setSAPstatus(newSAPStatus);
@@ -347,11 +452,13 @@ public class OrderPageController {
                         if (theOrder.getApprovalBy().equals("Deptor"))
                             theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 1));
                         else if (theOrder.getApprovalBy().equals("Customer") && !theOrder.getDebCheckScen()) {
-                            theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(),  5));
-                        } else if (theOrder.getApprovalBy().equals("Customer") && theOrder.getDebCheckScen())
+                            theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 5));
+                        } else if (theOrder.getApprovalBy().equals("Customer") && theOrder.getDebCheckScen()) {
                             theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 1));
+                            theOrder.setProcessId((byte) 1);
+                        }
 
-                       prepareOrder(  theOrder);
+                        prepareOrder(theOrder);
                         orderManager.save(theOrder);
                         statusChange.setOrder(theOrder);
                         statusChange.setSAPstatus(newSAPStatus);
@@ -384,7 +491,7 @@ public class OrderPageController {
 //                statusChange.setSAPstatus(newSAPStatus);
 //                statusChangeManager.save(statusChange);
                         }
-                        theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(),  2));
+                        theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 2));
                         prepareOrder(theOrder);
 
                     } else
@@ -401,20 +508,20 @@ public class OrderPageController {
 
                                 orderManager.save(theOrder);
                             }
-                            prepareOrder(  theOrder);
+                            prepareOrder(theOrder);
                         } else
 //__6
                             if (theOrder.getSapStatus().getId() == 4 && role.getId() == 1 && theOrder.getApprovalBy().equals("Customer") && theOrder.getDebCheckScen() && theOrder.getProcessId() == 1) {
                                 if (answer.equals("yes")) {
                                     theOrder.setProcessId((byte) 2);
-                                    theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(),  5));
 
                                     orderManager.save(theOrder);
+                                    theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 5));
                                 } else if (answer.equals("no")) {
                                     discardOrders(theOrder, statusChange);
-                                    theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(),  2));
+                                    theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 2));
                                 }
-                                prepareOrder(  theOrder);
+                                prepareOrder(theOrder);
 
                             } else
 //__8
@@ -425,8 +532,8 @@ public class OrderPageController {
                                     } else if (answer.equals("no")) {
                                         discardOrders(theOrder, statusChange);
                                     }
-                                    theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(),  2));
-                                    prepareOrder(  theOrder);
+                                    theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 2));
+                                    prepareOrder(theOrder);
 
                                 } else
 //__9
@@ -443,7 +550,7 @@ public class OrderPageController {
                                         } else if (answer.equals("no")) {
                                             newSAPStatus = sapStatusManager.findById(2);
                                             theOrder.setSAPstatus(newSAPStatus);
-                                            theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(),  4));
+                                            theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 4));
                                             prepareOrder(theOrder);
                                             orderManager.save(theOrder);
                                             statusChange.setOrder(theOrder);
@@ -456,7 +563,7 @@ public class OrderPageController {
                                         if (theOrder.getSapStatus().getId() == 5 && role.getId() == 2 && theOrder.getProcessId() == 4) {
                                             if (answer.equals("yes")) {
                                                 theOrder.setProcessId((byte) 5);
-                                                theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(),  4));
+                                                theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 4));
                                                 prepareOrder(theOrder);
                                                 orderManager.save(theOrder);
                                             }
@@ -474,56 +581,56 @@ public class OrderPageController {
                                                     statusChange.setSAPstatus(newSAPStatus);
                                                     statusChangeManager.save(statusChange);
                                                 }
-                                            }else
+                                            } else
 
 //__12
-                                            if (theOrder.getSapStatus().getId() == 7 && role.getId() == 2) {
-                                                if (answer.equals("yes")) {
-                                                    newSAPStatus = sapStatusManager.findById(8);
-                                                    theOrder.setSAPstatus(newSAPStatus);
-                                                    orderManager.save(theOrder);
-                                                    statusChange.setOrder(theOrder);
-                                                    statusChange.setSAPstatus(newSAPStatus);
-                                                    statusChangeManager.save(statusChange);
+                                                if (theOrder.getSapStatus().getId() == 7 && role.getId() == 2) {
+                                                    if (answer.equals("yes")) {
+                                                        newSAPStatus = sapStatusManager.findById(8);
+                                                        theOrder.setSAPstatus(newSAPStatus);
+                                                        orderManager.save(theOrder);
+                                                        statusChange.setOrder(theOrder);
+                                                        statusChange.setSAPstatus(newSAPStatus);
+                                                        statusChangeManager.save(statusChange);
+                                                    }
                                                 }
-                                            }
-
 
 
     }
 
     private void prepareOrder(Order theOrder) {
 
-            User userTo = theOrder.getItsUsers().get(0).getUser();
-            Role userToRoles = roleManager.findByUserId(userTo.getUserId());
+        User userTo = theOrder.getItsUsers().get(0).getUser();
+        Role userToRoles = roleManager.findByUserId(userTo.getUserId());
 //            userTo.setRole(userToRoles);
 
-            try {
-                Integer userToRoleId = userToRoles.getId();
-                Integer SSId = theOrder.getSAPstatus().getId();
+        try {
+            Integer userToRoleId = userToRoles.getId();
+            Integer SSId = theOrder.getSAPstatus().getId();
 
-                StatusSAPStatusRole statusSAPStatusRole = statusSAPStatusRoleManager.findStatusByRoleIdAndSAPStatusId(userToRoleId, SSId);
+            StatusSAPStatusRole statusSAPStatusRole = statusSAPStatusRoleManager.findStatusByRoleIdAndSAPStatusId(userToRoleId, SSId);
 
-                List<StatusSAPStatusRole> statusSAPStatusRolesList = new ArrayList<>();
-                statusSAPStatusRolesList.add(statusSAPStatusRole);
+            List<StatusSAPStatusRole> statusSAPStatusRolesList = new ArrayList<>();
+            statusSAPStatusRolesList.add(statusSAPStatusRole);
 
-                theOrder.getSAPstatus().setStatusSAPStatuseRoles(statusSAPStatusRolesList);
-            } catch (NullPointerException e) {
-                System.out.println(e.getStackTrace());
-            }
+            theOrder.getSAPstatus().setStatusSAPStatuseRoles(statusSAPStatusRolesList);
+        } catch (NullPointerException e) {
+            System.out.println(e.getStackTrace());
+        }
 
 //       commentsManager.save(comment);
 
     }
 
+    //delete NapkinSudio by commit
     @RequestMapping(value = "/changestatus/{orderId}/{answer}", method = RequestMethod.POST)
     public String changeOrderStatusAndUpload(@Valid MultiFileBucket multiFileBucket,
                                              BindingResult result, Model model, @PathVariable int orderId, @PathVariable String answer, @ModelAttribute("user") User user, @ModelAttribute("comment") Comments comment) throws IOException {
         Order theOrder = orderManager.findById(orderId);
         Role role = user.getRole();
 
-        statusChanginLogic(theOrder,  role, answer);
-        if(comment.getCommText() != "") {
+        statusChanginLogic(theOrder, role, answer);
+        if (comment.getCommText() != "") {
             comment.setFromUser(user);
             comment.setToUser(theOrder.getItsUsers().get(0).getUser());
             comment.setForRole(theOrder.getSAPstatus().getStatusSAPStatuseRoles().get(0).getRole());
@@ -570,50 +677,75 @@ public class OrderPageController {
 //        }
 
     }
+    @RequestMapping(value = "/orders/{orderId}/save-file-to-tmp/", method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity<String> saveFileToTmpDirectory(@RequestParam("files[]") MultipartFile multipartFile, @PathVariable int orderId) {
 
-    @RequestMapping(value = "/save-file/{orderId}", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    FileMeta doUpload(@RequestParam("files[]") MultipartFile multipartFile, @PathVariable int orderId) {
-        System.out.println("/save-file");
-        System.out.println(multipartFile.getOriginalFilename());
-//        File file = new File("my-file.txt");
-//        multipartFile.transferTo(file);
-        FileMeta fileMeta = new FileMeta();
-//        File directory= new File(UPLOAD_LOCATION +orderId+"/");
-//        if (!directory.exists()) {
-//            // ...
-//        }
-        
+        String fileName = null;
         try {
+            fileName = new String(multipartFile.getOriginalFilename().getBytes("iso-8859-1"), "UTF-8");
+            System.out.println(new String(multipartFile.getOriginalFilename().getBytes("iso-8859-1"), "UTF-8"));
+        } catch (UnsupportedEncodingException e1) {
+            e1.printStackTrace();
+        }
+        String tmpPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_TMP_DIRECTORY + SEP + fileName;
 
-            File file = new File(USER_HOME + FILE_SEPARATOR + UPLOAD_DIRECTORY + FILE_SEPARATOR + ORDERS_DIRECTORY + FILE_SEPARATOR + orderId + FILE_SEPARATOR + multipartFile.getOriginalFilename());
+        try {
+            File file = new File(tmpPath);
             file.getParentFile().mkdirs();
             multipartFile.transferTo(file);
-            fileMeta.setFileName(multipartFile.getOriginalFilename());
-            fileMeta.setFileSize(multipartFile.getSize() /1024 + " Kb");
-            fileMeta.setFileType(multipartFile.getContentType());
-//            fileMeta.setBytes(multipartFile.getBytes());
-        } catch (IOException e) {
+
+        } catch (IOException  e) {
             e.printStackTrace();
-        }
-        return fileMeta;
-    }
-
-    @RequestMapping(value = "/remove-file/{orderId}/{fileName:.*}")
-    public
-    @ResponseBody
-    void doRemove(@PathVariable int orderId, @PathVariable String fileName) {
-        System.out.println("/remove-file");
-        System.out.println(fileName);
-
-        try{
-            File file = new File(USER_HOME + FILE_SEPARATOR + UPLOAD_DIRECTORY + FILE_SEPARATOR + ORDERS_DIRECTORY + FILE_SEPARATOR + orderId + FILE_SEPARATOR + fileName);
-            if(file.delete()){System.out.println(file.getName() + " is deleted!");}
-//            else{System.out.println("Delete operation is failed.");}
+            return new ResponseEntity<String>(fileName, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
             e.printStackTrace();
+            return new ResponseEntity<String>(fileName, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return new ResponseEntity<String>(fileName, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/orders/{orderId}/order_attachments/remove_temp/{fileName:.*}", method = RequestMethod.DELETE)
+    public @ResponseBody ResponseEntity<String> removeAtachment(@PathVariable int orderId, @PathVariable String fileName) {
+        System.out.println("> remove-temp-file " + fileName);
+        String tmpPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_TMP_DIRECTORY + SEP + fileName;
+
+        try {
+            File file = new File(tmpPath);
+            if(file.delete()) {
+                System.out.println(file.getName() + " is deleted!");
+                return new ResponseEntity<String>(fileName, HttpStatus.OK);
+            } else {
+                System.out.println(file.getName() + " not found!");
+                return new ResponseEntity<String>(fileName, HttpStatus.NOT_FOUND);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>(fileName, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @RequestMapping(value = "/orders/{orderId}/order_attachments/remove_all_temps", method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity<List<String>> removeAllAtachments(@PathVariable int orderId, @RequestParam("files[]") List<String> files) {
+        System.out.println("> remove all temps " + files);
+        String tmpPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_TMP_DIRECTORY + SEP;
+
+        List<String> removedfiles = new ArrayList<>();
+        Path filePath = null;
+        for(String fileName : files) {
+            filePath = Paths.get(tmpPath + fileName);
+            try {
+                Files.delete(filePath);
+                removedfiles.add(fileName);
+            } catch (NoSuchFileException x) {
+                System.err.format("%s: no such file or directory%n", filePath);
+            } catch (DirectoryNotEmptyException x) {
+                System.err.format("%s not empty%n", filePath);
+            } catch (IOException x) {
+                // File permission problems are caught here.
+                System.err.println(x);
+            }
+        }
+        return new ResponseEntity<>(removedfiles, HttpStatus.OK);
     }
 
 
@@ -653,105 +785,147 @@ public class OrderPageController {
 //    }
 
 
-	@RequestMapping(value = "/orders/{orderId}/order_attachments", method = RequestMethod.GET)
-	public @ResponseBody ArrayList<FileInfo> getAllOrderAttachments(@PathVariable String orderId) {
-		
-		ArrayList<FileInfo> fileInfoList = new ArrayList<>();
-		FileInfo fileInfo;
-		File file;
-		
-		System.out.println(USER_HOME + FILE_SEPARATOR + UPLOAD_DIRECTORY + FILE_SEPARATOR + ORDERS_DIRECTORY + FILE_SEPARATOR + orderId);
-		File folder = new File(USER_HOME + FILE_SEPARATOR + UPLOAD_DIRECTORY + FILE_SEPARATOR + ORDERS_DIRECTORY + FILE_SEPARATOR + orderId);
-		if(folder.exists()) {
-			File[] listOfFiles = folder.listFiles();
-			for (int i = 0; i < listOfFiles.length; i++) {
-				file = listOfFiles[i];
-				if (file.isFile()) {
-					System.out.println("File: " + file.getName());
-					fileInfo = new FileInfo();
-					fileInfo.setName(file.getName());
-					fileInfo.setSize(file.length());
-					fileInfo.setLastModified(new Date(file.lastModified()));
-					fileInfoList.add(fileInfo);
-				} else if (file.isDirectory()) {
-					System.out.println("Directory " + file.getName());
-				}
-			}
-		} else {
-			System.out.println("for this order any attachment is not available!");
-		}
-		
-		return fileInfoList;
-	}
+    @RequestMapping(value = "/orders/{orderId}/order_attachments", method = RequestMethod.GET)
+    public @ResponseBody ArrayList<FileInfo> getAllOrderAttachments(@PathVariable String orderId) {
+
+        ArrayList<FileInfo> fileInfoList = new ArrayList<>();
+        FileInfo fileInfo;
+        File file;
+
+        String fnlDirPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_FINAL_DIRECTORY + SEP;
+
+        System.out.println(fnlDirPath);
+
+        File folder = new File(fnlDirPath);
+        if(folder.exists()) {
+            File[] listOfFiles = folder.listFiles();
+            for (int i = 0; i < listOfFiles.length; i++) {
+                file = listOfFiles[i];
+                if (file.isFile()) {
+                    System.out.println("File: " + file.getName());
+                    fileInfo = new FileInfo();
+                    fileInfo.setName(file.getName());
+                    fileInfo.setSize(file.length());
+                    fileInfo.setLastModified(new Date(file.lastModified()));
+                    fileInfoList.add(fileInfo);
+                } else if (file.isDirectory()) {
+                    System.out.println("Directory " + file.getName());
+                }
+            }
+        } else {
+            System.out.println("for this order any attachment is not available!");
+        }
+
+        return fileInfoList;
+    }
 
 
-	@RequestMapping(value = "/orders/{orderId}/order_attachments/{file:.*}", method = RequestMethod.GET)
-	public void downloadFile(HttpServletResponse response, @PathVariable String orderId, @PathVariable("file") String fileName) throws IOException {
-		System.out.println("!! DOWNLOAD !!");
-		File file = null;
-		System.out.println(USER_HOME + FILE_SEPARATOR + UPLOAD_DIRECTORY + FILE_SEPARATOR + ORDERS_DIRECTORY + FILE_SEPARATOR + orderId + FILE_SEPARATOR + fileName + "]");
-		file = new File(USER_HOME + FILE_SEPARATOR + UPLOAD_DIRECTORY + FILE_SEPARATOR + ORDERS_DIRECTORY + FILE_SEPARATOR + orderId + FILE_SEPARATOR + fileName);
 
-		if (!file.exists()) {
-			String errorMessage = "Sorry. The file you are looking for does not exist";
-			System.out.println(errorMessage);
-			OutputStream outputStream = response.getOutputStream();
-			outputStream.write(errorMessage.getBytes(Charset.forName("UTF-8")));
-			outputStream.close();
-			return;
-		}
 
-		String mimeType = URLConnection.guessContentTypeFromName(file.getName());
-		if (mimeType == null) {
-			System.out.println("mimetype is not detectable, will take default");
-			mimeType = "application/octet-stream";
-		}
+    @RequestMapping(value = "/orders/{orderId}/approve", method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity<List<String>> approve(@PathVariable int orderId, @RequestParam("files[]") List<String> files) {
+        System.out.println("> approve");
+        System.out.println(files);
 
-		System.out.println("mimetype : " + mimeType);
+        String tmpDirPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_TMP_DIRECTORY + SEP;
+        String fnlDirPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_FINAL_DIRECTORY + SEP;
 
-		response.setContentType(mimeType);
+        Path  pathFrom,
+                parhTo;
+        try {
+            Files.createDirectories(Paths.get(fnlDirPath));
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
-		/*
-		 * "Content-Disposition : inline" will show viewable types [like
-		 * images/text/pdf/anything viewable by browser] right on browser while
-		 * others(zip e.g) will be directly downloaded [may provide save as
-		 * popup, based on your browser setting.]
-		 */
-		response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() + "\""));
+        List<String> movedFiles = new ArrayList<>();
+        for(String fileName : files) {
+            pathFrom = Paths.get(tmpDirPath + fileName);
+            parhTo = Paths.get(fnlDirPath + fileName);
+            try {
+                Files.move(pathFrom, parhTo, StandardCopyOption.REPLACE_EXISTING);
+                movedFiles.add(fileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return new ResponseEntity<>(movedFiles, HttpStatus.OK);
+    }
 
-		/*
-		 * "Content-Disposition : attachment" will be directly download, may
-		 * provide save as popup, based on your browser setting
-		 */
-		// response.setHeader("Content-Disposition", String.format("attachment;
-		// filename=\"%s\"", file.getName()));
 
-		response.setContentLength((int) file.length());
+    @RequestMapping(value = "/orders/{orderId}/order_attachments/{file:.*}", method = RequestMethod.GET)
+    public void downloadFile(HttpServletResponse response, @PathVariable String orderId, @PathVariable("file") String fileName) throws IOException {
+        System.out.println("!! DOWNLOAD !!");
+        File file = null;
 
-		InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+        String fnlDirPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_FINAL_DIRECTORY + SEP;
 
-		// Copy bytes from source to destination(outputstream in this example),
-		// closes both streams.
-		FileCopyUtils.copy(inputStream, response.getOutputStream());
-	}
-	
-	@RequestMapping(value = "/orders/{orderId}/order_attachments/remove/{fileName:.*}", method = RequestMethod.DELETE)
-	public @ResponseBody ResponseEntity<String> removeOrderAttachments(@PathVariable String orderId, @PathVariable String fileName) {
-		
-		String path = USER_HOME + FILE_SEPARATOR + UPLOAD_DIRECTORY + FILE_SEPARATOR + ORDERS_DIRECTORY + FILE_SEPARATOR + orderId + FILE_SEPARATOR + fileName;
-		System.out.println(path);
-		File file = new File(path);
-		if(file.exists()) {
-			if(file.delete()) {
-				return new ResponseEntity<String>(HttpStatus.OK);
-			} else {
-				return new ResponseEntity<String>(HttpStatus.CONFLICT);
-			}
-		} else {
-			System.out.println("file not found!");
-			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
-		}
-	}
+        System.out.println(fnlDirPath + fileName);
+        file = new File(fnlDirPath + fileName);
+
+        if (!file.exists()) {
+            String errorMessage = "Sorry. The file you are looking for does not exist";
+            System.out.println(errorMessage);
+            OutputStream outputStream = response.getOutputStream();
+            outputStream.write(errorMessage.getBytes(Charset.forName("UTF-8")));
+            outputStream.close();
+            return;
+        }
+
+        String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+        if (mimeType == null) {
+            System.out.println("mimetype is not detectable, will take default");
+            mimeType = "application/octet-stream";
+        }
+
+        System.out.println("mimetype : " + mimeType);
+
+        response.setContentType(mimeType);
+
+  /*
+   * "Content-Disposition : inline" will show viewable types [like
+   * images/text/pdf/anything viewable by browser] right on browser while
+   * others(zip e.g) will be directly downloaded [may provide save as
+   * popup, based on your browser setting.]
+   */
+        response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() + "\""));
+
+  /*
+   * "Content-Disposition : attachment" will be directly download, may
+   * provide save as popup, based on your browser setting
+   */
+        // response.setHeader("Content-Disposition", String.format("attachment;
+        // filename=\"%s\"", file.getName()));
+
+        response.setContentLength((int) file.length());
+
+        InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+
+        // Copy bytes from source to destination(outputstream in this example),
+        // closes both streams.
+        FileCopyUtils.copy(inputStream, response.getOutputStream());
+    }
+
+    @RequestMapping(value = "/orders/{orderId}/order_attachments/remove/{fileName:.*}", method = RequestMethod.DELETE)
+    public @ResponseBody ResponseEntity<String> removeOrderAttachment(@PathVariable String orderId, @PathVariable String fileName) {
+
+        String fnlDirPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_FINAL_DIRECTORY + SEP;
+        String path = fnlDirPath + fileName;
+        System.out.println(path);
+        File file = new File(path);
+        if(file.exists()) {
+            if(file.delete()) {
+                return new ResponseEntity<String>(HttpStatus.OK);
+            } else {
+                return new ResponseEntity<String>(HttpStatus.CONFLICT);
+            }
+        } else {
+            System.out.println("file not found!");
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 
 }

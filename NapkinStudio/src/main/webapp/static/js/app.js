@@ -1,24 +1,195 @@
 "use strict";
-var napkin = {};
+var napkin = napkin || {};
 
 (function(napkin) {
 	
+	$(document).ready(function () {
+		var jApproveBtn = $(".approve-btn");
+		jApproveBtn.on("click", approve);
+		napkin.buildFileAttachmentBlock();
+		napkin.buildFileInfoList();
+	});
+	
+	var mjUpLi = {};
+	
+	var jShowAtBlock = $("<div></div>"),
+		jRemoveAllFiles = $('<span class="btn btn btn-link fileinput-button">\
+			<i class="glyphicon glyphicon-remove"></i>\
+			<span>Remove all</span>\
+			<input type="button">\
+		</span>');
+	
+	napkin.buildFileAttachmentBlock = function() {
+		var jAt = $("#order-attachment");
+		
+		var jAddAtBlock = $("<div></div>"),
+			jChoseFiles = $('<span class="btn btn-success fileinput-button">\
+                    			<i class="glyphicon glyphicon-plus"></i>\
+                    			<span>Add files...</span>\
+                    			<input type="file" name="files[]" multiple="">\
+                			</span>'),
+			jDDZone = $("<div class='drag-n-drop-zone dropzone'></div>");
+		
+		jAt.append(jAddAtBlock).append(jShowAtBlock);
+		var jUpList = $("<ui class='list-group'></ui>"), jUpLi;
+		
+		jRemoveAllFiles.hide();
+		
+		jAddAtBlock.append(jDDZone);
+		jDDZone.append(jChoseFiles);
+		jDDZone.append(jRemoveAllFiles);
+		jDDZone.append("<p class='drag-n-drop-file-text'>drag & drop files here ...</p>");
+		
+		jAddAtBlock.append(jUpList);
+		
+		var jfileInfo, jPb;
+		
+		jChoseFiles.fileupload({
+			url: location.href + "/save-file-to-tmp/",
+			dropZone: jDDZone,
+			formAcceptCharset: 'utf-8',
+			add: function (e, data) {
+	        	jUpLi = $("<li class='list-group-item'></li>");
+				jUpList.append(jUpLi);
+				jfileInfo = $("<div class='file-info'></div>");
+				jUpLi.append(jfileInfo);
+				jPb = $("<div class='progress-bar'></div>");
+				jUpLi.append(jPb);
+				
+				var fileName;
+				var jIconDeleteFile = $("<span class='remove-icon-align remove-attachment glyphicon glyphicon-remove'></span>"),
+					jIconFileStatus = $('<i class="file-upload-status fa fa-refresh fa-spin-custom"></i>');
+				
+	            $.each(data.files, function (index, file) {
+	            	fileName = file.name;
+	                console.info('Added file: ' + file.name);
+	                jIconDeleteFile.attr("fileName", file.name);
+	                jfileInfo.append(jIconDeleteFile);
+	                jfileInfo.append("<p class='file-info-text'>" + file.name + "  " + _formatFileSize(file.size) + "  " + _getDateFormatForAttachment(file.lastModifiedDate) + "</p>");
+	                jfileInfo.append(jIconFileStatus);
+	                mjUpLi[file.name] = jUpLi;
+	            });
+	            
+	            jUpLi.hover(function(e) {
+					$(this).find(".remove-attachment").show();
+				}, function(e) {
+					$(this).find(".remove-attachment").hide();
+				});
+	            jIconDeleteFile.on("click", _removeTmpFileItem);
+	            
+	            jPb.css("width", "0%");
+	            data.submit()
+		            .success(function(result, textStatus, jqXHR) {
+		            	jIconFileStatus.removeClass("fa fa-refresh fa-spin-custom").addClass("file-upload-success glyphicon glyphicon-ok-circle");
+			        })
+			        .error(function (jqXHR, textStatus, errorThrown) {
+			        	jIconFileStatus.removeClass("fa fa-refresh fa-spin-custom").addClass("file-upload-error glyphicon glyphicon-remove-circle");
+			        })
+			        .complete(function (result, textStatus, jqXHR) {
+			        	jRemoveAllFiles.show();
+			        })
+	        },
+			start: function(e, data) {
+				
+				$.each(data.files, function (index, file) {
+		            alert('Dropped file: ' + file.name);
+		        });
+				console.log('Uploads started');
+			},
+			progress: function (e, data) {
+				var progress = parseInt(data.loaded / data.total * 100, 10);
+				$.each(data.files, function (index, file) {
+					$(mjUpLi[file.name]).find(".progress-bar").css("width", progress + "%");
+				});
+			}
+		});
+		
+		jRemoveAllFiles.on("click", _removeAllTmpAttachments);
+		
+		function _removeTmpFileItem() {
+			var jThis = $(this);
+			var fileName = jThis.attr("fileName");
+			console.log(fileName);
+			$.ajax({
+				url: location.href + "/order_attachments/remove_temp/" + fileName,
+				type: 'DELETE',
+				success: function (result) {
+					console.log("ok");
+					delete mjUpLi[fileName];
+					if($.isEmptyObject(mjUpLi)) {
+						jRemoveAllFiles.hide();
+					}
+				},
+				error: function() {
+					console.log("error");
+					console.log(arguments);
+				},
+				complited: function(result) {
+					console.log("completed");
+					napkin.buildFileInfoList();
+				}
+			});
+			console.log("delete " + fileName);
+			jThis.closest("li").remove();
+		}
+		
+		function _removeAllTmpAttachments() {
+			var files = [];
+			for(var key in mjUpLi) {
+				files.push(key);
+			}
+			if(!files.length) {
+				console.info("No attachments to delete!");
+				return;
+			}
+			$.ajax({
+			    url: location.href + "/order_attachments/remove_all_temps",
+			    type: 'POST',
+			    data: {
+			    	files: files
+			    },
+			    success: function(result) {
+			        console.log("ok");
+			        if(Array.isArray(result)) {
+			        	for(var x = 0; x < result.length; ++x) {
+			        		mjUpLi[result[x]].remove();
+			        		delete mjUpLi[result[x]];
+			        	}
+			        }
+			        if($.isEmptyObject()) {
+			        	jRemoveAllFiles.hide();
+			        }
+			        napkin.buildFileInfoList();
+			    },
+			    error: function() {
+			    	console.log("fail");
+			    }
+			});
+		}
+	};
+	
 	napkin.buildFileInfoList = function() {
-		var jAt = $(".order-attachment");
+		var jAt = jShowAtBlock;
 		var jAtUi;
-		var orderId = +jAt.attr("orderId");
-		orderId = !isNaN(orderId) ? orderId : 0;
 		var attachmentList;
 		var name, size, lastModified;
+		var jDwldAll;
 		
-		$.get(orderId + "/order_attachments", function(response) {
+		$.get(location.href + "/order_attachments", function(response) {
 //			console.log(response);
 			jAt.html("");
 			jAt.append("<b>Opmerkingen</b>");
-			jAt.append("<ul></ul>")
-			jAtUi = jAt.find("ul");
+			jDwldAll = $("<button type='button' class='btn btn-link'>Download all</button>");
+			jAtUi = $("<ul></ul>");
 			if(Array.isArray(response)) {
 				attachmentList = response;
+				if(attachmentList.length) {
+					jAt.append(jDwldAll);
+					jAt.append(jAtUi);
+				} else {
+					jAt.append(jAtUi);
+					jAtUi.append("<li>Any attachment is not available!</li>");
+				}
 				for(let x = 0; x < attachmentList.length; ++x) {
 					name = attachmentList[x].name;
 					size = attachmentList[x].size;
@@ -38,7 +209,7 @@ var napkin = {};
 						"<li>\
 							<i class='_attachmentPreview attachment-preview fa fa-eye' data-toggle='modal' data-target='._attachmentModal' fileName='" + name + "'></i>\
 							<span class='_removeAttachment remove-icon-align remove-attachment glyphicon glyphicon-remove' fileName='" + name + "'></span>\
-							<a href='" + orderId + "/order_attachments/" + name + "' download title='download' class='download-attachment'>" +
+							<a href='" + location.href + "/order_attachments/" + name + "' download='" + name + "' title='download' class='_download_attachment download-attachment'>" +
 								"<i class='icon-align material-icons'>attach_file</i>" + name + "" +
 								"<p class='file-info'> - " + size + " - " + _getDateFormatForAttachment(lastModified) + "</p>" +
 						"</a>\
@@ -46,7 +217,7 @@ var napkin = {};
 				}
 				
 			} else {
-				jAtUi.append("<li>Any attachment is not available!</li>");
+				jAtUi.append("<p>no data!</p>");
 			}
 			
 			$(".order-attachment li").hover(function(e) {
@@ -56,10 +227,21 @@ var napkin = {};
 			});
 			$(".order-attachment li ._attachmentPreview").on("click", _previewAttachment);
 			$(".order-attachment li span._removeAttachment").on("click", _removeFileItem);
+			jDwldAll.on("click", _downloadAll);
 			
 			function _previewAttachment() {
 				var jThis = $(this);
+				var sPreview;
+				var filename = jThis.attr("fileName");
 				jAt.find("._attachmentModal").remove();
+				var ext = (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename)[0] : undefined;
+				console.log(ext);
+				if(ext === "jpg" || ext === "png") {
+					sPreview = '<img src="' + location.href + "/order_attachments/" + filename + '" style="max-width: 100%; max-height: 100%;">';
+				} else if(ext === "pdf") {
+					sPreview = '<iframe style="width: 100%; height: 500px;" src = "/NapkinStudio/static/ViewerJS/#../../orders/1402130001/order_attachments/' + jThis.attr("fileName") + '"></iframe>';
+				}
+				
 				jAt.append(
 					'<div class="_attachmentModal modal fade" role="dialog">\
 					    <div class="modal-dialog modal-lg">\
@@ -69,7 +251,7 @@ var napkin = {};
 					          <h4 class="modal-title">' + jThis.attr("fileName") + '</h4>\
 					        </div>\
 					        <div class="modal-body">\
-					          <iframe src="http://docs.google.com/gview?url=http://' + location.host + '/NapkinStudio/orders/1402130001/order_attachments/' + jThis.attr("fileName") + '&embedded=true" style="width:100%; height: 100%; max-height: 700px;" frameborder="0"></iframe>\
+					          ' + sPreview + '\
 					        </div>\
 					      </div>\
 					    </div>\
@@ -80,7 +262,7 @@ var napkin = {};
 				var jThis = $(this);
 				var fileName = jThis.attr("fileName");
 				$.ajax({
-				    url: orderId + "/order_attachments/remove/" + fileName,
+				    url: location.href + "/order_attachments/remove/" + fileName,
 				    type: 'DELETE',
 				    success: function(result) {
 				        console.log("ok");
@@ -129,69 +311,93 @@ var napkin = {};
             return dayStr + " " + monthNames[monthIndex] + " " + day + ". " + date.getHours() + ":" + minutes;
 		}
 		
-	};
-	
-	napkin.uploadFile = function(){
-        var orderId=$('#fileupload').attr("orderId");
-       $('#fileupload').fileupload({
-            dataType: 'json',
-            done: function (e, data) {
-            	var jDiv1 = $('<div class="row"  style="display: inline">'+data.result.fileName+' '+data.result.fileSize+'</div>');
-            	var jInp = $('<input  value="Delete" name="'+data.result.fileName+'"  type="button" class=" del-file-but btn btn-danger btn-sm">');
-            	jDiv1.append(
-                        ' <div class="floatRight">' +
-                        '<input  value="Delete" name="'+data.result.fileName+'"  type="button" class=" del-file-but btn btn-danger btn-sm">' +
-                        '</div>');
-            	$('#foruploadedfiles').append(jDiv1);
-            	
-            	jDiv1.find(".del-file-but").on("click", deleteFile);
-               napkin.buildFileInfoList();
-            },
-            progressall: function (e, data) {
-                var progress = parseInt(data.loaded / data.total * 100, 10);
-                $('#progress .bar').css(
-                        'width',
-                        progress + '%'
-                );
-            }
-        });
-        
-        function deleteFile(){
-            console.log("dqwdqw");
-            console.log($(this));
-            var thisElement=$(this);
-            $.ajax({
-                url: '../remove-file/'+orderId+'/'+thisElement.attr("name"),
-            success: function(result){
-            console.log("dqwdqw"); 
-            napkin.buildFileInfoList();
-            thisElement.parent().parent().remove();
-            }});
-       	
-        };
-	};
-	
-	
-	napkin.comFilApproveSubmit = function(){
+		function _downloadAll() {
+			$(".order-attachment ._download_attachment p").trigger("click");
+		}
 		
+	};
+	
+	function _formatFileSize(size) {
+		if(size < 1024) {
+			size = size + " b";
+		} else if (1024 <= size && size <= 1024 * 1024) {
+			size = Math.round(size / 1024 * 1000)  / 1000 + " kb";
+		} else if (1024 * 1024 <= size && size <= 1024 * 1024 * 1024) {
+			size = Math.round(size / (1024 * 1024)* 1000) / 1000 + " mb";
+		} else {
+			size = " ???";
+		}
+		return size;
 	}
 	
+	function _getDateFormatForAttachment(date) {
+		var monthNames = [
+			              "Jan", "Feb", "Mar",
+			              "Apr", "May", "Jun", "Jul",
+			              "Aug", "Sep", "Oct",
+			              "Nov", "Dec"
+			            ];
+
+        var day = date.getDate();
+        var monthIndex = date.getMonth();
+        var year = date.getFullYear();
+
+        var weekday = new Array(7);
+        weekday[0]=  "Sunday";
+        weekday[1] = "Monday";
+        weekday[2] = "Tuesday";
+        weekday[3] = "Wednesday";
+        weekday[4] = "Thursday";
+        weekday[5] = "Friday";
+        weekday[6] = "Saturday";
+
+        var today = new Date();
+        var dayStr;
+        if(Math.round(today / (1000 * 60 * 60 * 24)) === Math.round(date / (1000 * 60 * 60 * 24))) {
+        	dayStr = "Today";
+        } else {
+        	dayStr = weekday[date.getDay()];
+        }
+        var minutes = date.getMinutes();
+        if(date.getMinutes() < 10) {
+        	minutes = "0" + minutes;
+        }
+        
+        return dayStr + " " + monthNames[monthIndex] + " " + day + ". " + date.getHours() + ":" + minutes;
+	}
 	
-	
-	
+	function approve() {
+		var files = [];
+		for(var key in mjUpLi) {
+			files.push(key);
+		}
+		if(!files.length) {
+			console.info("No attachments to approve!");
+			return;
+		}
+		$.ajax({
+		    url: location.href + "/approve",
+		    type: 'POST',
+		    data: {
+		    	files: files
+		    },
+		    success: function(result) {
+		        console.log("ok");
+		        if(Array.isArray(result)) {
+		        	for(var x = 0; x < result.length; ++x) {
+		        		mjUpLi[result[x]].remove();
+		        		delete mjUpLi[result[x]];
+		        	}
+		        }
+		        if($.isEmptyObject()) {
+		        	jRemoveAllFiles.hide();
+		        }
+		        napkin.buildFileInfoList();
+		    },
+		    error: function() {
+		    	console.log("fail");
+		    }
+		});
+	}
 })(napkin);
 
-
-//function deleteFile(){
-//    console.log("dqwdqw");
-//    console.log($(this));
-//    var thisElement=$(this);
-//    $.ajax({
-//        url: '../remove-file/'+$('#fileupload').attr("orderId")+'/'+thisElement.attr("name"),
-//    success: function(result){
-//    console.log("dqwdqw"); 
-//    napkin.buildFileInfoList();
-//    thisElement.parent().parent().remove();
-//    }});
-	
-//};

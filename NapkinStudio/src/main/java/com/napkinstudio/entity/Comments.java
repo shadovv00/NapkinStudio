@@ -12,8 +12,19 @@ import static javax.persistence.CascadeType.REMOVE;
  *
  */
 
-@NamedQueries(
-		@NamedQuery(name = "Comments.findCommentsbyOrderId", query = "select c from Comments c inner join c.order o where o.orderId =:id order by c.lastModifiedDate desc ")
+@NamedQueries({
+		@NamedQuery(name = "Comments.findCommentsbyOrderId", query = "select c from Comments c inner join c.order o where o.orderId =:id order by c.lastModifiedDate desc "),
+		@NamedQuery(name = "Comments.findCommentsByOrderAndRoleId", query = "select c from Comments c inner join c.order o inner join c.forRole r where o.orderId =:orderId and r.id =:roleId  order by c.lastModifiedDate desc "),
+        @NamedQuery(name="Comments.findCommentsbyOrderAndRoleIDs", query = "select c from Comments c inner join c.order o inner join c.forRole r where o.orderId =:orderId and r.id  in (:roleIdList) order by c.lastModifiedDate desc "),
+		@NamedQuery(name = "Comments.countAllUnreadComments", query = "select count(c) from Comments c " +
+				"inner join c.order o inner join o.itsUsers iu inner join iu.user user where o.orderId=:orderId and user.id =:userId and c.lastModifiedDate > iu.lastLook"),
+		@NamedQuery(name = "Comments.countUnreadCommentsByRoleId", query = "select count(c) from Comments c " +
+				"inner join c.forRole r inner join c.order o inner join o.itsUsers iu inner join iu.user user where o.orderId=:orderId and user.id =:userId and c.lastModifiedDate > iu.lastLook" +
+				" and r.id =:roleId"),
+        @NamedQuery(name = "Comments.countUnreadCommentsByRoleIds", query = "select count(c) from Comments c " +
+                "inner join c.forRole r inner join c.order o inner join o.itsUsers iu inner join iu.user user where o.orderId=:orderId and user.id =:userId and c.lastModifiedDate > iu.lastLook" +
+                " and r.id in (:roleIdList)"),
+}
 )
 @Entity
 
@@ -25,16 +36,16 @@ public class Comments extends AbstractEntity {
 	@GeneratedValue
 	private Integer Id;
 	
-	@ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE,REMOVE})
+	@ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE})
 	private User fromUser;
     
-	@ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+	@ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE})
 	private User toUser;
     
-    @ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE,REMOVE})
+    @ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE})
 	private Order order;
     
-    @ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE,REMOVE})
+    @ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE})
 	private Role forRole;
     
     

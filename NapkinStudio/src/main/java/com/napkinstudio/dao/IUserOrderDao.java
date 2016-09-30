@@ -15,4 +15,6 @@ public interface IUserOrderDao extends JpaRepository<UserOrder,Integer> {
     List<UserOrder> findUserOrdersByOrderId(@Param("id") Integer orderId);
 
     List<UserOrder> findUserforOrdedByRole(@Param("orderId") Integer orderId, @Param("roleId") Integer roleId);
+
+    UserOrder findOrdersByUserAndOrderId(@Param("userId") Integer userId, @Param("orderId") Integer orderId);
 }

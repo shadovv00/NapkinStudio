@@ -141,6 +141,9 @@ body, #mainWrapper, .form-control{
     font-size: 0!important;
     margin: 0 5px;
 }
+.add-comment-btn:hover {
+	background-image: url("../image/img__Add comment_hover.png");
+}
 
 .btn-primary {
 	background-color: #29abe2;
@@ -240,6 +243,11 @@ b {
 
 .blabla {
     margin-top: 130px;
+}
+
+.inner-info-table td{
+	padding-top: 7px;
+	padding-right: 10px;
 }
 
 /*for progress bar*/
@@ -393,7 +401,7 @@ ul.checkout-bar a {
 		-webkit-box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
 		box-shadow: inset 2px 2px 2px 0px rgba(0, 0, 0, 0.2);
 		content: "";
-		height: 15px;
+		/*height: 15px;*/
 		width: 100%;
 		left: 50%;
 		position: absolute;
@@ -529,5 +537,95 @@ ul.checkout-bar a {
     -o-transition: height 0.1s ease;
     transition: height 0.1s ease;
 }
+ul {
+    list-style-type: none;
+}
+.drag-n-drop-zone {
+    background-color: silver;
+/  width: 200px; /
+/  min-height: 90px; /
+}
 
+.file-upload-status {
+    float: right;
+}
+.file-upload-success {
+    color: #5cb85c;
+}
+.file-upload-error {
+    color: #d9534f;
+}
+.fileinput-button {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+.fileinput-button input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    opacity: 0;
+    -ms-filter: 'alpha(opacity=0)';
+    font-size: 200px !important;
+    direction: ltr;
+    cursor: pointer;
+}
+.drag-n-drop-file-text {
+    display: inline-block;
+    margin-left: 1rem;
+    font-family: initial;
+}
+.file-info-text {
+    display: inline-block;
+    margin-left: 1rem;
+}
+.dropzone {
+/     background: palegreen; /
+/     width: 150px; /
+/     height: 50px; /
+/     line-height: 50px; /
+/     text-align: center; /
+font-weight: bold;
+}
+.dropzone.in {
+    width: 600px;
+    height: 200px;
+    line-height: 200px;
+    font-size: larger;
+}
+.dropzone.hover {
+    background: lawngreen;
+}
+.dropzone.fade {
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -ms-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+    opacity: 1;
+}
+.fa-spin-custom, .glyphicon-spin {
+    -webkit-animation: spin 1000ms infinite linear;
+    animation: spin 1000ms infinite linear;
+}
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+@keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
 }

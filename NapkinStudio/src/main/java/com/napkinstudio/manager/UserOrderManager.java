@@ -31,6 +31,10 @@ public class UserOrderManager {
     public List<UserOrder> findUserforOrdedByRole(int orderId, int roleId) {
        return userOrderDao.findUserforOrdedByRole(orderId, roleId);
     }
+
+    public UserOrder findOrdersByUserAndOrderId(Integer userId, Integer orderId) {
+        return userOrderDao.findOrdersByUserAndOrderId(userId,orderId);
+    }
 }
 
 

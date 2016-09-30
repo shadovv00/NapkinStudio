@@ -13,6 +13,8 @@ import static javax.persistence.CascadeType.REMOVE;
 @NamedQueries({
 
         @NamedQuery(name="UserOrder.findOrdersByUserId",query = "SELECT userOrder from UserOrder userOrder  inner join userOrder.user user where user.id =:id"),
+        @NamedQuery(name="UserOrder.findOrdersByUserAndOrderId",query = "SELECT userOrder from UserOrder userOrder  inner join userOrder.user user " +
+                    "  inner join userOrder.order o where user.id =:userId and o.orderId =:orderId"   ),
         @NamedQuery(name="UserOrder.findUserOrdersByOrderId",query = "SELECT userOrder from UserOrder userOrder  inner join userOrder.order o where o.orderId =:id"),
         @NamedQuery(name="UserOrder.findUserforOrdedByRole", query = "SELECT uo FROM UserOrder uo inner join uo.order o inner join uo.user u inner join u.role r where o.orderId =:orderId and r.id =:roleId")
 

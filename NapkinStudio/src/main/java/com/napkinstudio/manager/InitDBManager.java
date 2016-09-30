@@ -51,6 +51,9 @@ public class InitDBManager {
     @Autowired
     private ICommentsDao commentsDao;
 
+    @Autowired
+    private IStatusChangeDao statusChangeDao;
+
 //    @PostConstruct
 
     public void init() {
@@ -264,19 +267,19 @@ public class InitDBManager {
         statusSAPStatusRole = new StatusSAPStatusRole();
         statusSAPStatusRole.setRole(debtorRole);
         statusSAPStatusRole.setSAPStatus(SAPStatus1);
-        statusSAPStatusRole.setStatus(status1);
+        statusSAPStatusRole.setStatus(status2);
         statusSAPStatusRoleDao.save(statusSAPStatusRole);
 
         statusSAPStatusRole = new StatusSAPStatusRole();
         statusSAPStatusRole.setRole(debtorRole);
         statusSAPStatusRole.setSAPStatus(SAPStatus2);
-        statusSAPStatusRole.setStatus(status1);
+        statusSAPStatusRole.setStatus(status2);
         statusSAPStatusRoleDao.save(statusSAPStatusRole);
 
         statusSAPStatusRole = new StatusSAPStatusRole();
         statusSAPStatusRole.setRole(debtorRole);
         statusSAPStatusRole.setSAPStatus(SAPStatus3);
-        statusSAPStatusRole.setStatus(status1);
+        statusSAPStatusRole.setStatus(status2);
         statusSAPStatusRoleDao.save(statusSAPStatusRole);
 
         statusSAPStatusRole = new StatusSAPStatusRole();
@@ -392,6 +395,7 @@ public class InitDBManager {
         debtor.setLogin("deptor1");
         debtor.setPassword(encoder.encode("deptor1"));
         debtor.setEnabled(true);
+        debtor.setEmail("khomenkotest1@gmail.com");
 //        List<Role> roles = new ArrayList<Role>();
 //        roles.add(debtorRole);
 //        debtor.setRoles(roles);
@@ -403,6 +407,7 @@ public class InitDBManager {
         PVI.setLogin("PVI1");
         PVI.setPassword(encoder.encode("PVI1"));
         PVI.setEnabled(true);
+        PVI.setEmail("khomenkotest1@gmail.com");
 //        List<Role> roles2 = new ArrayList<Role>();
 //        roles2.add(PVIRole);
 //        PVI.setRoles(roles2);
@@ -415,6 +420,7 @@ public class InitDBManager {
         DTP.setLogin("DTP");
         DTP.setPassword(encoder.encode("DTP"));
         DTP.setEnabled(true);
+        DTP.setEmail("khomenkotest1@gmail.com");
 //        List<Role> roles3 = new ArrayList<Role>();
 //        roles3.add(DTPRole);
 //        DTP.setRoles(roles3);
@@ -435,6 +441,7 @@ public class InitDBManager {
         CustomUser.setFirstName("Customer");
         CustomUser.setLastName("Customer");
         CustomUser.setLogin("Customer");
+        CustomUser.setEmail("khomenkotest1@gmail.com");
         CustomUser.setPassword(encoder.encode("Customer"));
         CustomUser.setEnabled(true);
 //        List<Role> roles5 = new ArrayList<Role>();
@@ -467,6 +474,30 @@ public class InitDBManager {
 //        order1.setComments(commentsList);
         orderDao.save(order1);
 
+
+        StatusChange statchang1 = new StatusChange();
+        statchang1.setOrder(order1);
+        statchang1.setSAPstatus(SAPStatus1);
+        statchang1.setDateTime(new Date());
+        statusChangeDao.save(statchang1);
+        StatusChange statchang3 = new StatusChange();
+        statchang3.setOrder(order1);
+        statchang3.setSAPstatus(SAPStatus1);
+        statchang3.setDateTime(new Date());
+        statusChangeDao.save(statchang3);
+        StatusChange statchang2 = new StatusChange();
+        statchang2.setOrder(order1);
+        statchang2.setSAPstatus(SAPStatus1);
+        statchang2.setDateTime(new Date());
+        statusChangeDao.save(statchang2);
+
+//description of ProcessIds
+/*      1 "to deptor first"
+        2 "to user"
+        3 "to deptor fin"
+        4 "to dtp"
+        5 "to cliche"
+*/
 
 
 
@@ -567,7 +598,8 @@ public class InitDBManager {
         order3.setDeliveryDate(new Date());
         order3.setPVIcheckScen(true);
         order3.setRejected(false);
-        order3.setDebCheckScen(false);
+        order3.setDebCheckScen(true);
+        order3.setApprovalBy("Customer");
         orderDao.save(order3);
 
         UserOrder user1Order3 = new UserOrder();
@@ -601,6 +633,7 @@ public class InitDBManager {
         order2.setPVIcheckScen(false);
         order2.setRejected(false);
         order2.setDebCheckScen(false);
+        order2.setApprovalBy("Customer");
         orderDao.save(order2);
 
         UserOrder user1Order2 = new UserOrder();

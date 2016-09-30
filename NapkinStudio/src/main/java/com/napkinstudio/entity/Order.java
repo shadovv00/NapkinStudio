@@ -59,6 +59,9 @@ public class Order extends  AbstractEntity{
     private Boolean toDtp;
     private Boolean deleted;
 
+    private Integer unreadCommentsCount;
+
+
     
     
 //    @OneToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
@@ -287,5 +290,13 @@ public class Order extends  AbstractEntity{
 
     public void setSapStatus(SAPstatus sapStatus) {
         this.sapStatus = sapStatus;
+    }
+
+    public Integer getUnreadCommentsCount() {
+        return unreadCommentsCount;
+    }
+
+    public void setUnreadCommentsCount(Integer unreadedCommentsCount) {
+        this.unreadCommentsCount = unreadedCommentsCount;
     }
 }
