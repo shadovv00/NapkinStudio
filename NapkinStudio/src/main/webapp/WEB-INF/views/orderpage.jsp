@@ -266,7 +266,21 @@
                                                                 <p class="commentText">
                                                                         ${PVIComment.commText}
                                                                 </p>
-                                                                <p>${PVIComment.lastModifiedDate} ${PVIComment.fromUser.firstName} ${PVIComment.fromUser.lastName}</p>
+                                                                <p>
+                                                                        <%--${PVIComment.fromUser.lastModifiedDate}--%>
+                                                                    <c:choose>
+                                                                        <c:when test="${DateUtils.isSameDay(PVIComment.fromUser.lastModifiedDate, today)}">
+                                                                            Today <fmt:formatDate value="${PVIComment.fromUser.lastModifiedDate}" pattern=" HH:mm" />
+                                                                        </c:when>
+                                                                        <c:when test="${DateUtils.isSameDay(PVIComment.fromUser.lastModifiedDate, yesterday)}">
+                                                                            Yesterday <fmt:formatDate value="${PVIComment.fromUser.lastModifiedDate}" pattern=" HH:mm" />
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <fmt:formatDate value="${PVIComment.fromUser.lastModifiedDate}" pattern=" EEEE d/MM/yyyy HH:mm" />
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                        ${PVIComment.fromUser.firstName} ${PVIComment.fromUser.lastName}
+                                                                </p>
                                                                 <c:if test="${PVIComment.fromUser.userId == user.userId}">
                                                                     <a class="btn edit-comment"
                                                                        commentId="${PVIComment.id}">edit</a>
@@ -356,7 +370,21 @@
                                                                 <p class="commentText">
                                                                         ${DTPComment.commText}
                                                                 </p>
-                                                                <p>${DTPComment.lastModifiedDate} ${DTPComment.fromUser.firstName} ${DTPComment.fromUser.lastName}</p>
+                                                                <p>
+                                                                        <%--${DTPComment.fromUser.lastModifiedDate} --%>
+                                                                    <c:choose>
+                                                                        <c:when test="${DateUtils.isSameDay(DTPComment.fromUser.lastModifiedDate, today)}">
+                                                                            Today <fmt:formatDate value="${DTPComment.fromUser.lastModifiedDate}" pattern=" HH:mm" />
+                                                                        </c:when>
+                                                                        <c:when test="${DateUtils.isSameDay(DTPComment.fromUser.lastModifiedDate, yesterday)}">
+                                                                            Yesterday <fmt:formatDate value="${DTPComment.fromUser.lastModifiedDate}" pattern=" HH:mm" />
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <fmt:formatDate value="${DTPComment.fromUser.lastModifiedDate}" pattern=" EEEE d/MM/yyyy HH:mm" />
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                        ${DTPComment.fromUser.firstName} ${DTPComment.fromUser.lastName}
+                                                                </p>
                                                                 <c:if test="${DTPComment.fromUser.userId == user.userId}">
                                                                     <a class="btn edit-comment"
                                                                        commentId="${DTPComment.id}">edit</a>
@@ -442,7 +470,21 @@
                                                                 <p class="commentText">
                                                                         ${DeptorComment.commText}
                                                                 </p>
-                                                                <p>${DeptorComment.lastModifiedDate} ${DeptorComment.fromUser.firstName} ${DeptorComment.fromUser.lastName}</p>
+                                                                <p>
+                                                                        <%--${DeptorComment.fromUser.lastModifiedDate}--%>
+                                                                    <c:choose>
+                                                                        <c:when test="${DateUtils.isSameDay(DeptorComment.fromUser.lastModifiedDate, today)}">
+                                                                            Today <fmt:formatDate value="${DeptorComment.fromUser.lastModifiedDate}" pattern=" HH:mm" />
+                                                                        </c:when>
+                                                                        <c:when test="${DateUtils.isSameDay(DeptorComment.fromUser.lastModifiedDate, yesterday)}">
+                                                                            Yesterday <fmt:formatDate value="${DeptorComment.fromUser.lastModifiedDate}" pattern=" HH:mm" />
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <fmt:formatDate value="${DeptorComment.fromUser.lastModifiedDate}" pattern=" EEEE d/MM/yyyy HH:mm" />
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                        ${DeptorComment.fromUser.firstName} ${DeptorComment.fromUser.lastName}
+                                                                </p>
                                                                 <c:if test="${DeptorComment.fromUser.userId == user.userId}">
                                                                     <a class="btn edit-comment"
                                                                        commentId="${DeptorComment.id}">edit</a>
@@ -527,7 +569,21 @@
                                                                 <p class="commentText">
                                                                         ${CustomerComment.commText}
                                                                 </p>
-                                                                <p>${CustomerComment.lastModifiedDate} ${CustomerComment.fromUser.firstName} ${CustomerComment.fromUser.lastName}</p>
+                                                                <p>
+                                                                        <%--${CustomerComment.fromUser.lastModifiedDate}--%>
+                                                                    <c:choose>
+                                                                        <c:when test="${DateUtils.isSameDay(CustomerComment.fromUser.lastModifiedDate, today)}">
+                                                                            Today <fmt:formatDate value="${CustomerComment.fromUser.lastModifiedDate}" pattern=" HH:mm" />
+                                                                        </c:when>
+                                                                        <c:when test="${DateUtils.isSameDay(CustomerComment.fromUser.lastModifiedDate, yesterday)}">
+                                                                            Yesterday <fmt:formatDate value="${CustomerComment.fromUser.lastModifiedDate}" pattern=" HH:mm" />
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <fmt:formatDate value="${CustomerComment.fromUser.lastModifiedDate}" pattern=" EEEE d/MM/yyyy HH:mm" />
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                        ${CustomerComment.fromUser.firstName} ${CustomerComment.fromUser.lastName}
+                                                                </p>
                                                                 <c:if test="${CustomerComment.fromUser.userId == user.userId}">
                                                                     <a class="btn edit-comment"
                                                                        commentId="${CustomerComment.id}">edit</a>
@@ -612,7 +668,21 @@
                                                                 <p class="commentText">
                                                                         ${StampsManufacComment.commText}
                                                                 </p>
-                                                                <p>${StampsManufacComment.lastModifiedDate} ${StampsManufacComment.fromUser.firstName} ${StampsManufacComment.fromUser.lastName}</p>
+                                                                <p>
+                                                                        <%--${StampsManufacComment.fromUser.lastModifiedDate} --%>
+                                                                    <c:choose>
+                                                                        <c:when test="${DateUtils.isSameDay(StampsManufacComment.fromUser.lastModifiedDate, today)}">
+                                                                            Today <fmt:formatDate value="${StampsManufacComment.fromUser.lastModifiedDate}" pattern=" HH:mm" />
+                                                                        </c:when>
+                                                                        <c:when test="${DateUtils.isSameDay(StampsManufacComment.fromUser.lastModifiedDate, yesterday)}">
+                                                                            Yesterday <fmt:formatDate value="${StampsManufacComment.fromUser.lastModifiedDate}" pattern=" HH:mm" />
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <fmt:formatDate value="${StampsManufacComment.fromUser.lastModifiedDate}" pattern=" EEEE d/MM/yyyy HH:mm" />
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                        ${StampsManufacComment.fromUser.firstName} ${StampsManufacComment.fromUser.lastName}
+                                                                </p>
                                                                 <c:if test="${StampsManufacComment.fromUser.userId == user.userId}">
                                                                     <a class="btn edit-comment"
                                                                        commentId="${StampsManufacComment.id}">edit</a>
@@ -697,7 +767,20 @@
                                                                 <p class="commentText">
                                                                         ${ProductionComment.commText}
                                                                 </p>
-                                                                <p>${ProductionComment.lastModifiedDate} ${ProductionComment.fromUser.firstName} ${DTPComment.fromUser.lastName}</p>
+                                                                <p>
+                                                                    <c:choose>
+                                                                        <c:when test="${DateUtils.isSameDay(ProductionComment.fromUser.lastModifiedDate, today)}">
+                                                                            Today <fmt:formatDate value="${ProductionComment.fromUser.lastModifiedDate}" pattern=" HH:mm" />
+                                                                        </c:when>
+                                                                        <c:when test="${DateUtils.isSameDay(ProductionComment.fromUser.lastModifiedDate, yesterday)}">
+                                                                            Yesterday <fmt:formatDate value="${ProductionComment.fromUser.lastModifiedDate}" pattern=" HH:mm" />
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <fmt:formatDate value="${ProductionComment.fromUser.lastModifiedDate}" pattern=" EEEE d/MM/yyyy HH:mm" />
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                        ${ProductionComment.fromUser.firstName} ${ProductionComment.fromUser.lastName}
+                                                                </p>
                                                                 <c:if test="${ProductionComment.fromUser.userId == user.userId}">
                                                                     <a class="btn edit-comment"
                                                                        commentId="${ProductionComment.id}">edit</a>
@@ -766,11 +849,11 @@
                     </ul>
                 </div>
                     <div id="order-attachment" class="order-attachment" orderId="${theOrder.orderId}"></div>
-                <label>
-                    <input type="checkbox" name="check0" value="a2">Drukproef eerst door PVI laten controleren.
-                </label>
+                <%--<label>--%>
+                    <%--<input type="checkbox" name="check0" value="a2">Drukproef eerst door PVI laten controleren.--%>
+                <%--</label>--%>
                 <!--             <input type="checkbox" name="check0" value="a2">Drukproef eerst door PVI laten controleren.<Br> -->
-                <div display="inline" style="margin-bottom: 10px">
+                <div display="block" style="margin-bottom: 10px">
 
                     <%--Appove without comments and files adding--%>
                     <c:if test="${
@@ -803,8 +886,21 @@
                                 (theOrder.SAPstatus.id==2&&user.role.id==4)||
                                 (theOrder.SAPstatus.id==5&&user.role.id==4&&theOrder.processId==5)
                      }">
-                    <button type="button" class="approve-btn btn btn-success btn-lg">Approve</button>
-                    
+
+
+                    <form:form commandName="comment" method="post"
+                               action="/NapkinStudio/changestatus/${theOrder.orderId}/yes"
+                               cssClass="form-horizontal">
+                        <div >
+                            <form:textarea path="commText" cssClass="form-control"></form:textarea>
+                        </div>
+                        <%--<input type="submit" value="Save" class="btn btn-large btn-primary" style="float: left;">--%>
+                        <button type="button" class="approve-btn btn btn-success btn-lg" style="padding-top: 10px">Approve</button>
+                    </form:form>
+
+
+
+
                         </c:if>
                         <%--Discard with comments and files adding--%>
                         <c:if test="${

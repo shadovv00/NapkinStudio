@@ -144,7 +144,9 @@ body, #mainWrapper, .form-control{
 .add-comment-btn:hover {
 	background-image: url("../image/img__Add comment_hover.png");
 }
-
+.add-file-input {
+	background-image: url("../image/img__Add comment_hover.png");
+}
 .btn-primary {
 	background-color: #29abe2;
 	border: none;
@@ -576,10 +578,16 @@ remove-attachment:hover {
 	color: #8cd5ff;
 }
 .drag-n-drop-zone {
-	background-color: silver;
+	/*background-color: silver;*/
 /* 	width: 200px; */
 /* 	min-height: 90px; */
 }
+/*.drag-n-drop-zone:hover {*/
+	/*background-color: #d0cece;*/
+	/*border-style: dotted;*/
+	/*border-width: 2px;*/
+	/*border-color: silver;*/
+/*}*/
 .progress-bar {
 	height: 2px !important;
 }
@@ -670,4 +678,31 @@ remove-attachment:hover {
         -webkit-transform: rotate(359deg);
         transform: rotate(359deg);
     }
+}
+
+/*for filter-bar*/
+.status-filter-bar{
+	padding-left: 15px;
+	overflow: hidden;
+	display: block;
+	/*float: left;*/
+}
+
+.status-filter-bar li{
+	list-style-type: none;
+	display: block;
+	/*height: auto;*/
+}
+
+.status-filter-bar li a{
+	display: block;
+}
+
+.commentText{
+	font-weight: bold;
+	padding-top: 15px;
+	border-top: solid;
+	border-top-width: 0px;
+	border-top-color: silver;
+
 }

@@ -55,14 +55,14 @@
 </head>
 <body>
 
-<c:if test="${
-                            (theOrder.SAPstatus.id==7&&user.roles[0].id==2)
-                 }">
-    ChanwfwefgeStatus
-</c:if>
-<c:if test="true">
-    ChangeStatus
-</c:if>
+<%--<c:if test="${--%>
+                            <%--(theOrder.SAPstatus.id==7&&user.roles[0].id==2)--%>
+                 <%--}">--%>
+    <%--ChanwfwefgeStatus--%>
+<%--</c:if>--%>
+<%--<c:if test="true">--%>
+    <%--ChangeStatus--%>
+<%--</c:if>--%>
 
 <section class="col-md-12 logo-area" style="background-color: #f9f9f9; background-position-x: 10%">
     <a href="<c:url value="/logout"/>" style="float: right; margin: 20px 0">&nbsp;uitloggen </a>
@@ -73,54 +73,63 @@
     <h5 style="color: #29abe2; margin-left: 9%; width: 100px">Alle orders</h5>
 </section>
 <section class="main-wrapper">
-    <div class="col-md-1 order-status-wrapper">
-        <ul>
+    <div class="col-md-2 order-status-wrapper">
+        <ul class="status-filter-bar">
             <li>
-                <a id="all" class="ordersFilter" style="margin-left: 15px">All orders (${fn:length(userOrders)})</a>
-                <ul>
+                <a id="all" class="ordersFilter" >All orders (${fn:length(userOrders)})</a>
+                <br>
+                <ul class="status-filter-bar">
                     <li>
-                        <a id="in-progress" class="ordersFilter" style="margin-left: 15px" data-filter-column="3"
-                           data-filter-text="in progress">in progress</a>
-                        <ul>
+                        <a id="in-progress" class="ordersFilter"  data-filter-column="3"
+                           data-filter-text="in progress">In progress</a>
+                        <br>
+                        <ul class="status-filter-bar">
                             <c:if test="${user.role.id == 2}">
+                                <br>
                                 <li>
-                                    <a class="ordersFilter" style="margin-left: 15px" data-filter-column="3"
+                                    <a class="ordersFilter"  data-filter-column="3"
                                        data-filter-text="1">Proof request set up</a>
                                 </li>
                             </c:if>
+                            <br>
                             <li>
-                                <a class="ordersFilter" style="margin-left: 15px" data-filter-column="3"
+                                <a class="ordersFilter"  data-filter-column="3"
                                    data-filter-text="2">Proof
                                     requested</a>
                             </li>
                             <c:if test="${user.role.id == 2 || user.role.id == 4}">
+                                <br>
                                 <li>
 
-                                    <a class="ordersFilter" style="margin-left: 15px" data-filter-column="3"
+                                    <a class="ordersFilter" data-filter-column="3"
                                        data-filter-text="3">Check
                                         by PVI</a>
                                 </li>
                             </c:if>
 
 
+                            <br>
                             <li>
 
-                                <a class="ordersFilter" style="margin-left: 15px" data-filter-column="3"
+                                <a class="ordersFilter"  data-filter-column="3"
                                    data-filter-text="4">Waiting for approval</a>
                             </li>
 
+                            <br>
                             <li>
-                                <a class="ordersFilter" style="margin-left: 15px" data-filter-column="3"
+                                <a class="ordersFilter"  data-filter-column="3"
                                    data-filter-text="5">Approved</a>
 
                             </li>
+                            <br>
                             <li>
-                                <a class="ordersFilter" style="margin-left: 15px" data-filter-column="3"
+                                <a class="ordersFilter"  data-filter-column="3"
                                    data-filter-text="6">Rejected</a>
                             </li>
                             <c:if test="${user.role.id == 2}">
+                                <br>
                                 <li>
-                                    <a class="ordersFilter" style="margin-left: 15px" data-filter-column="3"
+                                    <a class="ordersFilter"  data-filter-column="3"
                                        data-filter-text="7">Stamps
                                         ordered</a>
                                 </li>
@@ -128,17 +137,21 @@
                         </ul>
                     </li>
                     <c:if test="${user.role.id == 2 || user.role.id == 1}">
+                        <br>
                         <li>
-                            <a id="planned" class="ordersFilter" style="margin-left: 15px" data-filter-column="3"
-                               data-filter-text="planned">planned</a>
+                            <a id="planned" class="ordersFilter"  data-filter-column="3"
+                               data-filter-text="planned">Planned</a>
+                            <br>
                             <ul>
+                                <br>
                                 <li>
-                                    <a class="ordersFilter" style="margin-left: 15px" data-filter-column="3"
+                                    <a class="ordersFilter"  data-filter-column="3"
                                        data-filter-text="8">New
                                         orders</a>
                                 </li>
+                                <br>
                                 <li>
-                                    <a class="ordersFilter" style="margin-left: 15px" data-filter-column="3"
+                                    <a class="ordersFilter"  data-filter-column="3"
                                        data-filter-text="11">Existing
                                         art.nr.</a>
                                 </li>
@@ -150,21 +163,24 @@
                 </ul>
             </li>
             <c:if test="${user.role.id == 2 || user.role.id == 1}">
+                <%--<br>--%>
                 <li>
-                    <a id="delivered" class="ordersFilter" style="margin-left: 15px" data-filter-column="3"
+                    <a id="delivered" class="ordersFilter"  data-filter-column="3"
                        data-filter-text="10">Order
                         delivered</a>
                 </li>
             </c:if>
             <c:if test="${user.role.id == 4}">
+                <br>
                 <li>
-                    <a id="stamps-ordered" class="ordersFilter" style="margin-left: 15px" data-filter-column="3"
+                    <a id="stamps-ordered" class="ordersFilter"  data-filter-column="3"
                        data-filter-text="7">Stamps
                         ordered</a>
                 </li>
             </c:if>
+            <br>
             <li>
-                <a id="on-hold" class="ordersFilter" style="margin-left: 15px" data-filter-column="3"
+                <a id="on-hold" class="ordersFilter"  data-filter-column="3"
                    data-filter-text="9">On
                     hold</a>
             </li>
@@ -172,12 +188,12 @@
 
         </ul>
     </div>
-    <div class="col-md-11">
+    <div class="col-md-10">
         <table class="tablesorter" id="orderstable">
             <thead>
             <tr>
                 <th>Order number</th>
-                <th>Unread comments</th>
+                <%--<th>Unread comments</th>--%>
                 <th>Debtor Order number</th>
                 <th>Item number</th>
                 <th>Status</th>
@@ -199,14 +215,22 @@
                 <%--<spring:param name="orderId" value ="${userOrder.order.orderId}"/>--%>
                 <%--</spring:url>">--%>
                 <tr class='clickable-row' data-href="<c:url value='/orders/${userOrder.order.orderId}' />">
-                    <td class='clickable-cell orderId'>${userOrder.order.orderId}</td>
-                    <td class='clickable-cell'>
+                    <td class='clickable-cell orderId'>${userOrder.order.orderId}
                         <c:if test="${userOrder.order.unreadCommentsCount != 0}">
-                            ${userOrder.order.unreadCommentsCount}
+                            <img src="<c:url value='/static/image/new_comments.png' />"  width="15" height="12">
+                            <b style="color: #29abe2">
+                                    ${userOrder.order.unreadCommentsCount}
+                            </b>
                         </c:if>
                     </td>
-                    <td class='clickable-cell'>${userOrder.order.debItemNum}</td>
-                    <td class='clickable-cell'>${userOrder.order.itemNum}"</td>
+                    <%--<td class='clickable-cell'>--%>
+                        <%--<c:if test="${userOrder.order.unreadCommentsCount != 0}">--%>
+                            <%--${userOrder.order.unreadCommentsCount}--%>
+                        <%--</c:if>--%>
+                    <%--</td>--%>
+                    <td class='clickable-cell' >${userOrder.order.debItemNum}
+                    </td>
+                    <td class='clickable-cell'>${userOrder.order.itemNum}</td>
                     <td class="status clickable-cell"
                         data-status="${userOrder.order.SAPstatus.statusSAPStatuseRoles[0].status.id}">
                             ${userOrder.order.SAPstatus.statusSAPStatuseRoles[0].status.name}

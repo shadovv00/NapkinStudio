@@ -24,9 +24,7 @@ var napkin = napkin || {};
 		
 		var jAddAtBlock = $("<div></div>"),
 			jChoseFiles = $('<span class="btn btn-success fileinput-button">\
-                    			<i class="glyphicon glyphicon-plus"></i>\
-                    			<span>Add files...</span>\
-                    			<input type="file" name="files[]" multiple="">\
+                    			<input class="add-file-input" type="file" name="files[]" multiple="">\
                 			</span>'),
 			jDDZone = $("<div class='drag-n-drop-zone dropzone'></div>");
 		
@@ -38,7 +36,7 @@ var napkin = napkin || {};
 		jAddAtBlock.append(jDDZone);
 		jDDZone.append(jChoseFiles);
 		jDDZone.append(jRemoveAllFiles);
-		jDDZone.append("<p class='drag-n-drop-file-text'>drag & drop files here ...</p>");
+		jDDZone.append("<p class='drag-n-drop-file-text'>Voeg bijlagen toe...</p>");
 		
 		jAddAtBlock.append(jUpList);
 		
