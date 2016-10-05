@@ -4,15 +4,7 @@ import static javax.persistence.CascadeType.MERGE;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Entity implementation class for Entity: Comments
@@ -54,7 +46,9 @@ public class Comments extends AbstractEntity {
     
     @ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE})
 	private Role forRole;
-    
+
+	@Transient
+	private Boolean unread;
     
 	@Column(name = "commText",columnDefinition="TEXT")	private String commText;
 	private Date dateTime;
@@ -105,6 +99,11 @@ public class Comments extends AbstractEntity {
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;    }
 
+	public Boolean getUnread() {
+		return unread;
+	}
 
-
+	public void setUnread(Boolean unread) {
+		this.unread = unread;
+	}
 }
