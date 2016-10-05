@@ -340,7 +340,7 @@ public class OrderPageController {
         comment.setOrder(order);
 
 
-        if ((comment.getForRole().getId() == 2 && user.getRole().getId() != 2) || (comment.getForRole().getId() == 4 && user.getRole().getId() != 4)) {
+        if (comment.getForRole().getId() !=user.getRole().getId()) {
 
             mailManager.sendEmail(comment);
         }

@@ -273,7 +273,7 @@
                                                         <div>
                                                             <div class="comment-container">
                                                                 <p class="commentText"
-                                                                   data-unread="${PVIComment.lastModifiedDate}  ${theOrder.itsUsers.get(0).lastLook}">
+                                                                   data-unread="${PVIComment.unread}">
                                                                         ${PVIComment.commText}
                                                                 </p>
                                                                 <p>
@@ -331,8 +331,8 @@
                                                 <div class="col-sm-5">
                                                     <input type="submit"
                                                            value="Save"
-                                                           class="btn btn-large btn-primary" style="float: left;">
-                                                    <a class="btn cancel-button btn-danger send-comment-btn"
+                                                           class="btn btn-large btn-primary send-comment-btn" style="float: left;">
+                                                    <a class="btn cancel-button btn-danger "
                                                        style="float:right;">Cancel</a>
                                                 </div>
                                             </form:form>
@@ -362,7 +362,7 @@
                                                     <li>
                                                         <div>
                                                             <div class="comment-container">
-                                                                <p class="commentText">
+                                                                <p class="commentText" data-unread="${DTPComment.unread}">
                                                                         ${DTPComment.commText}
                                                                 </p>
                                                                 <p>
@@ -469,7 +469,7 @@
                                                     <li>
                                                         <div>
                                                             <div class="comment-container">
-                                                                <p class="commentText">
+                                                                <p class="commentText"   data-unread="${DeptorComment.unread}">
                                                                         ${DeptorComment.commText}
                                                                 </p>
                                                                 <p>
@@ -543,7 +543,7 @@
                                                 <div class="col-sm-5">
                                                     <input type="submit"
                                                            value="Save"
-                                                           class="btn btn-large btn-primary" style="float: left;">
+                                                           class="btn btn-large btn-primary send-comment-btn" style="float: left;">
                                                     <a class="btn cancel-button btn-danger"
                                                        style="float:right;">Cancel</a>
 
@@ -574,7 +574,7 @@
                                                     <li>
                                                         <div>
                                                             <div class="comment-container">
-                                                                <p class="commentText">
+                                                                <p class="commentText"   data-unread="${CustomerComment.unread}" >
                                                                         ${CustomerComment.commText}
                                                                 </p>
                                                                 <p>
@@ -648,7 +648,7 @@
                                                 <div class="col-sm-5">
                                                     <input type="submit"
                                                            value="Save"
-                                                           class="btn btn-large btn-primary" style="float: left;">
+                                                           class="btn btn-large btn-primary send-comment-btn" style="float: left;">
                                                     <a class="btn cancel-button btn-danger"
                                                        style="float:right;">Cancel</a>
 
@@ -679,7 +679,7 @@
                                                     <li>
                                                         <div>
                                                             <div class="comment-container">
-                                                                <p class="commentText">
+                                                                <p class="commentText" data-unread="${StampsManufacComment.unread}">
                                                                         ${StampsManufacComment.commText}
                                                                 </p>
                                                                 <p>
@@ -716,7 +716,7 @@
                                                 </c:forEach>
                                             </c:when>
                                             <c:otherwise>
-                                                <c:out value="No comments for stamp manufacture"/>
+                                                <c:out value="No comments for stamp manufacture "/>
                                             </c:otherwise>
                                         </c:choose>
                                         <li>
@@ -753,7 +753,7 @@
                                                 <div class="col-sm-5">
                                                     <input type="submit"
                                                            value="Save"
-                                                           class="btn btn-large btn-primary" style="float: left;">
+                                                           class="btn btn-large btn-primary send-comment-btn" style="float: left;">
                                                     <a class="btn cancel-button btn-danger"
                                                        style="float:right;">Cancel</a>
 
@@ -784,7 +784,7 @@
                                                     <li>
                                                         <div>
                                                             <div class="comment-container">
-                                                                <p class="commentText">
+                                                                <p class="commentText" data-unread="${ProductionComment.unread}">
                                                                         ${ProductionComment.commText}
                                                                 </p>
                                                                 <p>
@@ -858,7 +858,7 @@
                                                 <div class="col-sm-5">
                                                     <input type="submit"
                                                            value="Save"
-                                                           class="btn btn-large btn-primary" style="float: left;">
+                                                           class="btn btn-large btn-primary send-comment-btn" style="float: left;">
                                                     <a class="btn cancel-button btn-danger"
                                                        style="float:right;">Cancel</a>
 
@@ -1182,10 +1182,10 @@
         });
 
         $(".commentText").each(function () {
-//            debugger;
-            console.log($(this).attr("data-unread"));
-//        if($(this).attr("data-unread").trim() === "true")
-//           console.log("true");
+        var unread = $(this).attr("data-unread");
+            console.log(unread);
+        if(unread === "true")
+            $(this).parent().css("background", "blue");
         });
 
 
