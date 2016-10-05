@@ -5,8 +5,12 @@ import com.napkinstudio.entity.*;
 import com.napkinstudio.manager.*;
 import com.napkinstudio.simplemodel.FileInfo;
 import com.napkinstudio.util.MultiFileValidator;
+
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,8 +35,6 @@ public class OrderPageController {
 
     private final static String USER_HOME = System.getProperty("user.home");
 
-    private final static String FILE_SEPARATOR = System.getProperty("file.separator");
-
     private final static String UPLOAD_DIRECTORY = "napkinStorage";
 
     private final static String ORDERS_DIRECTORY = "orders";
@@ -44,6 +46,9 @@ public class OrderPageController {
     private final static String ORDERS_FINAL_DIRECTORY = "final";
 
     private final static String ORDERS_PREVIEW_DIRECTORY = "preview";
+    
+    private final static String ORDERS_PPTMP_DIRECTORY = "pptemp";
+    private final static String ORDERS_PPFINAL_DIRECTORY = "ppfinal";
 
     @Autowired
     private UserManager userManager;
@@ -153,6 +158,9 @@ public class OrderPageController {
 
         Integer SSId = theOrder.getSAPstatus().getId();
         Integer roleId = user.getRole().getId();
+        if (roleId==5) {
+            roleId=1;
+        }
         Integer userId = user.getUserId();
 //        Map<String, Order> modelMap = new HashMap<>();
 //        modelMap.put("theOrder",theOrder);
@@ -172,6 +180,11 @@ public class OrderPageController {
 
         // setting lastlook
         UserOrder userOrder = userOrderManager.findOrdersByUserAndOrderId(userId, orderId);
+        // if not yours - empty page
+//      TODO: Beautify
+        if (userOrder==null){
+        	return "orders";
+        }
         userOrder.setLastLook(new Date());
         userOrderManager.save(userOrder);
 
@@ -238,12 +251,13 @@ public class OrderPageController {
             }
         }
 //
-        int prev = idList.indexOf(orderId.toString()) - 1;
-        int next = idList.indexOf(orderId.toString()) + 1;
-
-        String prevId = prev >= 0 ? idList.get(prev) : "";
-
-        String nextId = next <= (idList.size() - 1) ? idList.get(next) : "";
+        String prevId="", nextId="";
+        if (idList!=null&&idList.size()>0){
+            int prev = idList.indexOf(orderId.toString()) - 1;
+            int next = idList.indexOf(orderId.toString()) + 1;
+            prevId = prev >= 0 ? idList.get(prev) : "";
+            nextId = next <= (idList.size() - 1) ? idList.get(next) : "";
+        }
 
 
         model.addAttribute("nextId", nextId);
@@ -541,6 +555,7 @@ public class OrderPageController {
                                         if (answer.equals("yes")) {
 //                TODO: Check what todo next
                                             newSAPStatus = sapStatusManager.findById(1);
+                                            theOrder.setRejected(false);
                                             theOrder.setSAPstatus(newSAPStatus);
                                             theOrder.setItsUsers(null);
                                             orderManager.save(theOrder);
@@ -549,6 +564,7 @@ public class OrderPageController {
                                             statusChangeManager.save(statusChange);
                                         } else if (answer.equals("no")) {
                                             newSAPStatus = sapStatusManager.findById(2);
+                                            theOrder.setRejected(false);
                                             theOrder.setSAPstatus(newSAPStatus);
                                             theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 4));
                                             prepareOrder(theOrder);
@@ -677,6 +693,84 @@ public class OrderPageController {
 //        }
 
     }
+    
+    @RequestMapping(value = "/orders/{orderId}/save-printproof-to-tmp/", method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity<String> savePrintProofToTmpDirectory(@RequestParam("files[]") MultipartFile multipartFile, @PathVariable int orderId) {
+    	System.out.println("###### PRINTPROOF ###### " + multipartFile.getOriginalFilename());
+        String fileName = multipartFile.getOriginalFilename();
+        
+        String tmpPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_PPTMP_DIRECTORY;
+        
+        Path directory = Paths.get(tmpPath);
+        
+        if (Files.notExists(directory)) {
+        	try {
+				Files.createDirectory(directory);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return new ResponseEntity<String>(fileName, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+        } else {
+        	//remove all files from tmp directory
+        	try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(directory)) {
+        		for (Path path : directoryStream) {
+        			try {
+        				Files.delete(Paths.get(path.toString()));
+        			} catch (IOException e) {
+        				e.printStackTrace();
+        			}
+        		}
+        	} catch (IOException ex) {}
+        	
+        }
+        try {
+            File file = new File(tmpPath + SEP + multipartFile.getOriginalFilename());
+            multipartFile.transferTo(file);
+        } catch (IOException  e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>(fileName, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>(fileName, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<String>(fileName, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/orders/{orderId}/printproof", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> testphoto(@PathVariable int orderId) {
+    	InputStream is = null;
+    	byte[] buffer = null;
+    	String ppFnlDirPathStr = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_PPFINAL_DIRECTORY;
+		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(ppFnlDirPathStr))) {
+			for (Path path : directoryStream) {
+				try {
+					is = Files.newInputStream(path);
+					buffer = IOUtils.toByteArray(is);
+				} catch (IOException e) {
+					e.printStackTrace();
+					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+				break;
+			}
+		} catch (IOException ex) {
+		} finally {
+			try {
+				if(is != null) {
+					is.close();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_PNG);
+        
+        return new ResponseEntity<byte[]>(buffer, headers, HttpStatus.OK);
+    }
+    
     @RequestMapping(value = "/orders/{orderId}/save-file-to-tmp/", method = RequestMethod.POST)
     public @ResponseBody ResponseEntity<String> saveFileToTmpDirectory(@RequestParam("files[]") MultipartFile multipartFile, @PathVariable int orderId) {
 
@@ -823,9 +917,14 @@ public class OrderPageController {
 
 
     @RequestMapping(value = "/orders/{orderId}/approve", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<List<String>> approve(@PathVariable int orderId, @RequestParam("files[]") List<String> files) {
+    public @ResponseBody ResponseEntity<Map<String, Object>> approve(
+    		@PathVariable int orderId, 
+    		@RequestParam(value = "files[]", required = false) List<String> files, 
+    		@RequestParam(value = "printproof", required = false) String printproof) {
         System.out.println("> approve");
         System.out.println(files);
+        System.out.println(printproof);
+        Map<String, Object> respMap = new HashMap<>();
 
         String tmpDirPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_TMP_DIRECTORY + SEP;
         String fnlDirPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_FINAL_DIRECTORY + SEP;
@@ -839,21 +938,70 @@ public class OrderPageController {
             e1.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        List<String> movedFiles = new ArrayList<>();
-        for(String fileName : files) {
-            pathFrom = Paths.get(tmpDirPath + fileName);
-            parhTo = Paths.get(fnlDirPath + fileName);
-            try {
-                Files.move(pathFrom, parhTo, StandardCopyOption.REPLACE_EXISTING);
-                movedFiles.add(fileName);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        
+        if(files != null) {
+        	List<String> movedFiles = new ArrayList<>();
+        	for(String fileName : files) {
+        		pathFrom = Paths.get(tmpDirPath + fileName);
+        		parhTo = Paths.get(fnlDirPath + fileName);
+        		try {
+        			Files.move(pathFrom, parhTo, StandardCopyOption.REPLACE_EXISTING);
+        			movedFiles.add(fileName);
+        		} catch (IOException e) {
+        			e.printStackTrace();
+        		}
+        	}
+        	respMap.put("attachments", movedFiles);
+        } else {
+        	respMap.put("attachments", null);
         }
-        return new ResponseEntity<>(movedFiles, HttpStatus.OK);
+        
+        String 	pptpmDirPathStr = null,
+        		ppFnlDirPathStr = null;
+        Path	ppFnlDir = null,
+        		ppTmpFile = null,
+        		ppFnlFile = null;
+        if(printproof != null) {
+        	pptpmDirPathStr = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_PPTMP_DIRECTORY;
+            ppFnlDirPathStr = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_PPFINAL_DIRECTORY;
+            ppFnlDir = Paths.get(ppFnlDirPathStr);
+            if (Files.notExists(ppFnlDir)) {
+            	try {
+    				Files.createDirectory(ppFnlDir);
+    			} catch (IOException e) {
+    				e.printStackTrace();
+    				respMap.put("printproof", "error");
+    				return new ResponseEntity<>(respMap, HttpStatus.INTERNAL_SERVER_ERROR);
+    			}
+            }
+            try {
+            	//remove all files from pp final directory
+            	try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(ppFnlDir)) {
+            		for (Path path : directoryStream) {
+            			try {
+            				Files.delete(Paths.get(path.toString()));
+            			} catch (IOException e) {
+            				e.printStackTrace();
+            			}
+            		}
+            	} catch (IOException ex) {}
+            	ppTmpFile = Paths.get(pptpmDirPathStr + SEP + printproof);
+            	ppFnlFile = Paths.get(ppFnlDirPathStr + SEP + printproof);
+            	
+            	if(!printproof.equals("remove")) {
+            		Files.move(ppTmpFile, ppFnlFile, StandardCopyOption.REPLACE_EXISTING);
+            	}
+    			respMap.put("printproof", printproof);
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    			respMap.put("printproof", "fail");
+    		}
+        } else {
+        	respMap.put("printproof", null);
+        }
+        return new ResponseEntity<>(respMap, HttpStatus.OK);
     }
-
+    
 
     @RequestMapping(value = "/orders/{orderId}/order_attachments/{file:.*}", method = RequestMethod.GET)
     public void downloadFile(HttpServletResponse response, @PathVariable String orderId, @PathVariable("file") String fileName) throws IOException {
