@@ -2,27 +2,28 @@
 var napkin = napkin || {};
 
 (function(napkin) {
-
-
+	
 	var _bean = {};
+	
 	var mjUpLi = {};
 	
 	var jShowAtBlock = $("<div></div>"),
 		jRemoveAllFiles = $('<span class="btn btn-link fileinput-button">\
- 								<i class="glyphicon glyphicon-remove"></i>\
- 								<span>Remove all</span>\
- 								<input type="button">\
- 							</span>');
+								<i class="glyphicon glyphicon-remove"></i>\
+								<span>Remove all</span>\
+								<input type="button">\
+							</span>');
+	
 	$("#order-attachment").append(jShowAtBlock);
 	napkin.buildFileAttachmentBlock = function() {
 		var jAt = $("#order-attachment");
 		
 		var jAddAtBlock = $("<div></div>"),
-			jChoseFiles = $('<span class="btn btn-success fileinput-button">\
-                    			<input class="add-file-input" type="file" name="files[]" multiple="">\
+			jChoseFiles = $('<span class="glyphicon glyphicon-plus-sign btn-custom fileinput-button">\
+                    			<input class="glyphicon glyphicon-plus-sign" type="file" name="files[]" multiple="">\
                 			</span>'),
 			jDDZone = $("<div class='drag-n-drop-zone dropzone'></div>");
-
+		
 		jAt.append(jAddAtBlock);// .append(jShowAtBlock);
 		var jUpList = $("<ui class='list-group'></ui>"), jUpLi;
 		
@@ -169,7 +170,7 @@ var napkin = napkin || {};
 		var jDwldAll;
 		
 		$.get(location.href + "/order_attachments", function(response) {
-//			console.log(response);
+// console.log(response);
 			jAt.html("");
 			jAt.append("<b>Opmerkingen</b>");
 			jDwldAll = $("<button type='button' class='btn btn-link'>Download all</button>");
@@ -288,9 +289,9 @@ var napkin = napkin || {};
 
             var today = new Date();
             var dayStr;
-//            console.log("");
-//            console.log(Math.round(today / (1000 * 60 * 60 * 24)));
-//            console.log(Math.round(date / (1000 * 60 * 60 * 24)));
+// console.log("");
+// console.log(Math.round(today / (1000 * 60 * 60 * 24)));
+// console.log(Math.round(date / (1000 * 60 * 60 * 24)));
             if(Math.round(today / (1000 * 60 * 60 * 24)) === Math.round(date / (1000 * 60 * 60 * 24))) {
             	dayStr = "Today";
             } else {
@@ -309,112 +310,112 @@ var napkin = napkin || {};
 		}
 		
 	};
-
+	
 	function initPrintProof() {
-				var printproof = {};
-				_bean.printproof = printproof;
-
-					var jPP = $("#printproof");
-				var jHeaderText = $('<b class="opmerkingen-wrapper">Drukproef</b>');
-				var jSomeText = $("<p>Er is nog geen drukproef toegevoegd</p>");
-				var jChoseFile = $('<span class="btn-custom glyphicon glyphicon-plus-sign btn-custom fileinput-button" style="margin-right: 12px;">\
- 							</span>'),
-						jImgInp = $('<input class="glyphicon glyphicon-plus-sign" type="file" name="files[]">');
-				var jImgPreview = $("<img style='max-height: 100px;' />");
-				var jDltPr = $('<i class="glyphicon glyphicon-remove btn-custom" style="position: absolute; left: 0; top: 0;"></i>');
-				var jWrapImgPr = $("<div style='position:relative;  display: none;'></div>");
-				var jImg = $("<img style='max-height: 500px;' />");
-				var jDlt = $('<i class="glyphicon glyphicon-remove btn-custom" style="position: absolute; left: 0; top: 0;"></i>');
-				var jWrapImg = $("<div style='position:relative;'></div>");
-
-
-						jPP.css("margin-bottom", "10px");
-				jPP.append(jHeaderText);
-				jPP.append(jSomeText);
-				jChoseFile.append(jImgInp);
-				jSomeText.prepend(jChoseFile);
-
-					jWrapImgPr.append(jImgPreview);
-				jWrapImgPr.append(jDltPr);
-				jPP.append(jWrapImgPr);
-
-					jWrapImg.append(jImg);
-				jWrapImg.append(jDlt);
-				jPP.append(jWrapImg);
-
-
-						jImgInp.fileupload({
-								url: location.href + "/save-printproof-to-tmp/",
-						dropZone: undefined,
-						limitMultiFileUploads: 1,
-						acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-				        maxFileSize: 999000,
-						add: function (e, data) {
-
-								$.each(data.files, function (index, file) {
-										printproof.name = file.name;
-						            });
-
-
-						            data.submit()
-					            .success(function(result, textStatus, jqXHR) {
-						            	console.log("success");
-						            	jImg.attr("src", location.href + "/printproof");
-							        })
-						        .error(function (jqXHR, textStatus, errorThrown) {
-							        	console.log("error");
-							        })
-						        .complete(function (result, textStatus, jqXHR) {
-							        	console.log("completed");
-							        })
-				        }
-				});
-
-					function readURL(input) {
-							jImgPreview.show();
-					        if (input.files && input.files[0]) {
-						            var reader = new FileReader();
-
-							            reader.onload = function (e) {
-								            	jImgPreview.attr('src', e.target.result);
-								            }
-
-							            reader.readAsDataURL(input.files[0]);
-						        }
-					    }
-
-				jImgInp.change(function() {
-						jWrapImgPr.show();
-				        readURL(this);
-				    });
-
-					jDltPr.on("click", removePPTemp);
-				jDlt.on("click", removePrintProof);
-
-
-						printproof.showPrintProof = showPrintProof;
-
-					showPrintProof();
-
-					function showPrintProof() {
-							jImg.attr("src", location.href + "/printproof");
-							jImgPreview.hide();
-							printproof.name = undefined;
-							jWrapImg.show();
-						}
-
-				function removePPTemp() {
-						printproof.name = undefined;
-						jWrapImgPr.hide();
-					}
-
-				function removePrintProof() {
-						printproof.name = "remove";
-						jWrapImg.hide();
-					}
-
-			}
-
+		var printproof = {};
+		_bean.printproof = printproof;
+		
+		var jPP = $("#printproof");
+		var jHeaderText = $('<b class="opmerkingen-wrapper">Drukproef</b>');
+		var jSomeText = $("<p>Er is nog geen drukproef toegevoegd</p>");
+		var jChoseFile = $('<span class="btn-custom glyphicon glyphicon-plus-sign btn-custom fileinput-button" style="margin-right: 12px;">\
+							</span>'),
+			jImgInp = $('<input class="glyphicon glyphicon-plus-sign" type="file" name="files[]">');
+		var jImgPreview = $("<img style='max-height: 100px;' />");
+		var jDltPr = $('<i class="glyphicon glyphicon-remove btn-custom" style="position: absolute; left: 0; top: 0;"></i>');
+		var jWrapImgPr = $("<div style='position:relative;  display: none;'></div>");
+		var jImg = $("<img style='max-height: 500px;' />");
+		var jDlt = $('<i class="glyphicon glyphicon-remove btn-custom" style="position: absolute; left: 0; top: 0;"></i>');
+		var jWrapImg = $("<div style='position:relative;'></div>");
+		
+		
+		jPP.css("margin-bottom", "10px");
+		jPP.append(jHeaderText);
+		jPP.append(jSomeText);
+		jChoseFile.append(jImgInp);
+		jSomeText.prepend(jChoseFile);
+		
+		jWrapImgPr.append(jImgPreview);
+		jWrapImgPr.append(jDltPr);
+		jPP.append(jWrapImgPr);
+		
+		jWrapImg.append(jImg);
+		jWrapImg.append(jDlt);
+		jPP.append(jWrapImg);
+		
+		
+		jImgInp.fileupload({
+			url: location.href + "/save-printproof-to-tmp/",
+			dropZone: undefined,
+			limitMultiFileUploads: 1,
+			acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+	        maxFileSize: 999000,
+			add: function (e, data) {
+				
+				$.each(data.files, function (index, file) {
+					printproof.name = file.name;
+	            });
+				
+				
+	            data.submit()
+		            .success(function(result, textStatus, jqXHR) {
+		            	console.log("success");
+		            	jImg.attr("src", location.href + "/printproof");
+			        })
+			        .error(function (jqXHR, textStatus, errorThrown) {
+			        	console.log("error");
+			        })
+			        .complete(function (result, textStatus, jqXHR) {
+			        	console.log("completed");
+			        })
+	        }
+		});
+		
+		function readURL(input) {
+			jImgPreview.show();
+	        if (input.files && input.files[0]) {
+	            var reader = new FileReader();
+	            
+	            reader.onload = function (e) {
+	            	jImgPreview.attr('src', e.target.result);
+	            }
+	            
+	            reader.readAsDataURL(input.files[0]);
+	        }
+	    }
+	    
+		jImgInp.change(function() {
+			jWrapImgPr.show();
+	        readURL(this);
+	    });
+		
+		jDltPr.on("click", removePPTemp);
+		jDlt.on("click", removePrintProof);
+		
+		
+		printproof.showPrintProof = showPrintProof;
+		
+		showPrintProof();
+		
+		function showPrintProof() {
+			jImg.attr("src", location.href + "/printproof");
+			jImgPreview.hide();
+			printproof.name = undefined;
+			jWrapImg.show();
+		}
+		
+		function removePPTemp() {
+			printproof.name = undefined;
+			jWrapImgPr.hide();
+		}
+		
+		function removePrintProof() {
+			printproof.name = "remove";
+			jWrapImg.hide();
+		}
+		
+	}
+	
 	function _formatFileSize(size) {
 		if(size < 1024) {
 			size = size + " b";
@@ -464,122 +465,123 @@ var napkin = napkin || {};
         return dayStr + " " + monthNames[monthIndex] + " " + day + ". " + date.getHours() + ":" + minutes;
 	}
 	
-	// function approve() {
-	// 	var files = [];
-	// 	for(var key in mjUpLi) {
-	// 		files.push(key);
-	// 	}
-	// 	if(!files.length) {
-	// 		console.info("No attachments to approve!");
-	// 		return;
-	// 	}
-	// 	$.ajax({
-	// 	    url: location.href + "/approve",
-	// 	    type: 'POST',
-	// 	    data: {
-	// 	    	files: files
-	// 	    },
-	// 	    success: function(result) {
-	// 	        console.log("ok");
-	// 	        if(Array.isArray(result)) {
-	// 	        	for(var x = 0; x < result.length; ++x) {
-	// 	        		mjUpLi[result[x]].remove();
-	// 	        		delete mjUpLi[result[x]];
-	// 	        	}
-	// 	        }
-	// 	        if($.isEmptyObject()) {
-	// 	        	jRemoveAllFiles.hide();
-	// 	        }
-	// 	        napkin.buildFileInfoList();
-	// 	    },
-	// 	    error: function() {
-	// 	    	console.log("fail");
-	// 	    }
-	// 	});
-	// }
-	function approve() {
-			     $('.loading-spinner').show();
-			  var urltostatus=$(this).attr('foraction');
-			  // var st=$(this).attr('st');
-				  // var ur=$(this).attr('ur');
-					  // var pi=$(this).attr('pi');
-						  var commentText=$("#statuscahngecomment").val();
+// function approve() {
+// var files = [];
+// for(var key in mjUpLi) {
+// files.push(key);
+// }
+// $.ajax({
+// url: location.href + "/approve",
+// type: 'POST',
+// data: {
+// files: files,
+// printproof: _bean.printproof.name
+// },
+// success: function(result) {
+// console.log("ok");
+// _bean.printproof.showPrintProof();
+// var atts = result['attachments'];
+// if(Array.isArray(atts)) {
+// for(var x = 0; x < atts.length; ++x) {
+// mjUpLi[atts[x]].remove();
+// delete mjUpLi[atts[x]];
+// }
+// }
+// if($.isEmptyObject()) {
+// jRemoveAllFiles.hide();
+// }
+// napkin.buildFileInfoList();
+// },
+// error: function() {
+// console.log("fail");
+// }
+// });
+//		
+// }
+	
+	 function approve() {
+	     $('.loading-spinner').show();
+	  var urltostatus=$(this).attr('foraction');
+	  // var st=$(this).attr('st');
+	  // var ur=$(this).attr('ur');
+	  // var pi=$(this).attr('pi');
+	  var commentText=$("#statuscahngecomment").val();
 
-				  if (urltostatus.slice(-1)=="o"&&parseInt($(this).attr('pi'))!=3&&!commentText.length){
-				   $("#statuscahngecomment").css( "border", "2px dotted red" );
-				            $('.loading-spinner').hide();
-				   return;
-				  }
-			  var files = [];
-			  for(var key in mjUpLi) {
-				   files.push(key);
-				  }
-			  if(!files.length) {
-			   if (parseInt($(this).attr('ur'))==4&&urltostatus.slice(-1)=="s"){
-					    console.info("No attachments to approve!");
-					    $(".dropzone").css( "border", "2px dotted red" );
-					                $('.loading-spinner').hide();
-					    return;
-					   }else{
-					    changeStatusAndAddComment(urltostatus,commentText);
-					   }
-				  }else {
-				  $.ajax({
-							    url: location.href + "/approve",
-							    type: 'POST',
-						    data: {
-							    	files: files,
-								    	printproof: _bean.printproof.name
-							    },
-						    success: function(result) {
-							    	console.log("files saved");
-								     changeStatusAndAddComment(urltostatus, commentText);
-							        _bean.printproof.showPrintProof();
-							        var atts = result['attachments'];
-							        if(Array.isArray(atts)) {
-								        	for(var x = 0; x < atts.length; ++x) {
-									        		mjUpLi[atts[x]].remove();
-									        		delete mjUpLi[atts[x]];
-									        	}
-								        }
-							        if($.isEmptyObject(mjUpLi)) {
-								        	jRemoveAllFiles.hide();
-								        }
-							        napkin.buildFileInfoList();
-							    },
-						    error: function() {
-							    	console.log("fail");
-							    	$('.loading-spinner').hide();
-							    }
-						});
-				  }
-			 }
-
-			 function changeStatusAndAddComment(urltostatus,commentText) {
-					  $.ajax({
-						   url: urltostatus,
-						   type: 'POST',
-						   data: {
-						    commText: commentText
-						   },
-					   success: function(result) {
-						    console.log("status scahnge and comment saved");
-						    location.reload();
-						   },
-					   error: function() {
-						    console.log("fail");
-						                $('.loading-spinner').hide();
-						   }
-					  });
-					 }
-
-		$(document).ready(function () {
-				initPrintProof();
-
-					var jApproveBtn = $(".approve-btn");
-				jApproveBtn.on("click", approve);
-				napkin.buildFileAttachmentBlock();
-				napkin.buildFileInfoList();
+	  if (urltostatus.slice(-1)=="o"&&parseInt($(this).attr('pi'))!=3&&!commentText.length){
+	   $("#statuscahngecomment").css( "border", "2px dotted red" );
+	            $('.loading-spinner').hide();
+	   return;
+	  }
+	  var files = [];
+	  for(var key in mjUpLi) {
+	   files.push(key);
+	  }
+	  if(!files.length) {
+	   if (parseInt($(this).attr('ur'))==4&&urltostatus.slice(-1)=="s"){
+	    console.info("No attachments to approve!");
+	    $(".dropzone").css( "border", "2px dotted red" );
+	                $('.loading-spinner').hide();
+	    return;
+	   }else{
+	    changeStatusAndAddComment(urltostatus,commentText);
+	   }
+	  }else {
+		  $.ajax({
+			    url: location.href + "/approve",
+			    type: 'POST',
+			    data: {
+			    	files: files,
+			    	printproof: _bean.printproof.name
+			    },
+			    success: function(result) {
+			    	console.log("files saved");
+				     changeStatusAndAddComment(urltostatus, commentText);
+			        _bean.printproof.showPrintProof();
+			        var atts = result['attachments'];
+			        if(Array.isArray(atts)) {
+			        	for(var x = 0; x < atts.length; ++x) {
+			        		mjUpLi[atts[x]].remove();
+			        		delete mjUpLi[atts[x]];
+			        	}
+			        }
+			        if($.isEmptyObject(mjUpLi)) {
+			        	jRemoveAllFiles.hide();
+			        }
+			        napkin.buildFileInfoList();
+			    },
+			    error: function() {
+			    	console.log("fail");
+			    	$('.loading-spinner').hide();
+			    }
 			});
+	  }
+	 }
+	
+	 function changeStatusAndAddComment(urltostatus,commentText) {
+		  $.ajax({
+		   url: urltostatus,
+		   type: 'POST',
+		   data: {
+		    commText: commentText
+		   },
+		   success: function(result) {
+		    console.log("status scahnge and comment saved");
+		    location.reload();
+		   },
+		   error: function() {
+		    console.log("fail");
+		                $('.loading-spinner').hide();
+		   }
+		  });
+		 }
+	
+	$(document).ready(function () {
+		initPrintProof();
+		
+		var jApproveBtn = $(".approve-btn");
+		jApproveBtn.on("click", approve);
+		napkin.buildFileAttachmentBlock();
+		napkin.buildFileInfoList();
+	});
 })(napkin);
 
