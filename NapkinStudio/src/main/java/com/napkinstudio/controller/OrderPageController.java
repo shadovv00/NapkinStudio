@@ -273,7 +273,7 @@ public class OrderPageController {
 
             List<Comments> comments = null;
             if (user.getRole().getId() == 5) {
-                List<Comments> customerComments = commentsManager.findCommentsByOrderAndRoleId(orderId, 5);
+                List<Comments> customerComments = commentsManager.findCommentsByOrderAndRoleId(orderId, 5, userOrder);
                 model.addAttribute("CustomerComments", customerComments);
             } else if (user.getRole().getId() == 1) {
 //                List<Comments> customerComments = commentsManager.findCommentsByOrderAndRoleId(orderId, 5);
@@ -282,7 +282,7 @@ public class OrderPageController {
                 roleIdList.add(5);
                 roleIdList.add(1);
 
-                Map<Integer, List<Comments>> commentsMap = commentsManager.findCommentsbyOrderAndRoleIDs(orderId, roleIdList);
+                Map<Integer, List<Comments>> commentsMap = commentsManager.findCommentsbyOrderAndRoleIDs(orderId, roleIdList, userOrder);
                 List<Comments> customerComments = commentsMap.get(5);
                 List<Comments> deptorComments = commentsMap.get(1);
 
@@ -291,7 +291,7 @@ public class OrderPageController {
 
             } else if (user.getRole().getId() == 2 || user.getRole().getId() == 4) {
 
-                Map<Integer, List<Comments>> commentsMap = commentsManager.findCommentsbyOrderId(orderId);
+                Map<Integer, List<Comments>> commentsMap = commentsManager.findCommentsbyOrderId(orderId, userOrder);
 
                 model.addAttribute("PVIComments", commentsMap.get(2));
                 model.addAttribute("DeptorComments", commentsMap.get(1));
@@ -792,13 +792,6 @@ public class OrderPageController {
 			}
 		}
 		
-    }
-
-
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_PNG);
-
-        return new ResponseEntity<byte[]>(buffer, headers, HttpStatus.OK);
     }
 
 
