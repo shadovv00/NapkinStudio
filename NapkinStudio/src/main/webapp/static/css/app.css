@@ -304,6 +304,9 @@ h1 {
     background-color: #dcd9d9;
 }*/
 
+
+
+
 .prev-order-btn {
     position: absolute!important;
     left: -160px;
@@ -712,7 +715,9 @@ remove-attachment:hover {
 }
 
 
-
+.status-filter-bar{
+	padding-left: 10px;
+}
 
 .status-filter-bar li{
 	list-style-type: none;
@@ -856,3 +861,5 @@ remove-attachment:hover {
 		transform: rotate(360deg);
 	}
 }
+
+

@@ -1060,7 +1060,7 @@ public class OrderPageController {
         System.out.println("mimetype : " + mimeType);
 
         response.setContentType(mimeType);
-
+        response.addHeader("X-Frame-Options", "SAMEORIGIN");
   /*
    * "Content-Disposition : inline" will show viewable types [like
    * images/text/pdf/anything viewable by browser] right on browser while

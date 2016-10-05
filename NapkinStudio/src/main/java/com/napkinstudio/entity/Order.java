@@ -54,6 +54,7 @@ public class Order extends  AbstractEntity{
     private Boolean rejected;
     private Boolean pVIcheckScen;
     private Boolean debCheckScen;
+    private Boolean repeated;
     private byte processId;
     private Boolean toDeptor;
     private Boolean toDtp;
@@ -238,6 +239,11 @@ public class Order extends  AbstractEntity{
         return pVIcheckScen;    }
     public void setPVIcheckScen(Boolean pVIcheckScen) {
         this.pVIcheckScen = pVIcheckScen;    }
+
+    public Boolean getRepeated() {
+        return repeated;    }
+    public void setRepeated(Boolean repeated) {
+        this.repeated = repeated;    }
 
 
     public Boolean getDebCheckScen() {

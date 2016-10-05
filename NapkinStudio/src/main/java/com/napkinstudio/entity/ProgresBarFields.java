@@ -58,6 +58,7 @@ public class ProgresBarFields {
 //    private String name;
     private Boolean rejected;
     private Boolean pVIcheckScen;
+    private Boolean repeated;
 
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
@@ -90,6 +91,12 @@ public class ProgresBarFields {
         return pVIcheckScen;    }
     public void setPVIcheckScen(Boolean pVIcheckScen) {
         this.pVIcheckScen = pVIcheckScen;    }
+
+    public Boolean getRepeated() {
+        return repeated;    }
+    public void setRepeated(Boolean repeated) {
+        this.repeated = repeated;    }
+
 
     public SAPstatus getSAPStatus() {
         return SAPStatus;
