@@ -77,28 +77,23 @@
         <ul class="status-filter-bar">
             <li>
                 <a id="all" class="ordersFilter" >All orders (${fn:length(userOrders)})</a>
-                <br>
                 <ul class="status-filter-bar">
                     <li>
                         <a id="in-progress" class="ordersFilter"  data-filter-column="3"
                            data-filter-text="in progress">In progress</a>
-                        <br>
                         <ul class="status-filter-bar">
                             <c:if test="${user.role.id == 2}">
-                                <br>
                                 <li>
                                     <a class="ordersFilter"  data-filter-column="3"
                                        data-filter-text="1">Proof request set up</a>
                                 </li>
                             </c:if>
-                            <br>
                             <li>
                                 <a class="ordersFilter"  data-filter-column="3"
                                    data-filter-text="2">Proof
                                     requested</a>
                             </li>
                             <c:if test="${user.role.id == 2 || user.role.id == 4}">
-                                <br>
                                 <li>
 
                                     <a class="ordersFilter" data-filter-column="3"
@@ -108,26 +103,22 @@
                             </c:if>
 
 
-                            <br>
                             <li>
 
                                 <a class="ordersFilter"  data-filter-column="3"
                                    data-filter-text="4">Waiting for approval</a>
                             </li>
 
-                            <br>
                             <li>
                                 <a class="ordersFilter"  data-filter-column="3"
                                    data-filter-text="5">Approved</a>
 
                             </li>
-                            <br>
                             <li>
                                 <a class="ordersFilter"  data-filter-column="3"
                                    data-filter-text="6">Rejected</a>
                             </li>
                             <c:if test="${user.role.id == 2}">
-                                <br>
                                 <li>
                                     <a class="ordersFilter"  data-filter-column="3"
                                        data-filter-text="7">Stamps
@@ -137,19 +128,15 @@
                         </ul>
                     </li>
                     <c:if test="${user.role.id == 2 || user.role.id == 1}">
-                        <br>
                         <li>
                             <a id="planned" class="ordersFilter"  data-filter-column="3"
                                data-filter-text="planned">Planned</a>
-                            <br>
-                            <ul>
-                                <br>
+                            <ul class="planned">
                                 <li>
                                     <a class="ordersFilter"  data-filter-column="3"
                                        data-filter-text="8">New
                                         orders</a>
                                 </li>
-                                <br>
                                 <li>
                                     <a class="ordersFilter"  data-filter-column="3"
                                        data-filter-text="11">Existing
@@ -171,14 +158,12 @@
                 </li>
             </c:if>
             <c:if test="${user.role.id == 4}">
-                <br>
                 <li>
                     <a id="stamps-ordered" class="ordersFilter"  data-filter-column="3"
                        data-filter-text="7">Stamps
                         ordered</a>
                 </li>
             </c:if>
-            <br>
             <li>
                 <a id="on-hold" class="ordersFilter"  data-filter-column="3"
                    data-filter-text="9">On

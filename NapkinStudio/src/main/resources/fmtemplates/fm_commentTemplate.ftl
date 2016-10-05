@@ -7,6 +7,6 @@
 <div>
     <a href="${link}">To Order</a>
 </div>
-
+<img src='cid:company-logo'>
 </body>
 </html>

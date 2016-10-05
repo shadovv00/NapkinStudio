@@ -4,6 +4,7 @@ import com.napkinstudio.entity.Comments;
 import com.napkinstudio.entity.Order;
 import freemarker.template.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -55,8 +56,9 @@ public class MailManager {
                 if (object instanceof Comments) {
                     Comments comment = (Comments) object;
                     order = comment.getOrder();
-                    String link = "http://10.4.0.66:8080/orders/" + order.getOrderId().toString();
+                    String link = "http://10.4.0.66:8080/NapkinStudio/orders/" + order.getOrderId().toString();
                     helper.setTo(comment.getToUser().getEmail());
+
 
 
                     model.put("comment", comment);
@@ -71,7 +73,7 @@ public class MailManager {
 
                 } else if (object instanceof Order) {
                     order = (Order) object;
-                    String link = "http://10.4.0.66:8080/orders/" + order.getOrderId().toString();
+                    String link = "http://10.4.0.66:8080/NapkinStudio/orders/" + order.getOrderId().toString();
                     helper.setTo(order.getItsUsers().get(0).getUser().getEmail());
                     model.put("order", order);
                     model.put("link", link);
@@ -100,6 +102,7 @@ public class MailManager {
                 helper.setFrom("khomenkotest1@gmail.com");
                 helper.setSubject(order.getOrderId() + " " + order.getItemNum() + " " + order.getPrintName());
                 helper.setText(text, true);
+                helper.addInline("company-logo",new ClassPathResource("img__Bunzl.png") );
 
                 System.out.println("Template content : " + text);
 
