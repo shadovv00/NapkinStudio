@@ -3,7 +3,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ page contentType="text/html; charset=utf-8" language="java"  import="java.util.Date, java.util.Calendar, org.apache.commons.lang.time.DateUtils" errorPage="" %>
+<%@ page contentType="text/html; charset=utf-8" language="java"
+         import="java.util.Date, java.util.Calendar, org.apache.commons.lang.time.DateUtils" errorPage="" %>
 <c:set var="today" scope="session" value="<%=new java.util.Date()%>"/>
 <c:set var="yesterday" scope="session" value="<%=new java.util.Date(new java.util.Date().getTime() - 60*60*24*1000)%>"/>
 <c:set var="thisstage" scope="session" value="true"/>
@@ -58,24 +59,23 @@
 </head>
 
 <body style="overflow-y: auto">
-
 <div class="loading-spinner" style="display:none">Loading&#8230;</div>
 <section class="col-md-12 logo-area" style="background-color: #f9f9f9; background-position-x: 10%">
     <a href="<c:url value="/logout"/>" style="float: right; margin: 20px 0">&nbsp;uitloggen </a>
     <p style="float: right; margin: 20px 0">${user.role.name} - </p>
+
 </section>
 <section class="subheader col-md-12" style="background-color: white">
     <c:if test="${user.role.id!=5}">
         <a href="<c:url value="/orders"/>" class="back-btn"> Overzicht </a>
     </c:if>
-    <h2> ${theOrder.orderId}  ${theOrder.itemNum} - ${theOrder.printName}</h2>   
-    
+    <h2> ${theOrder.orderId} ${theOrder.itemNum} - ${theOrder.printName}</h2>
     <div class="checkout-wrap">
         <div class="progress-bar-line"></div>
-         <ul class="checkout-bar">
+        <ul class="checkout-bar">
             <c:if test="${prevId.length() > 0 &&user.role.id!=5}">
-                <li class="prev-order-btn">
-                    <a href="<spring:url value="/orders/{prevId}">
+                <li class="prev-order-btn" onclick="document.getElementById('prev-btn-id').click()">
+                    <a id="prev-btn-id" href="<spring:url value="/orders/{prevId}">
                           <spring:param name="prevId" value ="${prevId}"/>
                 </spring:url>">Previous</a>
                 </li>
@@ -111,7 +111,8 @@
                 </c:if>
             </c:forEach>
             <c:if test="${nextId.length() > 0  &&user.role.id!=5}">
-                <li class="next-order-btn"><a href="<spring:url value="/orders/{nextId}">
+                <li class="next-order-btn" onclick="document.getElementById('next-btn-id').click()"><a id="next-btn-id"
+                                                                                                       href="<spring:url value="/orders/{nextId}">
                     <spring:param name="nextId" value ="${nextId}"/>
                 </spring:url>">Next</a></li>
             </c:if>
@@ -120,7 +121,7 @@
 </section>
 <section class="order-wrapper" style="background-color: #f9f9f9">
 
-    <table class="blabla" width="100%" border="0" >
+    <table class="blabla" width="100%" border="0">
         <tr valign="top">
             <td width="10%">
             </td>
@@ -129,127 +130,127 @@
                 <%--&lt;%&ndash;stautus                 <c:out value="${theOrder.SAPstatus.statusSAPStatuseRoles[0].status.name}" />&ndash;%&gt;--%>
                 <%--</div>--%>
                 <%--6.4-5 Order and Article info/////////////////////////////////////////////////--%>
-                <table width="100%" border="0" style="margin-bottom: 10px; margin-top: 10px">        <tr class="table-title" valign="top">
-            <th width="50%" >
-                <b>Order Informatie</b>
-            </th>
-            <th width="50%" >
-                <b>Artikel informatie</b>
-            </th>
-        </tr>
-        <tr>
-            <td width="50%" valign="top">
-                <table width="100%" class="inner-info-table">
-                    <tr valign="top">
-                        <td width="34%">
-                            debtor number
+                <table width="100%" border="0" style="margin-bottom: 10px; margin-top: 10px">
+                    <tr class="table-title" valign="top">
+                        <th width="50%">
+                            <b>Order Informatie</b>
+                        </th>
+                        <th width="50%">
+                            <b>Artikel informatie</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td width="50%" valign="top">
+                            <table width="100%" class="inner-info-table">
+                                <tr valign="top">
+                                    <td width="34%">
+                                        debtor number
+                                    </td>
+                                    <td width="66%">
+                                        ${theOrder.debNum}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Debtor Order Number</td>
+                                    <td>${theOrder.debNum}</td>
+                                </tr>
+                                <tr>
+                                    <td>Quantity</td>
+                                    <td>${theOrder.quantity} stuks</td>
+                                </tr>
+                                <tr>
+                                    <td>Approval by</td>
+                                    <td>${theOrder.approvalBy}</td>
+                                </tr>
+                                <tr>
+                                    <td>Debtor contact</td>
+                                    <td>${theOrder.debCont}</td>
+                                </tr>
+                                <tr>
+                                    <td>Delivery address</td>
+                                    <td>${theOrder.delivAddr}</td>
+                                </tr>
+                                <tr>
+                                    <td>Delivery address contact</td>
+                                    <td>${theOrder.delivAddrCont}</td>
+                                </tr>
+                                <tr>
+                                    <td>Unloading times</td>
+                                    <td>${theOrder.unloadTimes}</td>
+                                </tr>
+                                <tr>
+                                    <td>Delivery instructions</td>
+                                    <td>${theOrder.delivInstruct}</td>
+                                </tr>
+                            </table>
                         </td>
-                        <td width="66%">
-                            ${theOrder.debNum}
+                        <td width="50%" valign="top">
+                            <table width="100%" class="inner-info-table">
+                                <tr valign="top">
+                                    <td width="34%">
+                                        Item number
+                                    </td>
+                                    <td width="66%">
+                                        ${theOrder.itemNum}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Debtor item number</td>
+                                    <td>${theOrder.debItemNum}</td>
+                                </tr>
+                                <tr>
+                                    <td>Size</td>
+                                    <td>${theOrder.size}</td>
+                                </tr>
+                                <tr>
+                                    <td>Material</td>
+                                    <td>${theOrder.material}</td>
+                                </tr>
+                                <tr>
+                                    <td>folding method</td>
+                                    <td>${theOrder.foldingMeth}</td>
+                                </tr>
+                                <tr>
+                                    <td>napkin colour</td>
+                                    <td>${theOrder.napkinCol}</td>
+                                </tr>
+                                <c:if test="${(theOrder.SAPstatus.id<=2)}">
+                                    <tr>
+                                        <td>Print colour 1</td>
+                                        <td>${theOrder.color1}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Print colour 2</td>
+                                        <td>${theOrder.color2}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Print colour 3</td>
+                                        <td>${theOrder.color3}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Print colour 4</td>
+                                        <td>${theOrder.color4}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Print colour 4</td>
+                                        <td>${theOrder.color4}</td>
+                                    </tr>
+                                </c:if>
+                            </table>
                         </td>
                     </tr>
-                    <tr>
-                        <td>Debtor Order Number</td>
-                        <td>${theOrder.debNum}</td>
-                    </tr>
-                    <tr>
-                        <td>Quantity</td>
-                        <td>${theOrder.quantity} stuks</td>
-                    </tr>
-                    <tr>
-                        <td>Approval by</td>
-                        <td>${theOrder.approvalBy}</td>
-                    </tr>
-                    <tr>
-                        <td>Debtor contact</td>
-                        <td>${theOrder.debCont}</td>
-                    </tr>
-                    <tr>
-                        <td>Delivery address</td>
-                        <td>${theOrder.delivAddr}</td>
-                    </tr>
-                    <tr>
-                        <td>Delivery address contact</td>
-                        <td>${theOrder.delivAddrCont}</td>
-                    </tr>
-                    <tr>
-                        <td>Unloading times</td>
-                        <td>${theOrder.unloadTimes}</td>
-                    </tr>
-                    <tr>
-                        <td>Delivery instructions</td>
-                        <td>${theOrder.delivInstruct}</td>
-                    </tr>
-                </table>
-            </td>
-            <td width="50%" valign="top">
-                <table width="100%" class="inner-info-table">
-                    <tr valign="top">
-                        <td width="34%">
-                            Item number
-                        </td>
-                        <td width="66%">
-                            ${theOrder.itemNum}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Debtor item number</td>
-                        <td>${theOrder.debItemNum}</td>
-                    </tr>
-                    <tr>
-                        <td>Size</td>
-                        <td>${theOrder.size}</td>
-                    </tr>
-                    <tr>
-                        <td>Material</td>
-                        <td>${theOrder.material}</td>
-                    </tr>
-                    <tr>
-                        <td>folding method</td>
-                        <td>${theOrder.foldingMeth}</td>
-                    </tr>
-                    <tr>
-                        <td>napkin colour</td>
-                        <td>${theOrder.napkinCol}</td>
-                    </tr>
-                    <c:if test="${(theOrder.SAPstatus.id<=2)}">
-                        <tr>
-                            <td>Print colour 1</td>
-                            <td>${theOrder.color1}</td>
-                        </tr>
-                        <tr>
-                            <td>Print colour 2</td>
-                            <td>${theOrder.color2}</td>
-                        </tr>
-                        <tr>
-                            <td>Print colour 3</td>
-                            <td>${theOrder.color3}</td>
-                        </tr>
-                        <tr>
-                            <td>Print colour 4</td>
-                            <td>${theOrder.color4}</td>
-                        </tr>
-                        <tr>
-                            <td>Print colour 4</td>
-                            <td>${theOrder.color4}</td>
-                        </tr>
-                    </c:if>
-                </table>
-            </td>
-        </tr>
 
-    </table>
+                </table>
 
-    <%--6.7 Print proof/////////////////////////////////////////////////--%>
-    <%--TODO: Check condition--%>
-    <c:if test="${(theOrder.SAPstatus.id==2&&user.role.id==4)||
+                <%--6.7 Print proof/////////////////////////////////////////////////--%>
+                <%--TODO: Check condition--%>
+                <c:if test="${(theOrder.SAPstatus.id==2&&user.role.id==4)||
                                 (theOrder.SAPstatus.id>2)}">
-        <div width="100%" style="margin-bottom: 10px">
-            <b>Drukproef</b>
-        </div>
-    </c:if>
-		
-		<div id="printproof"></div>
+                    <div width="100%" style="margin-bottom: 10px">
+                        <b>Drukproef</b>
+                    </div>
+                </c:if>
+                <div id="printproof"></div>
                 <%--6.6 Comments/////////////////////////////////////////////////--%>
                 <div width="100%" style="margin-bottom: 10px">
                     <b class="opmerkingen-wrapper">Opmerkingen</b>
@@ -271,10 +272,31 @@
                                                     <li>
                                                         <div>
                                                             <div class="comment-container">
-                                                                <p class="commentText">
+                                                                <p class="commentText"
+                                                                   data-unread="${PVIComment.lastModifiedDate}  ${theOrder.itsUsers.get(0).lastLook}">
                                                                         ${PVIComment.commText}
                                                                 </p>
-                                                                <p>${PVIComment.lastModifiedDate} ${PVIComment.fromUser.firstName} ${PVIComment.fromUser.lastName}</p>
+                                                                <p>
+                                                                        <%--${PVIComment.fromUser.lastModifiedDate}--%>
+                                                                    <c:choose>
+                                                                        <c:when test="${DateUtils.isSameDay(PVIComment.fromUser.lastModifiedDate, today)}">
+                                                                            Today <fmt:formatDate
+                                                                                value="${PVIComment.fromUser.lastModifiedDate}"
+                                                                                pattern=" HH:mm"/>
+                                                                        </c:when>
+                                                                        <c:when test="${DateUtils.isSameDay(PVIComment.fromUser.lastModifiedDate, yesterday)}">
+                                                                            Yesterday <fmt:formatDate
+                                                                                value="${PVIComment.fromUser.lastModifiedDate}"
+                                                                                pattern=" HH:mm"/>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <fmt:formatDate
+                                                                                    value="${PVIComment.fromUser.lastModifiedDate}"
+                                                                                    pattern=" EEEE d/MM/yyyy HH:mm"/>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                        ${PVIComment.fromUser.firstName} ${PVIComment.fromUser.lastName}
+                                                                </p>
                                                                 <c:if test="${PVIComment.fromUser.userId == user.userId}">
                                                                     <a class="btn edit-comment"
                                                                        commentId="${PVIComment.id}">edit</a>
@@ -292,15 +314,7 @@
                                             </c:otherwise>
                                         </c:choose>
                                         <li>
-                                            <%--<c:if test="${param.success eq true }">--%>
-                                            <%--<div class="row text-center">--%>
-                                            <%--<div class="col-md-offset-4 col-md-5">--%>
-                                            <%--<div class="alert alert-success">--%>
-                                            <%--Comment was added--%>
-                                            <%--</div>--%>
-                                            <%--</div>--%>
-                                            <%--</div>--%>
-                                            <%--</c:if>--%>
+
                                             <form:form commandName="comment" method="post"
                                                        action="/NapkinStudio/addComment"
                                                        cssClass="form-horizontal addCommentForm">
@@ -312,28 +326,15 @@
                                                                      value="2"/>
                                                         <form:hidden path="order.orderId"
                                                                      value="${theOrder.orderId}"/>
-                                                        <form:hidden
-                                                                path="order.itemNum"
-                                                                value="${theOrder.itemNum}"/>
-
-                                                        <form:hidden
-                                                                path="order.printName"
-                                                                value="${theOrder.printName}"/>
-                                                            <%--<input name="deleted" type="hidden" value="true"/>--%>
                                                     </div>
                                                 </div>
-                                                <%--<div class="modal-footer col-sm-5">--%>
                                                 <div class="col-sm-5">
                                                     <input type="submit"
                                                            value="Save"
                                                            class="btn btn-large btn-primary" style="float: left;">
-                                                    <a class="btn cancel-button btn-danger"
+                                                    <a class="btn cancel-button btn-danger send-comment-btn"
                                                        style="float:right;">Cancel</a>
-
-
                                                 </div>
-
-                                                <%--</div>--%>
                                             </form:form>
                                         </li>
                                     </ul>
@@ -364,7 +365,27 @@
                                                                 <p class="commentText">
                                                                         ${DTPComment.commText}
                                                                 </p>
-                                                                <p>${DTPComment.lastModifiedDate} ${DTPComment.fromUser.firstName} ${DTPComment.fromUser.lastName}</p>
+                                                                <p>
+                                                                        <%--${DTPComment.fromUser.lastModifiedDate} --%>
+                                                                    <c:choose>
+                                                                        <c:when test="${DateUtils.isSameDay(DTPComment.fromUser.lastModifiedDate, today)}">
+                                                                            Today <fmt:formatDate
+                                                                                value="${DTPComment.fromUser.lastModifiedDate}"
+                                                                                pattern=" HH:mm"/>
+                                                                        </c:when>
+                                                                        <c:when test="${DateUtils.isSameDay(DTPComment.fromUser.lastModifiedDate, yesterday)}">
+                                                                            Yesterday <fmt:formatDate
+                                                                                value="${DTPComment.fromUser.lastModifiedDate}"
+                                                                                pattern=" HH:mm"/>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <fmt:formatDate
+                                                                                    value="${DTPComment.fromUser.lastModifiedDate}"
+                                                                                    pattern=" EEEE d/MM/yyyy HH:mm"/>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                        ${DTPComment.fromUser.firstName} ${DTPComment.fromUser.lastName}
+                                                                </p>
                                                                 <c:if test="${DTPComment.fromUser.userId == user.userId}">
                                                                     <a class="btn edit-comment"
                                                                        commentId="${DTPComment.id}">edit</a>
@@ -416,7 +437,8 @@
                                                 <div class="col-sm-5">
                                                     <input type="submit"
                                                            value="Save"
-                                                           class="btn btn-large btn-primary" style="float: left;">
+                                                           class="btn btn-large btn-primary send-comment-btn"
+                                                           style="float: left;">
                                                     <a class="btn cancel-button btn-danger"
                                                        style="float:right;">Cancel</a>
 
@@ -450,7 +472,27 @@
                                                                 <p class="commentText">
                                                                         ${DeptorComment.commText}
                                                                 </p>
-                                                                <p>${DeptorComment.lastModifiedDate} ${DeptorComment.fromUser.firstName} ${DeptorComment.fromUser.lastName}</p>
+                                                                <p>
+                                                                        <%--${DeptorComment.fromUser.lastModifiedDate}--%>
+                                                                    <c:choose>
+                                                                        <c:when test="${DateUtils.isSameDay(DeptorComment.fromUser.lastModifiedDate, today)}">
+                                                                            Today <fmt:formatDate
+                                                                                value="${DeptorComment.fromUser.lastModifiedDate}"
+                                                                                pattern=" HH:mm"/>
+                                                                        </c:when>
+                                                                        <c:when test="${DateUtils.isSameDay(DeptorComment.fromUser.lastModifiedDate, yesterday)}">
+                                                                            Yesterday <fmt:formatDate
+                                                                                value="${DeptorComment.fromUser.lastModifiedDate}"
+                                                                                pattern=" HH:mm"/>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <fmt:formatDate
+                                                                                    value="${DeptorComment.fromUser.lastModifiedDate}"
+                                                                                    pattern=" EEEE d/MM/yyyy HH:mm"/>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                        ${DeptorComment.fromUser.firstName} ${DeptorComment.fromUser.lastName}
+                                                                </p>
                                                                 <c:if test="${DeptorComment.fromUser.userId == user.userId}">
                                                                     <a class="btn edit-comment"
                                                                        commentId="${DeptorComment.id}">edit</a>
@@ -535,7 +577,27 @@
                                                                 <p class="commentText">
                                                                         ${CustomerComment.commText}
                                                                 </p>
-                                                                <p>${CustomerComment.lastModifiedDate} ${CustomerComment.fromUser.firstName} ${CustomerComment.fromUser.lastName}</p>
+                                                                <p>
+                                                                        <%--${CustomerComment.fromUser.lastModifiedDate}--%>
+                                                                    <c:choose>
+                                                                        <c:when test="${DateUtils.isSameDay(CustomerComment.fromUser.lastModifiedDate, today)}">
+                                                                            Today <fmt:formatDate
+                                                                                value="${CustomerComment.fromUser.lastModifiedDate}"
+                                                                                pattern=" HH:mm"/>
+                                                                        </c:when>
+                                                                        <c:when test="${DateUtils.isSameDay(CustomerComment.fromUser.lastModifiedDate, yesterday)}">
+                                                                            Yesterday <fmt:formatDate
+                                                                                value="${CustomerComment.fromUser.lastModifiedDate}"
+                                                                                pattern=" HH:mm"/>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <fmt:formatDate
+                                                                                    value="${CustomerComment.fromUser.lastModifiedDate}"
+                                                                                    pattern=" EEEE d/MM/yyyy HH:mm"/>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                        ${CustomerComment.fromUser.firstName} ${CustomerComment.fromUser.lastName}
+                                                                </p>
                                                                 <c:if test="${CustomerComment.fromUser.userId == user.userId}">
                                                                     <a class="btn edit-comment"
                                                                        commentId="${CustomerComment.id}">edit</a>
@@ -620,7 +682,27 @@
                                                                 <p class="commentText">
                                                                         ${StampsManufacComment.commText}
                                                                 </p>
-                                                                <p>${StampsManufacComment.lastModifiedDate} ${StampsManufacComment.fromUser.firstName} ${StampsManufacComment.fromUser.lastName}</p>
+                                                                <p>
+                                                                        <%--${StampsManufacComment.fromUser.lastModifiedDate} --%>
+                                                                    <c:choose>
+                                                                        <c:when test="${DateUtils.isSameDay(StampsManufacComment.fromUser.lastModifiedDate, today)}">
+                                                                            Today <fmt:formatDate
+                                                                                value="${StampsManufacComment.fromUser.lastModifiedDate}"
+                                                                                pattern=" HH:mm"/>
+                                                                        </c:when>
+                                                                        <c:when test="${DateUtils.isSameDay(StampsManufacComment.fromUser.lastModifiedDate, yesterday)}">
+                                                                            Yesterday <fmt:formatDate
+                                                                                value="${StampsManufacComment.fromUser.lastModifiedDate}"
+                                                                                pattern=" HH:mm"/>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <fmt:formatDate
+                                                                                    value="${StampsManufacComment.fromUser.lastModifiedDate}"
+                                                                                    pattern=" EEEE d/MM/yyyy HH:mm"/>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                        ${StampsManufacComment.fromUser.firstName} ${StampsManufacComment.fromUser.lastName}
+                                                                </p>
                                                                 <c:if test="${StampsManufacComment.fromUser.userId == user.userId}">
                                                                     <a class="btn edit-comment"
                                                                        commentId="${StampsManufacComment.id}">edit</a>
@@ -705,7 +787,26 @@
                                                                 <p class="commentText">
                                                                         ${ProductionComment.commText}
                                                                 </p>
-                                                                <p>${ProductionComment.lastModifiedDate} ${ProductionComment.fromUser.firstName} ${DTPComment.fromUser.lastName}</p>
+                                                                <p>
+                                                                    <c:choose>
+                                                                        <c:when test="${DateUtils.isSameDay(ProductionComment.fromUser.lastModifiedDate, today)}">
+                                                                            Today <fmt:formatDate
+                                                                                value="${ProductionComment.fromUser.lastModifiedDate}"
+                                                                                pattern=" HH:mm"/>
+                                                                        </c:when>
+                                                                        <c:when test="${DateUtils.isSameDay(ProductionComment.fromUser.lastModifiedDate, yesterday)}">
+                                                                            Yesterday <fmt:formatDate
+                                                                                value="${ProductionComment.fromUser.lastModifiedDate}"
+                                                                                pattern=" HH:mm"/>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <fmt:formatDate
+                                                                                    value="${ProductionComment.fromUser.lastModifiedDate}"
+                                                                                    pattern=" EEEE d/MM/yyyy HH:mm"/>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                        ${ProductionComment.fromUser.firstName} ${ProductionComment.fromUser.lastName}
+                                                                </p>
                                                                 <c:if test="${ProductionComment.fromUser.userId == user.userId}">
                                                                     <a class="btn edit-comment"
                                                                        commentId="${ProductionComment.id}">edit</a>
@@ -773,32 +874,13 @@
                         </li>
                     </ul>
                 </div>
-                    <div id="order-attachment" class="order-attachment" orderId="${theOrder.orderId}"></div>
-                <label>
-                    <input type="checkbox" name="check0" value="a2">Drukproef eerst door PVI laten controleren.
-                </label>
-                <!--             <input type="checkbox" name="check0" value="a2">Drukproef eerst door PVI laten controleren.<Br> -->
+                <div id="order-attachment" class="order-attachment" orderId="${theOrder.orderId}"></div>
+
                 <div display="block" style="margin-bottom: 10px">
 
-                    <%--Files and comments for StatusChange--%>
-                    <c:if test="${
-                                    (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
-                                    ((theOrder.SAPstatus.id==1)&&user.role.id==2)||
-                                    (theOrder.SAPstatus.id==2&&user.role.id==4)||
-                                    (theOrder.SAPstatus.id==5&&user.role.id==4&&theOrder.processId==5)||
-                                    (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Deptor')||
-                                    (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
-                                    (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==1)||
-                                    (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==2)||
-                                    (theOrder.SAPstatus.id==6&&user.role.id==2)
-                         }">
-                        <div id="order-new-attachment" style="padding-top: 15px; padding-bottom: 15px"></div>
-                        <div >
-                            <textarea id="statuscahngecomment" path="commText" placeholder="Enter comment" style="padding-bottom: 15px;"></textarea>
-                        </div>
-                    </c:if>
                     <%--Appove without comments and files adding--%>
                     <c:if test="${
+
                                 (theOrder.SAPstatus.id==6&&user.role.id==2)||
                                 (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
                                 (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Deptor')||
@@ -808,16 +890,18 @@
                                 (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.processId==3)||
                                 (theOrder.SAPstatus.id==5&&user.role.id==2&&theOrder.processId==4)||
                                 (theOrder.SAPstatus.id==7&&user.role.id==2)
+
                      }">
-                    <a href="<c:url value='/changestatus/${theOrder.orderId}/yes' />"
-                       class="btn btn-success">Goedkeuren</a>
+                        <a href="<c:url value='/changestatus/${theOrder.orderId}/yes' />"
+                           class="btn btn-success">Goedkeuren</a>
                     </c:if>
                     <%--Discard without comments and files adding--%>
                     <c:if test="${
+                                (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
                                 (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.processId==3)
                      }">
-                    <a href="<c:url value='/changestatus/${theOrder.orderId}/no' />"
-                       class="btn  btn-success" style="background-color: grey!important">Annuleren</a>
+                        <a href="<c:url value='/changestatus/${theOrder.orderId}/no' />"
+                           class="btn  btn-success" style="background-color: grey!important">Annuleren</a>
                     </c:if>
                     <%--Appove with comments and files adding--%>
                     <c:if test="${
@@ -825,24 +909,31 @@
                                 (theOrder.SAPstatus.id==2&&user.role.id==4)||
                                 (theOrder.SAPstatus.id==5&&user.role.id==4&&theOrder.processId==5)
                      }">
+
+
                         <button type="button" class="approve-btn btn btn-success"
-                                foraction="/NapkinStudio/changestatus/${theOrder.orderId}/yes" st=${theOrder.SAPstatus.id} ur=${user.role.id} pi=${theOrder.processId}
-                        >Goedkeuren</button>
+                                foraction="/NapkinStudio/changestatus/${theOrder.orderId}/yes"
+                                st=${theOrder.SAPstatus.id} ur=${user.role.id} pi=${theOrder.processId}
+                        >Goedkeuren
+                        </button>
                     </c:if>
                     <%--Discard with comments and files adding--%>
                     <c:if test="${
-                                (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
                                 (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Deptor')||
                                 (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
                                 (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==1)||
                                 (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==2)||
                                 (theOrder.SAPstatus.id==6&&user.role.id==2)
                      }">
+
                         <button type="button" class="approve-btn btn "
-                                foraction="/NapkinStudio/changestatus/${theOrder.orderId}/no" st=${theOrder.SAPstatus.id} ur=${user.role.id} pi=${theOrder.processId}
-                        >Annuleren</button>
+                                foraction="/NapkinStudio/changestatus/${theOrder.orderId}/no"
+                                st=${theOrder.SAPstatus.id} ur=${user.role.id} pi=${theOrder.processId}>Annuleren
+                        </button>
                     </c:if>
-                    </div>
+
+
+                </div>
 
 
             </td>
@@ -904,13 +995,40 @@
         $(".add-comment-btn").hide();
         $(".cancel-button").hide();
         $(".editCommentForm").hide();
+        $(".edit-comment").hide();
+        $(".delete-comment").hide();
+        $(".loading-spinner").hide();
+
+
         $(".add-comment-btn").click(function () {
-            console.log("CLick");
+            <%--debugger;--%>
+            <%--console.log("CLick");--%>
+            <%--var commentsList = $(this).parent().next().find("ul");--%>
+            <%--var liTag = "<li>";--%>
+            <%--liTag = liTag + "<form:form commandName='comment' method='post' action='/NapkinStudio/addComment' cssClass='form-horizontal addCommentForm' >";--%>
+            <%--liTag = liTag +   "<div class='form-group'>";--%>
+            <%--liTag = liTag + "<div class='col-sm-5'>"--%>
+            <%--liTag = liTag + "<form:textarea path='commText'   cssClass='form-control' /> <form:hidden path='forRole.id' value='2'/>";--%>
+
+            <%--liTag = liTag+  "</div> </div> <div class='col-sm-5'> ";--%>
+            <%--liTag = liTag + "<input type='submit'value='Save'class='btn btn-large btn-primary' style='float: left;'>";--%>
+            <%--liTag = liTag   + "<a class='btn cancel-button btn-danger'style='float:right;'>Cancel</a> </div>";--%>
+            <%--liTag = liTag   + " </form:form>"--%>
+            <%--liTag = liTag + "</li>"--%>
+            <%--var $addCommentsForm = $(liTag);--%>
+            <%--commentsList.append($addCommentsForm);--%>
+            <%--console.log($(this).parent().next().find("ul"));--%>
+            <%--//--%>
             console.log($(this).parent().next().find("form"));
             $(this).parent().next().find("form").show();
             $(this).parent().next().find(".cancel-button").show();
 
         });
+
+        $(".send-comment-btn").click(function () {
+            $(".loading-spinner").show();
+        });
+
 
         $(".cancel-button").click(function () {
             $(this).parent().parent().hide();
@@ -1046,6 +1164,24 @@
 
         if (statusId > 6 && status !== "Rejected")
             $(".add-comment-btn").hide();
+
+        $(".comment-container").hover(function () {
+
+            $(this).find(".edit-comment").show();
+            $(this).find(".delete-comment").show();
+        }, function () {
+            $(this).find(".edit-comment").hide();
+            $(this).find(".delete-comment").hide();
+        });
+
+        $(".commentText").each(function () {
+            debugger;
+            console.log($(this).attr("data-unread"));
+//        if($(this).attr("data-unread").trim() === "true")
+//           console.log("true");
+        });
+
+
     });
 
 </script>
