@@ -111,7 +111,7 @@
 			rules : {
 				login : {
 					required : true,
-					minlength : 3,
+					minlength : 4,
 					remote : {
 						url : "<c:url value='/register/availableLogin'/>",
 						type : "POST",
@@ -130,7 +130,7 @@
 						url : "<c:url value='/register/availableEmail'/>",
 						type : "POST",
 						data : {
-							login : function() {
+							email : function() {
 								return $("#email").val();
 							}
 						}

@@ -5,11 +5,8 @@ import com.napkinstudio.entity.*;
 import com.napkinstudio.manager.*;
 import com.napkinstudio.simplemodel.FileInfo;
 import com.napkinstudio.util.MultiFileValidator;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -374,7 +371,7 @@ public class OrderPageController {
 
 
     ////delete NapkinSudio by commit
-    @RequestMapping(value = "/changestatus/{orderId}/{answer}")
+        @RequestMapping(value = "/changestatus/{orderId}/{answer}")
     public String changeOrderStatus(Model model, @PathVariable int orderId, @PathVariable String answer, @ModelAttribute("user") User user) {
 
 //        Comments comment = new Comments();
@@ -654,7 +651,7 @@ public class OrderPageController {
         Role role = user.getRole();
 
         statusChanginLogic(theOrder, role, answer);
-        if (comment.getCommText() != "") {
+        if (!comment.getCommText().equals("") ) {
             comment.setFromUser(user);
             comment.setToUser(theOrder.getItsUsers().get(0).getUser());
             comment.setForRole(theOrder.getSAPstatus().getStatusSAPStatuseRoles().get(0).getRole());
