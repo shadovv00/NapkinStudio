@@ -18,8 +18,8 @@ var napkin = napkin || {};
 		var jAt = $("#order-attachment");
 		
 		var jAddAtBlock = $("<div></div>"),
-			jChoseFiles = $('<span class="btn btn-success fileinput-button">\
-                    			<input class="add-file-input" type="file" name="files[]" multiple="">\
+			jChoseFiles = $('<span class="glyphicon glyphicon-plus-sign btn-custom fileinput-button">\
+								<input class="glyphicon glyphicon-plus-sign" type="file" name="files[]" multiple="">\
                 			</span>'),
 			jDDZone = $("<div class='drag-n-drop-zone dropzone'></div>");
 
@@ -340,6 +340,7 @@ var napkin = napkin || {};
 
 					jWrapImg.append(jImg);
 				jWrapImg.append(jDlt);
+                //TODO: Check what for?
 				jPP.append(jWrapImg);
 
 
@@ -505,11 +506,11 @@ var napkin = napkin || {};
 					  // var pi=$(this).attr('pi');
 						  var commentText=$("#statuscahngecomment").val();
 
-				  if (urltostatus.slice(-1)=="o"&&parseInt($(this).attr('pi'))!=3&&!commentText.length){
-				   $("#statuscahngecomment").css( "border", "2px dotted red" );
-				            $('.loading-spinner').hide();
-				   return;
-				  }
+			  if (urltostatus.slice(-1)=="o"&&parseInt($(this).attr('pi'))!=3&&!commentText.length){
+			   $("#statuscahngecomment").css( "border", "2px dotted red" );
+						$('.loading-spinner').hide();
+			   return;
+			  }
 			  var files = [];
 			  for(var key in mjUpLi) {
 				   files.push(key);

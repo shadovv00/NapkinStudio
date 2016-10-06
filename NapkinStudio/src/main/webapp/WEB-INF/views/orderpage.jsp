@@ -246,11 +246,11 @@
                 <%--TODO: Check condition--%>
                 <c:if test="${(theOrder.SAPstatus.id==2&&user.role.id==4)||
                                 (theOrder.SAPstatus.id>2)}">
-                    <div width="100%" style="margin-bottom: 10px">
-                        <b>Drukproef</b>
-                    </div>
-                </c:if>
+                    <%--<div width="100%" style="margin-bottom: 10px">--%>
+                        <%--<b>Drukproef</b>--%>
+                    <%--</div>--%>
                 <div id="printproof"></div>
+                </c:if>
                 <%--6.6 Comments/////////////////////////////////////////////////--%>
                 <div width="100%" style="margin-bottom: 10px">
                     <b class="opmerkingen-wrapper">Opmerkingen</b>
