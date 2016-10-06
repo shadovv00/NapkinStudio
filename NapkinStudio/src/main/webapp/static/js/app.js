@@ -319,7 +319,7 @@ var napkin = napkin || {};
 				var jSomeText = $("<p>Er is nog geen drukproef toegevoegd</p>");
 				var jChoseFile = $('<span class="btn-custom glyphicon glyphicon-plus-sign btn-custom fileinput-button" style="margin-right: 12px;">\
  							</span>'),
-						jImgInp = $('<input class="glyphicon glyphicon-plus-sign" type="file" name="files[]">');
+					jImgInp = $('<input class="glyphicon glyphicon-plus-sign" type="file" name="files[]">');
 				var jImgPreview = $("<img style='max-height: 100px;' />");
 				var jDltPr = $('<i class="glyphicon glyphicon-remove btn-custom" style="position: absolute; left: 0; top: 0;"></i>');
 				var jWrapImgPr = $("<div style='position:relative;  display: none;'></div>");
@@ -328,47 +328,46 @@ var napkin = napkin || {};
 				var jWrapImg = $("<div style='position:relative;'></div>");
 
 
-						jPP.css("margin-bottom", "10px");
+				jPP.css("margin-bottom", "10px");
 				jPP.append(jHeaderText);
 				jPP.append(jSomeText);
 				jChoseFile.append(jImgInp);
 				jSomeText.prepend(jChoseFile);
 
-					jWrapImgPr.append(jImgPreview);
+				jWrapImgPr.append(jImgPreview);
 				jWrapImgPr.append(jDltPr);
 				jPP.append(jWrapImgPr);
 
-					jWrapImg.append(jImg);
-				jWrapImg.append(jDlt);
+				jWrapImg.append(jImg);
+//				jWrapImg.append(jDlt);
                 //TODO: Check what for?
 				jPP.append(jWrapImg);
+				
+
+				jImgInp.fileupload({
+						url: location.href + "/save-printproof-to-tmp/",
+				dropZone: undefined,
+				limitMultiFileUploads: 1,
+				acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+		        maxFileSize: 999000,
+				add: function (e, data) {
+
+						$.each(data.files, function (index, file) {
+								printproof.name = file.name;
+				            });
 
 
-						jImgInp.fileupload({
-								url: location.href + "/save-printproof-to-tmp/",
-						dropZone: undefined,
-						limitMultiFileUploads: 1,
-						acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-				        maxFileSize: 999000,
-						add: function (e, data) {
-
-								$.each(data.files, function (index, file) {
-										printproof.name = file.name;
-						            });
-
-
-						            data.submit()
-					            .success(function(result, textStatus, jqXHR) {
-						            	console.log("success");
-						            	jImg.attr("src", location.href + "/printproof");
-							        })
-						        .error(function (jqXHR, textStatus, errorThrown) {
-							        	console.log("error");
-							        })
-						        .complete(function (result, textStatus, jqXHR) {
-							        	console.log("completed");
-							        })
-				        }
+				            data.submit()
+			            .success(function(result, textStatus, jqXHR) {
+				            	console.log("success");
+					        })
+				        .error(function (jqXHR, textStatus, errorThrown) {
+					        	console.log("error");
+					        })
+				        .complete(function (result, textStatus, jqXHR) {
+					        	console.log("completed");
+					        })
+		        	}
 				});
 
 					function readURL(input) {
@@ -389,30 +388,40 @@ var napkin = napkin || {};
 				        readURL(this);
 				    });
 
-					jDltPr.on("click", removePPTemp);
-				jDlt.on("click", removePrintProof);
+				jDltPr.on("click", removePPTemp);
+//				jDlt.on("click", removePrintProof);
 
 
 						printproof.showPrintProof = showPrintProof;
 
-					showPrintProof();
+				showPrintProof();
 
-					function showPrintProof() {
-							jImg.attr("src", location.href + "/printproof");
-							jImgPreview.hide();
-							printproof.name = undefined;
-							jWrapImg.show();
-						}
+				function showPrintProof() {
+					jImg.attr("src", location.href + "/printproof");
+					jImgPreview.hide();
+					printproof.name = undefined;
+					$.ajax({
+					    url: location.href + "/printproof/exist",
+					    type: 'GET',
+					    success: function(result) {
+					    	if(result === "ok") {
+					    		jWrapImg.show();
+					    	} else {
+					    		jWrapImg.hide();
+					    	}
+					    }
+					});
+				}
 
 				function removePPTemp() {
-						printproof.name = undefined;
-						jWrapImgPr.hide();
-					}
+					printproof.name = undefined;
+					jWrapImgPr.hide();
+				}
 
 				function removePrintProof() {
-						printproof.name = "remove";
-						jWrapImg.hide();
-					}
+					printproof.name = "remove";
+					jWrapImg.hide();
+				}
 
 			}
 

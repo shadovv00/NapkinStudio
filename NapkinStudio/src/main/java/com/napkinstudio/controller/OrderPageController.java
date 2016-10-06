@@ -747,6 +747,18 @@ public class OrderPageController {
         }
         return new ResponseEntity<String>(fileName, HttpStatus.OK);
     }
+    
+    @RequestMapping(value = "/orders/{orderId}/printproof/exist", method = RequestMethod.GET)
+    public ResponseEntity<String> hasPriptproof(HttpServletResponse response, @PathVariable int orderId) {
+    	System.out.println(orderId + " has printproof");
+    	String ppFnlDirPathStr = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_PPFINAL_DIRECTORY;
+		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(ppFnlDirPathStr))) {
+			if(directoryStream.iterator().hasNext()) {
+				return new ResponseEntity<>("ok", HttpStatus.OK);
+			}
+		} catch (IOException ex) {}
+		return new ResponseEntity<>("no", HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/orders/{orderId}/printproof", method = RequestMethod.GET)
     public void getPrintproof(HttpServletResponse response, @PathVariable int orderId) {
