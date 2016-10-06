@@ -51,7 +51,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //		.and().csrf().and().exceptionHandling().accessDeniedPage("/Access_Denied")
 		;
 
-
+		http
+		// ...
+		.headers()
+			.frameOptions().sameOrigin()
+			.httpStrictTransportSecurity().disable();
 
 //        .antMatchers("/orders").authenticated()
 //        .and().formLogin().loginPage("/login").defaultSuccessUrl("/orders").failureUrl("/login?error")

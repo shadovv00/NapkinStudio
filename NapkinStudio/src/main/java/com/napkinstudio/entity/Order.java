@@ -60,10 +60,9 @@ public class Order extends  AbstractEntity{
     private Boolean toDtp;
     private Boolean deleted;
 
+    @Transient
     private Integer unreadCommentsCount;
 
-
-    
     
 //    @OneToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
 //    private Article article;

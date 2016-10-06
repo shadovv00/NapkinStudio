@@ -273,7 +273,7 @@ public class OrderPageController {
 
             List<Comments> comments = null;
             if (user.getRole().getId() == 5) {
-                List<Comments> customerComments = commentsManager.findCommentsByOrderAndRoleId(orderId, 5);
+                List<Comments> customerComments = commentsManager.findCommentsByOrderAndRoleId(orderId, 5, userOrder);
                 model.addAttribute("CustomerComments", customerComments);
             } else if (user.getRole().getId() == 1) {
 //                List<Comments> customerComments = commentsManager.findCommentsByOrderAndRoleId(orderId, 5);
@@ -282,7 +282,7 @@ public class OrderPageController {
                 roleIdList.add(5);
                 roleIdList.add(1);
 
-                Map<Integer, List<Comments>> commentsMap = commentsManager.findCommentsbyOrderAndRoleIDs(orderId, roleIdList);
+                Map<Integer, List<Comments>> commentsMap = commentsManager.findCommentsbyOrderAndRoleIDs(orderId, roleIdList, userOrder);
                 List<Comments> customerComments = commentsMap.get(5);
                 List<Comments> deptorComments = commentsMap.get(1);
 
@@ -291,7 +291,7 @@ public class OrderPageController {
 
             } else if (user.getRole().getId() == 2 || user.getRole().getId() == 4) {
 
-                Map<Integer, List<Comments>> commentsMap = commentsManager.findCommentsbyOrderId(orderId);
+                Map<Integer, List<Comments>> commentsMap = commentsManager.findCommentsbyOrderId(orderId, userOrder);
 
                 model.addAttribute("PVIComments", commentsMap.get(2));
                 model.addAttribute("DeptorComments", commentsMap.get(1));
@@ -340,7 +340,7 @@ public class OrderPageController {
         comment.setOrder(order);
 
 
-        if ((comment.getForRole().getId() == 2 && user.getRole().getId() != 2) || (comment.getForRole().getId() == 4 && user.getRole().getId() != 4)) {
+        if (comment.getForRole().getId() !=user.getRole().getId()) {
 
             mailManager.sendEmail(comment);
         }
@@ -749,38 +749,49 @@ public class OrderPageController {
     }
 
     @RequestMapping(value = "/orders/{orderId}/printproof", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> testphoto(@PathVariable int orderId) {
-        InputStream is = null;
-        byte[] buffer = null;
-        String ppFnlDirPathStr = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_PPFINAL_DIRECTORY;
-        try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(ppFnlDirPathStr))) {
-            for (Path path : directoryStream) {
-                try {
-                    is = Files.newInputStream(path);
-                    buffer = IOUtils.toByteArray(is);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-                }
-                break;
-            }
-        } catch (IOException ex) {
-        } finally {
-            try {
-                if (is != null) {
-                    is.close();
-                }
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-
-
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_PNG);
-
-        return new ResponseEntity<byte[]>(buffer, headers, HttpStatus.OK);
+    public void getPrintproof(HttpServletResponse response, @PathVariable int orderId) {
+    	System.out.println("get printproof");
+    	String mimeType = null;
+    	InputStream is = null;
+    	String ppFnlDirPathStr = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_PPFINAL_DIRECTORY;
+		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(ppFnlDirPathStr))) {
+			for (Path path : directoryStream) {
+				try {
+					is = Files.newInputStream(path);
+					mimeType = Files.probeContentType(path);
+					String[] tokens = path.getFileName().toString().split("\\.(?=[^\\.]+$)");
+					System.out.println(Arrays.toString(tokens));
+					if(tokens.length == 2) {
+						if(tokens[1].toLowerCase().equals("svg")) {
+							mimeType = "image/svg+xml";
+						}
+					}
+					if (mimeType == null) {
+			            System.out.println("mimetype is not detectable, will take default");
+			            mimeType = "application/octet-stream";
+			        }
+			        System.out.println("mimetype : " + mimeType);
+			        response.setContentType(mimeType);
+			        response.setContentLength((int) Files.size(path));
+			        FileCopyUtils.copy(is, response.getOutputStream());
+				} catch (IOException e) {
+					e.printStackTrace();
+					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				}
+				break;
+			}
+		} catch (IOException ex) {
+		} finally {
+			try {
+				if(is != null) {
+					is.close();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
     }
 
 
