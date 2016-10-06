@@ -6,7 +6,7 @@ var napkin = napkin || {};
 
 	var _bean = {};
 	var mjUpLi = {};
-	
+	var jWrapImgPr = $("<div style='position:relative;  display: none;'></div>");
 	var jShowAtBlock = $("<div></div>"),
 		jRemoveAllFiles = $('<span class="btn btn-link fileinput-button">\
  								<i class="glyphicon glyphicon-remove"></i>\
@@ -15,7 +15,7 @@ var napkin = napkin || {};
  							</span>');
 	$("#order-attachment").append(jShowAtBlock);
 	napkin.buildFileAttachmentBlock = function() {
-		var jAt = $("#order-attachment");
+		var jAt = $("#order-new-attachment");
 		
 		var jAddAtBlock = $("<div></div>"),
 			jChoseFiles = $('<span class="glyphicon glyphicon-plus-sign btn-custom fileinput-button">\
@@ -309,7 +309,7 @@ var napkin = napkin || {};
 		}
 		
 	};
-
+	 
 	function initPrintProof() {
 				var printproof = {};
 				_bean.printproof = printproof;
@@ -322,7 +322,7 @@ var napkin = napkin || {};
 					jImgInp = $('<input class="glyphicon glyphicon-plus-sign" type="file" name="files[]">');
 				var jImgPreview = $("<img style='max-height: 100px;' />");
 				var jDltPr = $('<i class="glyphicon glyphicon-remove btn-custom" style="position: absolute; left: 0; top: 0;"></i>');
-				var jWrapImgPr = $("<div style='position:relative;  display: none;'></div>");
+//				var jWrapImgPr = $("<div style='position:relative;  display: none;'></div>");
 				var jImg = $("<img style='max-height: 500px;' />");
 				var jDlt = $('<i class="glyphicon glyphicon-remove btn-custom" style="position: absolute; left: 0; top: 0;"></i>');
 				var jWrapImg = $("<div style='position:relative;'></div>");
@@ -510,10 +510,16 @@ var napkin = napkin || {};
 	function approve() {
 			     $('.loading-spinner').show();
 			  var urltostatus=$(this).attr('foraction');
-			  // var st=$(this).attr('st');
-				  // var ur=$(this).attr('ur');
+			   var st=$(this).attr('st');
+				   var ur=$(this).attr('ur');
 					  // var pi=$(this).attr('pi');
 						  var commentText=$("#statuscahngecomment").val();
+						  if (st==2&&ur==4&&jWrapImgPr.attr('display')!="none"){
+							   $("#printproof p").css( "border", "2px dotted red" );
+							   $('.loading-spinner').hide();
+							   console.log("no");
+							   return;
+							  }
 
 			  if (urltostatus.slice(-1)=="o"&&parseInt($(this).attr('pi'))!=3&&!commentText.length){
 			   $("#statuscahngecomment").css( "border", "2px dotted red" );
@@ -588,7 +594,9 @@ var napkin = napkin || {};
 
 					var jApproveBtn = $(".approve-btn");
 				jApproveBtn.on("click", approve);
-				napkin.buildFileAttachmentBlock();
+				if ($("#order-new-attachment")){
+				    napkin.buildFileAttachmentBlock();
+				   }
 				napkin.buildFileInfoList();
 			});
 })(napkin);
