@@ -6,7 +6,7 @@ var napkin = napkin || {};
 
 	var _bean = {};
 	var mjUpLi = {};
-	var jWrapImgPr = $("<div style='position:relative;  display: none;'></div>");
+	var jWrapImgPr = $("<div id='proofprevdiv'style='position:relative;  display: none;'></div>");
 	var jShowAtBlock = $("<div></div>"),
 		jRemoveAllFiles = $('<span class="btn btn-link fileinput-button">\
  								<i class="glyphicon glyphicon-remove"></i>\
@@ -330,17 +330,18 @@ var napkin = napkin || {};
 
 				jPP.css("margin-bottom", "10px");
 				jPP.append(jHeaderText);
-				jPP.append(jSomeText);
-				jChoseFile.append(jImgInp);
-				jSomeText.prepend(jChoseFile);
 
-				jWrapImgPr.append(jImgPreview);
-				jWrapImgPr.append(jDltPr);
-				jPP.append(jWrapImgPr);
+				if (parseInt($("#maininfotable").attr('st'))==2&&parseInt($("#maininfotable").attr('ur'))==4){
+					jPP.append(jSomeText);
+					jChoseFile.append(jImgInp);
+					jSomeText.prepend(jChoseFile);
+					jWrapImgPr.append(jImgPreview);
+					jWrapImgPr.append(jDltPr);
+					jPP.append(jWrapImgPr);
+				}
 
 				jWrapImg.append(jImg);
 //				jWrapImg.append(jDlt);
-                //TODO: Check what for?
 				jPP.append(jWrapImg);
 				
 
@@ -514,13 +515,14 @@ var napkin = napkin || {};
 				   var ur=$(this).attr('ur');
 					  // var pi=$(this).attr('pi');
 						  var commentText=$("#statuscahngecomment").val();
-						  if (st==2&&ur==4&&jWrapImgPr.attr('display')!="none"){
-							   $("#printproof p").css( "border", "2px dotted red" );
-							   $('.loading-spinner').hide();
-							   console.log("no");
-							   return;
-							  }
-
+			    //when DTP, printproof required
+			  if (parseInt(st)==2&&parseInt(ur)==4&&$('#proofprevdiv').is(":hidden")){
+				   $("#printproof p").css( "border", "2px dotted red" );
+				   $('.loading-spinner').hide();
+				   console.log("no");
+				   return;
+				  }
+				//when rejection comment required
 			  if (urltostatus.slice(-1)=="o"&&parseInt($(this).attr('pi'))!=3&&!commentText.length){
 			   $("#statuscahngecomment").css( "border", "2px dotted red" );
 						$('.loading-spinner').hide();
@@ -530,8 +532,8 @@ var napkin = napkin || {};
 			  for(var key in mjUpLi) {
 				   files.push(key);
 				  }
-			  if(!files.length) {
-			   if (parseInt($(this).attr('ur'))==4&&urltostatus.slice(-1)=="s"){
+			  if(!files.length&&!_bean.printproof.name) {
+			   if (parseInt($(this).attr('ur'))==5&&parseInt(st)==2){
 					    console.info("No attachments to approve!");
 					    $(".dropzone").css( "border", "2px dotted red" );
 					                $('.loading-spinner').hide();
@@ -592,7 +594,7 @@ var napkin = napkin || {};
 		$(document).ready(function () {
 				initPrintProof();
 
-					var jApproveBtn = $(".approve-btn");
+				var jApproveBtn = $(".approve-btn");
 				jApproveBtn.on("click", approve);
 				if ($("#order-new-attachment")){
 				    napkin.buildFileAttachmentBlock();
