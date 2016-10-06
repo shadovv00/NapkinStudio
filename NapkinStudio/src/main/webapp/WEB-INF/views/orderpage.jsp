@@ -130,7 +130,7 @@
                 <%--&lt;%&ndash;stautus                 <c:out value="${theOrder.SAPstatus.statusSAPStatuseRoles[0].status.name}" />&ndash;%&gt;--%>
                 <%--</div>--%>
                 <%--6.4-5 Order and Article info/////////////////////////////////////////////////--%>
-                <table width="100%" border="0" style="margin-bottom: 10px; margin-top: 10px">
+                    <table id="maininfotable" width="100%" border="0" style="margin-bottom: 10px; margin-top: 10px" st=${theOrder.SAPstatus.id} ur=${user.role.id}>
                     <tr class="table-title" valign="top">
                         <th width="50%">
                             <b>Order Informatie</b>
@@ -259,7 +259,7 @@
                             <table width="100%">
                                 <td width="17%" style="vertical-align: top">
                                     <b>Voor PVI</b>
-                                    <a id="PVI-button" class="add-comment-btn">Add comment</a>
+                                    <a id="PVI-button" class="add-comment-btn" data-for-role="2">Add comment</a>
                                 </td>
                                 <%-- <td width="3%" style="vertical-align: top">
                                      <a id="PVI-button" class="add-comment-btn">Add comment</a>
@@ -313,7 +313,7 @@
                                                 <c:out value="No comments for PVI"/>
                                             </c:otherwise>
                                         </c:choose>
-                                        <li>
+                                        <li id="form-container">
 
                                             <form:form commandName="comment" method="post"
                                                        action="/NapkinStudio/addComment"
@@ -322,7 +322,7 @@
                                                     <div class="col-sm-5">
                                                         <form:textarea path="commText"
                                                                        cssClass="form-control"></form:textarea>
-                                                        <form:hidden path="forRole.id"
+                                                        <form:hidden id="for-role" path="forRole.id"
                                                                      value="2"/>
                                                         <form:hidden path="order.orderId"
                                                                      value="${theOrder.orderId}"/>
@@ -347,11 +347,9 @@
                             <table width="100%">
                                 <td width="17%" style="vertical-align: top">
                                     <b>Voor DTP</b>
-                                    <a id="DTP-button" class="add-comment-btn">Add comment</a>
+                                    <a id="DTP-button" data-for-role="4" class="add-comment-btn">Add comment</a>
                                 </td>
-                                <%--<td width="3%" style="vertical-align: top">
-                                    <a id="DTP-button" class="btn add-comment-btn">Add comment</a>
-                                </td>--%>
+
                                 <td>
 
 
@@ -402,50 +400,50 @@
                                                 <c:out value="No comments for DTP"/>
                                             </c:otherwise>
                                         </c:choose>
-                                        <li>
-                                            <%--<c:if test="${param.success eq true }">--%>
-                                            <%--<div class="row text-center">--%>
-                                            <%--<div class="col-md-offset-4 col-md-5">--%>
-                                            <%--<div class="alert alert-success">--%>
-                                            <%--Comment was added--%>
-                                            <%--</div>--%>
-                                            <%--</div>--%>
-                                            <%--</div>--%>
-                                            <%--</c:if>--%>
-                                            <form:form commandName="comment" method="post"
-                                                       action="/NapkinStudio/addComment"
-                                                       cssClass="form-horizontal addCommentForm">
-                                                <div class="form-group">
-                                                    <div class="col-sm-5">
-                                                        <form:textarea path="commText"
-                                                                       cssClass="form-control"></form:textarea>
-                                                        <form:hidden path="forRole.id"
-                                                                     value="4"/>
-                                                        <form:hidden path="order.orderId"
-                                                                     value="${theOrder.orderId}"/>
-                                                        <form:hidden
-                                                                path="order.itemNum"
-                                                                value="${theOrder.itemNum}"/>
+                                        <%--<li>--%>
+                                            <%--&lt;%&ndash;<c:if test="${param.success eq true }">&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;<div class="row text-center">&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;<div class="col-md-offset-4 col-md-5">&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;<div class="alert alert-success">&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;Comment was added&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</c:if>&ndash;%&gt;--%>
+                                            <%--<form:form commandName="comment" method="post"--%>
+                                                       <%--action="/NapkinStudio/addComment"--%>
+                                                       <%--cssClass="form-horizontal addCommentForm">--%>
+                                                <%--<div class="form-group">--%>
+                                                    <%--<div class="col-sm-5">--%>
+                                                        <%--<form:textarea path="commText"--%>
+                                                                       <%--cssClass="form-control"></form:textarea>--%>
+                                                        <%--<form:hidden path="forRole.id"--%>
+                                                                     <%--value="4"/>--%>
+                                                        <%--<form:hidden path="order.orderId"--%>
+                                                                     <%--value="${theOrder.orderId}"/>--%>
+                                                        <%--<form:hidden--%>
+                                                                <%--path="order.itemNum"--%>
+                                                                <%--value="${theOrder.itemNum}"/>--%>
 
-                                                        <form:hidden
-                                                                path="order.printName"
-                                                                value="${theOrder.printName}"/>
-                                                            <%--<input name="deleted" type="hidden" value="true"/>--%>
-                                                    </div>
-                                                </div>
-                                                <%--<div class="modal-footer col-sm-5">--%>
-                                                <div class="col-sm-5">
-                                                    <input type="submit"
-                                                           value="Save"
-                                                           class="btn btn-large btn-primary send-comment-btn"
-                                                           style="float: left;">
-                                                    <a class="btn cancel-button btn-danger"
-                                                       style="float:right;">Cancel</a>
-
-                                                </div>
+                                                        <%--<form:hidden--%>
+                                                                <%--path="order.printName"--%>
+                                                                <%--value="${theOrder.printName}"/>--%>
+                                                            <%--&lt;%&ndash;<input name="deleted" type="hidden" value="true"/>&ndash;%&gt;--%>
+                                                    <%--</div>--%>
                                                 <%--</div>--%>
-                                            </form:form>
-                                        </li>
+                                                <%--&lt;%&ndash;<div class="modal-footer col-sm-5">&ndash;%&gt;--%>
+                                                <%--<div class="col-sm-5">--%>
+                                                    <%--<input type="submit"--%>
+                                                           <%--value="Save"--%>
+                                                           <%--class="btn btn-large btn-primary send-comment-btn"--%>
+                                                           <%--style="float: left;">--%>
+                                                    <%--<a class="btn cancel-button btn-danger"--%>
+                                                       <%--style="float:right;">Cancel</a>--%>
+
+                                                <%--</div>--%>
+                                                <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                                            <%--</form:form>--%>
+                                        <%--</li>--%>
                                     </ul>
 
 
@@ -456,7 +454,7 @@
                             <table width="100%">
                                 <td width="17%" style="vertical-align: top">
                                     <b>Voor debiteur</b>
-                                    <a class="add-comment-btn">Add comment</a>
+                                    <a  class="add-comment-btn" data-for-role="1">Add comment</a>
                                 </td>
                                 <%--<td width="3%" style="vertical-align: top">
                                     <a class="btn add-comment-btn">Add comment</a>
@@ -509,48 +507,48 @@
                                                 <c:out value="No comments for deptor"/>
                                             </c:otherwise>
                                         </c:choose>
-                                        <li>
-                                            <%--<c:if test="${param.success eq true }">--%>
-                                            <%--<div class="row text-center">--%>
-                                            <%--<div class="col-md-offset-4 col-md-5">--%>
-                                            <%--<div class="alert alert-success">--%>
-                                            <%--Comment was added--%>
-                                            <%--</div>--%>
-                                            <%--</div>--%>
-                                            <%--</div>--%>
-                                            <%--</c:if>--%>
-                                            <form:form commandName="comment" method="post"
-                                                       action="/NapkinStudio/addComment"
-                                                       cssClass="form-horizontal addCommentForm">
-                                                <div class="form-group">
-                                                    <div class="col-sm-5">
-                                                        <form:textarea path="commText"
-                                                                       cssClass="form-control"></form:textarea>
-                                                        <form:hidden path="forRole.id"
-                                                                     value="1"/>
-                                                        <form:hidden path="order.orderId"
-                                                                     value="${theOrder.orderId}"/> <form:hidden
-                                                            path="order.itemNum"
-                                                            value="${theOrder.itemNum}"/>
+                                        <%--<li>--%>
+                                            <%--&lt;%&ndash;<c:if test="${param.success eq true }">&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;<div class="row text-center">&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;<div class="col-md-offset-4 col-md-5">&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;<div class="alert alert-success">&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;Comment was added&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</c:if>&ndash;%&gt;--%>
+                                            <%--<form:form commandName="comment" method="post"--%>
+                                                       <%--action="/NapkinStudio/addComment"--%>
+                                                       <%--cssClass="form-horizontal addCommentForm">--%>
+                                                <%--<div class="form-group">--%>
+                                                    <%--<div class="col-sm-5">--%>
+                                                        <%--<form:textarea path="commText"--%>
+                                                                       <%--cssClass="form-control"></form:textarea>--%>
+                                                        <%--<form:hidden path="forRole.id"--%>
+                                                                     <%--value="1"/>--%>
+                                                        <%--<form:hidden path="order.orderId"--%>
+                                                                     <%--value="${theOrder.orderId}"/> <form:hidden--%>
+                                                            <%--path="order.itemNum"--%>
+                                                            <%--value="${theOrder.itemNum}"/>--%>
 
-                                                        <form:hidden
-                                                                path="order.printName"
-                                                                value="${theOrder.printName}"/>
-                                                            <%--<input name="deleted" type="hidden" value="true"/>--%>
-                                                    </div>
-                                                </div>
-                                                <%--<div class="modal-footer col-sm-5">--%>
-                                                <div class="col-sm-5">
-                                                    <input type="submit"
-                                                           value="Save"
-                                                           class="btn btn-large btn-primary send-comment-btn" style="float: left;">
-                                                    <a class="btn cancel-button btn-danger"
-                                                       style="float:right;">Cancel</a>
-
-                                                </div>
+                                                        <%--<form:hidden--%>
+                                                                <%--path="order.printName"--%>
+                                                                <%--value="${theOrder.printName}"/>--%>
+                                                            <%--&lt;%&ndash;<input name="deleted" type="hidden" value="true"/>&ndash;%&gt;--%>
+                                                    <%--</div>--%>
                                                 <%--</div>--%>
-                                            </form:form>
-                                        </li>
+                                                <%--&lt;%&ndash;<div class="modal-footer col-sm-5">&ndash;%&gt;--%>
+                                                <%--<div class="col-sm-5">--%>
+                                                    <%--<input type="submit"--%>
+                                                           <%--value="Save"--%>
+                                                           <%--class="btn btn-large btn-primary send-comment-btn" style="float: left;">--%>
+                                                    <%--<a class="btn cancel-button btn-danger"--%>
+                                                       <%--style="float:right;">Cancel</a>--%>
+
+                                                <%--</div>--%>
+                                                <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                                            <%--</form:form>--%>
+                                        <%--</li>--%>
                                     </ul>
 
 
@@ -561,7 +559,7 @@
                             <table width="100%">
                                 <td width="17%" style="vertical-align: top">
                                     <b>Voor eindafnemer</b>
-                                    <a class="add-comment-btn">Add comment</a>
+                                    <a class="add-comment-btn" data-for-role="5">Add comment</a>
                                 </td>
                                 <%--<td width="3%" style="vertical-align: top">
                                     <a class="btn add-comment-btn">Add comment</a>
@@ -614,48 +612,48 @@
                                                 <c:out value="No comments for customer"/>
                                             </c:otherwise>
                                         </c:choose>
-                                        <li>
-                                            <%--<c:if test="${param.success eq true }">--%>
-                                            <%--<div class="row text-center">--%>
-                                            <%--<div class="col-md-offset-4 col-md-5">--%>
-                                            <%--<div class="alert alert-success">--%>
-                                            <%--Comment was added--%>
-                                            <%--</div>--%>
-                                            <%--</div>--%>
-                                            <%--</div>--%>
-                                            <%--</c:if>--%>
-                                            <form:form commandName="comment" method="post"
-                                                       action="/NapkinStudio/addComment"
-                                                       cssClass="form-horizontal addCommentForm">
-                                                <div class="form-group">
-                                                    <div class="col-sm-5">
-                                                        <form:textarea path="commText"
-                                                                       cssClass="form-control"></form:textarea>
-                                                        <form:hidden path="forRole.id"
-                                                                     value="5"/>
-                                                        <form:hidden path="order.orderId"
-                                                                     value="${theOrder.orderId}"/> <form:hidden
-                                                            path="order.itemNum"
-                                                            value="${theOrder.itemNum}"/>
+                                        <%--<li>--%>
+                                            <%--&lt;%&ndash;<c:if test="${param.success eq true }">&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;<div class="row text-center">&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;<div class="col-md-offset-4 col-md-5">&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;<div class="alert alert-success">&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;Comment was added&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</c:if>&ndash;%&gt;--%>
+                                            <%--<form:form commandName="comment" method="post"--%>
+                                                       <%--action="/NapkinStudio/addComment"--%>
+                                                       <%--cssClass="form-horizontal addCommentForm">--%>
+                                                <%--<div class="form-group">--%>
+                                                    <%--<div class="col-sm-5">--%>
+                                                        <%--<form:textarea path="commText"--%>
+                                                                       <%--cssClass="form-control"></form:textarea>--%>
+                                                        <%--<form:hidden path="forRole.id"--%>
+                                                                     <%--value="5"/>--%>
+                                                        <%--<form:hidden path="order.orderId"--%>
+                                                                     <%--value="${theOrder.orderId}"/> <form:hidden--%>
+                                                            <%--path="order.itemNum"--%>
+                                                            <%--value="${theOrder.itemNum}"/>--%>
 
-                                                        <form:hidden
-                                                                path="order.printName"
-                                                                value="${theOrder.printName}"/>
-                                                            <%--<input name="deleted" type="hidden" value="true"/>--%>
-                                                    </div>
-                                                </div>
-                                                <%--<div class="modal-footer col-sm-5">--%>
-                                                <div class="col-sm-5">
-                                                    <input type="submit"
-                                                           value="Save"
-                                                           class="btn btn-large btn-primary send-comment-btn" style="float: left;">
-                                                    <a class="btn cancel-button btn-danger"
-                                                       style="float:right;">Cancel</a>
-
-                                                </div>
+                                                        <%--<form:hidden--%>
+                                                                <%--path="order.printName"--%>
+                                                                <%--value="${theOrder.printName}"/>--%>
+                                                            <%--&lt;%&ndash;<input name="deleted" type="hidden" value="true"/>&ndash;%&gt;--%>
+                                                    <%--</div>--%>
                                                 <%--</div>--%>
-                                            </form:form>
-                                        </li>
+                                                <%--&lt;%&ndash;<div class="modal-footer col-sm-5">&ndash;%&gt;--%>
+                                                <%--<div class="col-sm-5">--%>
+                                                    <%--<input type="submit"--%>
+                                                           <%--value="Save"--%>
+                                                           <%--class="btn btn-large btn-primary send-comment-btn" style="float: left;">--%>
+                                                    <%--<a class="btn cancel-button btn-danger"--%>
+                                                       <%--style="float:right;">Cancel</a>--%>
+
+                                                <%--</div>--%>
+                                                <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                                            <%--</form:form>--%>
+                                        <%--</li>--%>
                                     </ul>
 
 
@@ -666,7 +664,7 @@
                             <table width="100%">
                                 <td width="17%" style="vertical-align: top">
                                     <b>Voor stamp manufacturer</b>
-                                    <a class="add-comment-btn">Add comment</a>
+                                    <a class="add-comment-btn" data-for-role="6">Add comment</a>
                                 </td>
                                 <%--<td width="3%" style="vertical-align: top">
                                     <a class="btn add-comment-btn">Add comment</a>
@@ -719,48 +717,48 @@
                                                 <c:out value="No comments for stamp manufacture "/>
                                             </c:otherwise>
                                         </c:choose>
-                                        <li>
-                                            <%--<c:if test="${param.success eq true }">--%>
-                                            <%--<div class="row text-center">--%>
-                                            <%--<div class="col-md-offset-4 col-md-5">--%>
-                                            <%--<div class="alert alert-success">--%>
-                                            <%--Comment was added--%>
-                                            <%--</div>--%>
-                                            <%--</div>--%>
-                                            <%--</div>--%>
-                                            <%--</c:if>--%>
-                                            <form:form commandName="comment" method="post"
-                                                       action="/NapkinStudio/addComment"
-                                                       cssClass="form-horizontal addCommentForm">
-                                                <div class="form-group">
-                                                    <div class="col-sm-5">
-                                                        <form:textarea path="commText"
-                                                                       cssClass="form-control"></form:textarea>
-                                                        <form:hidden path="forRole.id"
-                                                                     value="6"/>
-                                                        <form:hidden path="order.orderId"
-                                                                     value="${theOrder.orderId}"/> <form:hidden
-                                                            path="order.itemNum"
-                                                            value="${theOrder.itemNum}"/>
+                                        <%--<li>--%>
+                                            <%--&lt;%&ndash;<c:if test="${param.success eq true }">&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;<div class="row text-center">&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;<div class="col-md-offset-4 col-md-5">&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;<div class="alert alert-success">&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;Comment was added&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</c:if>&ndash;%&gt;--%>
+                                            <%--<form:form commandName="comment" method="post"--%>
+                                                       <%--action="/NapkinStudio/addComment"--%>
+                                                       <%--cssClass="form-horizontal addCommentForm">--%>
+                                                <%--<div class="form-group">--%>
+                                                    <%--<div class="col-sm-5">--%>
+                                                        <%--<form:textarea path="commText"--%>
+                                                                       <%--cssClass="form-control"></form:textarea>--%>
+                                                        <%--<form:hidden path="forRole.id"--%>
+                                                                     <%--value="6"/>--%>
+                                                        <%--<form:hidden path="order.orderId"--%>
+                                                                     <%--value="${theOrder.orderId}"/> <form:hidden--%>
+                                                            <%--path="order.itemNum"--%>
+                                                            <%--value="${theOrder.itemNum}"/>--%>
 
-                                                        <form:hidden
-                                                                path="order.printName"
-                                                                value="${theOrder.printName}"/>
-                                                            <%--<input name="deleted" type="hidden" value="true"/>--%>
-                                                    </div>
-                                                </div>
-                                                <%--<div class="modal-footer col-sm-5">--%>
-                                                <div class="col-sm-5">
-                                                    <input type="submit"
-                                                           value="Save"
-                                                           class="btn btn-large btn-primary send-comment-btn" style="float: left;">
-                                                    <a class="btn cancel-button btn-danger"
-                                                       style="float:right;">Cancel</a>
-
-                                                </div>
+                                                        <%--<form:hidden--%>
+                                                                <%--path="order.printName"--%>
+                                                                <%--value="${theOrder.printName}"/>--%>
+                                                            <%--&lt;%&ndash;<input name="deleted" type="hidden" value="true"/>&ndash;%&gt;--%>
+                                                    <%--</div>--%>
                                                 <%--</div>--%>
-                                            </form:form>
-                                        </li>
+                                                <%--&lt;%&ndash;<div class="modal-footer col-sm-5">&ndash;%&gt;--%>
+                                                <%--<div class="col-sm-5">--%>
+                                                    <%--<input type="submit"--%>
+                                                           <%--value="Save"--%>
+                                                           <%--class="btn btn-large btn-primary send-comment-btn" style="float: left;">--%>
+                                                    <%--<a class="btn cancel-button btn-danger"--%>
+                                                       <%--style="float:right;">Cancel</a>--%>
+
+                                                <%--</div>--%>
+                                                <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                                            <%--</form:form>--%>
+                                        <%--</li>--%>
                                     </ul>
 
 
@@ -771,7 +769,7 @@
                             <table width="100%">
                                 <td width="17%" style="vertical-align: top">
                                     <b>Voor production</b>
-                                    <a id="production-button" class="add-comment-btn">Add comment</a>
+                                    <a id="production-button" class="add-comment-btn" data-for-role="7">Add comment</a>
                                 </td>
                                 <%--<td width="3%" style="vertical-align: top">
                                     <a class="btn add-comment-btn" id="production-button">Add comment</a>
@@ -823,49 +821,49 @@
                                                 <c:out value="No comments for production"/>
                                             </c:otherwise>
                                         </c:choose>
-                                        <li>
-                                            <%--<c:if test="${param.success eq true }">--%>
-                                            <%--<div class="row text-center">--%>
-                                            <%--<div class="col-md-offset-4 col-md-5">--%>
-                                            <%--<div class="alert alert-success">--%>
-                                            <%--Comment was added--%>
-                                            <%--</div>--%>
-                                            <%--</div>--%>
-                                            <%--</div>--%>
-                                            <%--</c:if>--%>
-                                            <form:form commandName="comment" method="post"
-                                                       action="/NapkinStudio/addComment"
-                                                       cssClass="form-horizontal addCommentForm">
-                                                <div class="form-group">
-                                                    <div class="col-sm-5">
-                                                        <form:textarea path="commText"
-                                                                       cssClass="form-control"></form:textarea>
-                                                        <form:hidden path="forRole.id"
-                                                                     value="7"/>
-                                                        <form:hidden path="order.orderId"
-                                                                     value="${theOrder.orderId}"/>
-                                                        <form:hidden
-                                                                path="order.itemNum"
-                                                                value="${theOrder.itemNum}"/>
+                                        <%--<li>--%>
+                                            <%--&lt;%&ndash;<c:if test="${param.success eq true }">&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;<div class="row text-center">&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;<div class="col-md-offset-4 col-md-5">&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;<div class="alert alert-success">&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;Comment was added&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                                            <%--&lt;%&ndash;</c:if>&ndash;%&gt;--%>
+                                            <%--<form:form commandName="comment" method="post"--%>
+                                                       <%--action="/NapkinStudio/addComment"--%>
+                                                       <%--cssClass="form-horizontal addCommentForm">--%>
+                                                <%--<div class="form-group">--%>
+                                                    <%--<div class="col-sm-5">--%>
+                                                        <%--<form:textarea path="commText"--%>
+                                                                       <%--cssClass="form-control"></form:textarea>--%>
+                                                        <%--<form:hidden path="forRole.id"--%>
+                                                                     <%--value="7"/>--%>
+                                                        <%--<form:hidden path="order.orderId"--%>
+                                                                     <%--value="${theOrder.orderId}"/>--%>
+                                                        <%--<form:hidden--%>
+                                                                <%--path="order.itemNum"--%>
+                                                                <%--value="${theOrder.itemNum}"/>--%>
 
-                                                        <form:hidden
-                                                                path="order.printName"
-                                                                value="${theOrder.printName}"/>
-                                                            <%--<input name="deleted" type="hidden" value="true"/>--%>
-                                                    </div>
-                                                </div>
-                                                <%--<div class="modal-footer col-sm-5">--%>
-                                                <div class="col-sm-5">
-                                                    <input type="submit"
-                                                           value="Save"
-                                                           class="btn btn-large btn-primary send-comment-btn" style="float: left;">
-                                                    <a class="btn cancel-button btn-danger"
-                                                       style="float:right;">Cancel</a>
-
-                                                </div>
+                                                        <%--<form:hidden--%>
+                                                                <%--path="order.printName"--%>
+                                                                <%--value="${theOrder.printName}"/>--%>
+                                                            <%--&lt;%&ndash;<input name="deleted" type="hidden" value="true"/>&ndash;%&gt;--%>
+                                                    <%--</div>--%>
                                                 <%--</div>--%>
-                                            </form:form>
-                                        </li>
+                                                <%--&lt;%&ndash;<div class="modal-footer col-sm-5">&ndash;%&gt;--%>
+                                                <%--<div class="col-sm-5">--%>
+                                                    <%--<input type="submit"--%>
+                                                           <%--value="Save"--%>
+                                                           <%--class="btn btn-large btn-primary send-comment-btn" style="float: left;">--%>
+                                                    <%--<a class="btn cancel-button btn-danger"--%>
+                                                       <%--style="float:right;">Cancel</a>--%>
+
+                                                <%--</div>--%>
+                                                <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                                            <%--</form:form>--%>
+                                        <%--</li>--%>
                                     </ul>
 
 
@@ -1000,7 +998,6 @@
 
         $(".addCommentForm").hide();
         $(".add-comment-btn").hide();
-        $(".cancel-button").hide();
         $(".editCommentForm").hide();
         $(".edit-comment").hide();
         $(".delete-comment").hide();
@@ -1008,25 +1005,38 @@
 
 
         $(".add-comment-btn").click(function () {
-            <%--debugger;--%>
-            <%--console.log("CLick");--%>
-            <%--var commentsList = $(this).parent().next().find("ul");--%>
-            <%--var liTag = "<li>";--%>
-            <%--liTag = liTag + "<form:form commandName='comment' method='post' action='/NapkinStudio/addComment' cssClass='form-horizontal addCommentForm' >";--%>
+
+            console.log("CLick");
+            var roleId = $(this).attr("data-for-role");
+            var commentsList = $(this).parent().next().find("ul");
+
+
+            var formContainer = $("#form-container");
+            var input = formContainer.find("#for-role");
+            input.val(roleId);
+
+
+            commentsList.append(formContainer);
+            <%--var text = "<form:form commandName='comment' action='/NapkinStudio/addComment' cssClass='form-horizontal addCommentForm' method='post' > </form:form>";--%>
+//            var $form =  $(this).parent().next().find("form");
+//            $liTag.append($form);
+//            commentsList.append($liTag);
+            <%----%>
+            <%--liTag = liTag + "<form\:form commandName='comment' method='post' action='/NapkinStudio/addComment' cssClass='form-horizontal addCommentForm' >";--%>
             <%--liTag = liTag +   "<div class='form-group'>";--%>
             <%--liTag = liTag + "<div class='col-sm-5'>"--%>
-            <%--liTag = liTag + "<form:textarea path='commText'   cssClass='form-control' /> <form:hidden path='forRole.id' value='2'/>";--%>
+            <%--liTag = liTag + "<form\:textarea path='commText'   cssClass='form-control' /> <form:hidden path='forRole.id' value='2'/>";--%>
 
             <%--liTag = liTag+  "</div> </div> <div class='col-sm-5'> ";--%>
             <%--liTag = liTag + "<input type='submit'value='Save'class='btn btn-large btn-primary' style='float: left;'>";--%>
             <%--liTag = liTag   + "<a class='btn cancel-button btn-danger'style='float:right;'>Cancel</a> </div>";--%>
-            <%--liTag = liTag   + " </form:form>"--%>
+            <%--liTag = liTag   + " </form\:form>"--%>
             <%--liTag = liTag + "</li>"--%>
             <%--var $addCommentsForm = $(liTag);--%>
             <%--commentsList.append($addCommentsForm);--%>
             <%--console.log($(this).parent().next().find("ul"));--%>
-            <%--//--%>
-            console.log($(this).parent().next().find("form"));
+            //
+//            console.log($(this).parent().next().find("form"));
             $(this).parent().next().find("form").show();
             $(this).parent().next().find(".cancel-button").show();
 
@@ -1038,8 +1048,10 @@
 
 
         $(".cancel-button").click(function () {
-            $(this).parent().parent().hide();
-            $(this).hide();
+           var form =  $(this).parent().parent();
+            form.find("textarea").val("");
+            form.hide();
+
         });
 
 
