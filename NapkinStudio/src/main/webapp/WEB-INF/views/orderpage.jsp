@@ -400,50 +400,7 @@
                                                 <c:out value="No comments for DTP"/>
                                             </c:otherwise>
                                         </c:choose>
-                                        <%--<li>--%>
-                                            <%--&lt;%&ndash;<c:if test="${param.success eq true }">&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;<div class="row text-center">&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;<div class="col-md-offset-4 col-md-5">&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;<div class="alert alert-success">&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;Comment was added&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</c:if>&ndash;%&gt;--%>
-                                            <%--<form:form commandName="comment" method="post"--%>
-                                                       <%--action="/NapkinStudio/addComment"--%>
-                                                       <%--cssClass="form-horizontal addCommentForm">--%>
-                                                <%--<div class="form-group">--%>
-                                                    <%--<div class="col-sm-5">--%>
-                                                        <%--<form:textarea path="commText"--%>
-                                                                       <%--cssClass="form-control"></form:textarea>--%>
-                                                        <%--<form:hidden path="forRole.id"--%>
-                                                                     <%--value="4"/>--%>
-                                                        <%--<form:hidden path="order.orderId"--%>
-                                                                     <%--value="${theOrder.orderId}"/>--%>
-                                                        <%--<form:hidden--%>
-                                                                <%--path="order.itemNum"--%>
-                                                                <%--value="${theOrder.itemNum}"/>--%>
 
-                                                        <%--<form:hidden--%>
-                                                                <%--path="order.printName"--%>
-                                                                <%--value="${theOrder.printName}"/>--%>
-                                                            <%--&lt;%&ndash;<input name="deleted" type="hidden" value="true"/>&ndash;%&gt;--%>
-                                                    <%--</div>--%>
-                                                <%--</div>--%>
-                                                <%--&lt;%&ndash;<div class="modal-footer col-sm-5">&ndash;%&gt;--%>
-                                                <%--<div class="col-sm-5">--%>
-                                                    <%--<input type="submit"--%>
-                                                           <%--value="Save"--%>
-                                                           <%--class="btn btn-large btn-primary send-comment-btn"--%>
-                                                           <%--style="float: left;">--%>
-                                                    <%--<a class="btn cancel-button btn-danger"--%>
-                                                       <%--style="float:right;">Cancel</a>--%>
-
-                                                <%--</div>--%>
-                                                <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                                            <%--</form:form>--%>
-                                        <%--</li>--%>
                                     </ul>
 
 
@@ -507,48 +464,7 @@
                                                 <c:out value="No comments for deptor"/>
                                             </c:otherwise>
                                         </c:choose>
-                                        <%--<li>--%>
-                                            <%--&lt;%&ndash;<c:if test="${param.success eq true }">&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;<div class="row text-center">&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;<div class="col-md-offset-4 col-md-5">&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;<div class="alert alert-success">&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;Comment was added&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</c:if>&ndash;%&gt;--%>
-                                            <%--<form:form commandName="comment" method="post"--%>
-                                                       <%--action="/NapkinStudio/addComment"--%>
-                                                       <%--cssClass="form-horizontal addCommentForm">--%>
-                                                <%--<div class="form-group">--%>
-                                                    <%--<div class="col-sm-5">--%>
-                                                        <%--<form:textarea path="commText"--%>
-                                                                       <%--cssClass="form-control"></form:textarea>--%>
-                                                        <%--<form:hidden path="forRole.id"--%>
-                                                                     <%--value="1"/>--%>
-                                                        <%--<form:hidden path="order.orderId"--%>
-                                                                     <%--value="${theOrder.orderId}"/> <form:hidden--%>
-                                                            <%--path="order.itemNum"--%>
-                                                            <%--value="${theOrder.itemNum}"/>--%>
 
-                                                        <%--<form:hidden--%>
-                                                                <%--path="order.printName"--%>
-                                                                <%--value="${theOrder.printName}"/>--%>
-                                                            <%--&lt;%&ndash;<input name="deleted" type="hidden" value="true"/>&ndash;%&gt;--%>
-                                                    <%--</div>--%>
-                                                <%--</div>--%>
-                                                <%--&lt;%&ndash;<div class="modal-footer col-sm-5">&ndash;%&gt;--%>
-                                                <%--<div class="col-sm-5">--%>
-                                                    <%--<input type="submit"--%>
-                                                           <%--value="Save"--%>
-                                                           <%--class="btn btn-large btn-primary send-comment-btn" style="float: left;">--%>
-                                                    <%--<a class="btn cancel-button btn-danger"--%>
-                                                       <%--style="float:right;">Cancel</a>--%>
-
-                                                <%--</div>--%>
-                                                <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                                            <%--</form:form>--%>
-                                        <%--</li>--%>
                                     </ul>
 
 
@@ -612,48 +528,7 @@
                                                 <c:out value="No comments for customer"/>
                                             </c:otherwise>
                                         </c:choose>
-                                        <%--<li>--%>
-                                            <%--&lt;%&ndash;<c:if test="${param.success eq true }">&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;<div class="row text-center">&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;<div class="col-md-offset-4 col-md-5">&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;<div class="alert alert-success">&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;Comment was added&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</c:if>&ndash;%&gt;--%>
-                                            <%--<form:form commandName="comment" method="post"--%>
-                                                       <%--action="/NapkinStudio/addComment"--%>
-                                                       <%--cssClass="form-horizontal addCommentForm">--%>
-                                                <%--<div class="form-group">--%>
-                                                    <%--<div class="col-sm-5">--%>
-                                                        <%--<form:textarea path="commText"--%>
-                                                                       <%--cssClass="form-control"></form:textarea>--%>
-                                                        <%--<form:hidden path="forRole.id"--%>
-                                                                     <%--value="5"/>--%>
-                                                        <%--<form:hidden path="order.orderId"--%>
-                                                                     <%--value="${theOrder.orderId}"/> <form:hidden--%>
-                                                            <%--path="order.itemNum"--%>
-                                                            <%--value="${theOrder.itemNum}"/>--%>
 
-                                                        <%--<form:hidden--%>
-                                                                <%--path="order.printName"--%>
-                                                                <%--value="${theOrder.printName}"/>--%>
-                                                            <%--&lt;%&ndash;<input name="deleted" type="hidden" value="true"/>&ndash;%&gt;--%>
-                                                    <%--</div>--%>
-                                                <%--</div>--%>
-                                                <%--&lt;%&ndash;<div class="modal-footer col-sm-5">&ndash;%&gt;--%>
-                                                <%--<div class="col-sm-5">--%>
-                                                    <%--<input type="submit"--%>
-                                                           <%--value="Save"--%>
-                                                           <%--class="btn btn-large btn-primary send-comment-btn" style="float: left;">--%>
-                                                    <%--<a class="btn cancel-button btn-danger"--%>
-                                                       <%--style="float:right;">Cancel</a>--%>
-
-                                                <%--</div>--%>
-                                                <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                                            <%--</form:form>--%>
-                                        <%--</li>--%>
                                     </ul>
 
 
@@ -717,48 +592,7 @@
                                                 <c:out value="No comments for stamp manufacture "/>
                                             </c:otherwise>
                                         </c:choose>
-                                        <%--<li>--%>
-                                            <%--&lt;%&ndash;<c:if test="${param.success eq true }">&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;<div class="row text-center">&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;<div class="col-md-offset-4 col-md-5">&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;<div class="alert alert-success">&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;Comment was added&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</c:if>&ndash;%&gt;--%>
-                                            <%--<form:form commandName="comment" method="post"--%>
-                                                       <%--action="/NapkinStudio/addComment"--%>
-                                                       <%--cssClass="form-horizontal addCommentForm">--%>
-                                                <%--<div class="form-group">--%>
-                                                    <%--<div class="col-sm-5">--%>
-                                                        <%--<form:textarea path="commText"--%>
-                                                                       <%--cssClass="form-control"></form:textarea>--%>
-                                                        <%--<form:hidden path="forRole.id"--%>
-                                                                     <%--value="6"/>--%>
-                                                        <%--<form:hidden path="order.orderId"--%>
-                                                                     <%--value="${theOrder.orderId}"/> <form:hidden--%>
-                                                            <%--path="order.itemNum"--%>
-                                                            <%--value="${theOrder.itemNum}"/>--%>
 
-                                                        <%--<form:hidden--%>
-                                                                <%--path="order.printName"--%>
-                                                                <%--value="${theOrder.printName}"/>--%>
-                                                            <%--&lt;%&ndash;<input name="deleted" type="hidden" value="true"/>&ndash;%&gt;--%>
-                                                    <%--</div>--%>
-                                                <%--</div>--%>
-                                                <%--&lt;%&ndash;<div class="modal-footer col-sm-5">&ndash;%&gt;--%>
-                                                <%--<div class="col-sm-5">--%>
-                                                    <%--<input type="submit"--%>
-                                                           <%--value="Save"--%>
-                                                           <%--class="btn btn-large btn-primary send-comment-btn" style="float: left;">--%>
-                                                    <%--<a class="btn cancel-button btn-danger"--%>
-                                                       <%--style="float:right;">Cancel</a>--%>
-
-                                                <%--</div>--%>
-                                                <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                                            <%--</form:form>--%>
-                                        <%--</li>--%>
                                     </ul>
 
 
@@ -821,49 +655,7 @@
                                                 <c:out value="No comments for production"/>
                                             </c:otherwise>
                                         </c:choose>
-                                        <%--<li>--%>
-                                            <%--&lt;%&ndash;<c:if test="${param.success eq true }">&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;<div class="row text-center">&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;<div class="col-md-offset-4 col-md-5">&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;<div class="alert alert-success">&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;Comment was added&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                                            <%--&lt;%&ndash;</c:if>&ndash;%&gt;--%>
-                                            <%--<form:form commandName="comment" method="post"--%>
-                                                       <%--action="/NapkinStudio/addComment"--%>
-                                                       <%--cssClass="form-horizontal addCommentForm">--%>
-                                                <%--<div class="form-group">--%>
-                                                    <%--<div class="col-sm-5">--%>
-                                                        <%--<form:textarea path="commText"--%>
-                                                                       <%--cssClass="form-control"></form:textarea>--%>
-                                                        <%--<form:hidden path="forRole.id"--%>
-                                                                     <%--value="7"/>--%>
-                                                        <%--<form:hidden path="order.orderId"--%>
-                                                                     <%--value="${theOrder.orderId}"/>--%>
-                                                        <%--<form:hidden--%>
-                                                                <%--path="order.itemNum"--%>
-                                                                <%--value="${theOrder.itemNum}"/>--%>
 
-                                                        <%--<form:hidden--%>
-                                                                <%--path="order.printName"--%>
-                                                                <%--value="${theOrder.printName}"/>--%>
-                                                            <%--&lt;%&ndash;<input name="deleted" type="hidden" value="true"/>&ndash;%&gt;--%>
-                                                    <%--</div>--%>
-                                                <%--</div>--%>
-                                                <%--&lt;%&ndash;<div class="modal-footer col-sm-5">&ndash;%&gt;--%>
-                                                <%--<div class="col-sm-5">--%>
-                                                    <%--<input type="submit"--%>
-                                                           <%--value="Save"--%>
-                                                           <%--class="btn btn-large btn-primary send-comment-btn" style="float: left;">--%>
-                                                    <%--<a class="btn cancel-button btn-danger"--%>
-                                                       <%--style="float:right;">Cancel</a>--%>
-
-                                                <%--</div>--%>
-                                                <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                                            <%--</form:form>--%>
-                                        <%--</li>--%>
                                     </ul>
 
 
@@ -890,7 +682,7 @@
                          }">
                             <div id="order-new-attachment" style="padding-top: 15px; padding-bottom: 15px"></div>
                             <div >
-                                <textarea id="statuscahngecomment" path="commText" placeholder="Enter comment" style="padding-bottom: 15px;"></textarea>
+                                <textarea id="statuscahngecomment" path="commText" placeholder="Enter comment" style="margin-bottom: 15px;"></textarea>
                             </div>
                         </c:if>
                         <%--Appove without comments and files adding--%>
@@ -1006,12 +798,12 @@
 
         $(".add-comment-btn").click(function () {
 
-            console.log("CLick");
+
             var roleId = $(this).attr("data-for-role");
             var commentsList = $(this).parent().next().find("ul");
 
-
             var formContainer = $("#form-container");
+            formContainer.find("textarea").val("");
             var input = formContainer.find("#for-role");
             input.val(roleId);
 

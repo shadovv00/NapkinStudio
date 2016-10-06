@@ -617,7 +617,8 @@ remove-attachment:hover {
 	color: #8cd5ff;
 }
 .drag-n-drop-zone {
-	background-color: silver;
+	background-color: white;
+	border-radius: 5px;
 /* 	width: 200px; */
 /* 	min-height: 90px; */
 }
