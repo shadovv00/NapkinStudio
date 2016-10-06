@@ -591,7 +591,7 @@ public class InitDBManager {
 //        userOrderDao.save(user5Order);
 
         Order order3 = new Order();
-        order3.setSAPstatus(SAPStatus4);
+        order3.setSAPstatus(SAPStatus1);
         order3.setDebItemNum("063821232");
         order3.setItemNum("69784673");
         order3.setPrintName("Crowne Plaza 24 standaard");
@@ -631,7 +631,7 @@ public class InitDBManager {
         userOrderDao.save(user5Order3);
 
         Order order2 = new Order();
-        order2.setSAPstatus(SAPStatus3);
+        order2.setSAPstatus(SAPStatus1);
         order2.setDebItemNum("2559752");
         order2.setItemNum("0934895");
         order2.setPrintName("Crowne Plaza 24 standaard");

@@ -1,5 +1,7 @@
 package com.napkinstudio.entity;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.List;
@@ -35,6 +37,7 @@ import static javax.persistence.CascadeType.REMOVE;
         @NamedQuery(name = "Role.findByUserId", query = "SELECT r FROM  Role r  inner join r.users u WHERE u.userId  =:id"), })
 
 @Entity
+@XStreamAlias("role")
 @Table(name="Role")
 public class Role {
 

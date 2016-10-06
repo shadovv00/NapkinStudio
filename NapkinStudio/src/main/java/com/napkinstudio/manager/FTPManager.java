@@ -51,8 +51,9 @@ public class FTPManager {
 		String message = "ok";
 		
 		String
-//				host = "localhost",//"10.4.0.129",
-				host = "10.4.0.129",
+//				host = "localhost",//"10.4.0.129",//194.44.213.118:44808
+//				host = "10.4.0.129",
+				host = "194.44.213.118:44",
 				username = "catdogcat",
 				password = "2cats1dog";
 //				username = "ftpuser",
