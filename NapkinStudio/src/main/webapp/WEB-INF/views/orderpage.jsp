@@ -682,7 +682,7 @@
                          }">
                             <div id="order-new-attachment" style="padding-top: 15px; padding-bottom: 15px"></div>
                             <div >
-                                <textarea id="statuscahngecomment" path="commText" placeholder="Enter comment" style="margin-bottom: 15px;"></textarea>
+                                <textarea id="statuscahngecomment" path="commText" placeholder="Enter comment" style="margin-bottom: 15px; border-radius:5px; "></textarea>
                             </div>
                         </c:if>
                         <%--Appove without comments and files adding--%>
@@ -989,7 +989,7 @@
         var unread = $(this).attr("data-unread");
             console.log(unread);
         if(unread === "true")
-            $(this).parent().css("background", "blue");
+            $(this).parent().css("color", "#29abe2");
         });
 
 

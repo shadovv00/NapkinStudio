@@ -205,7 +205,7 @@ var napkin = napkin || {};
 							<a href='" + location.href + "/order_attachments/" + name + "' download='" + name + "' title='download' class='_download_attachment download-attachment'>" +
 								"<i class='icon-align material-icons'>attach_file</i>" + name + "" +
 								"<p class='file-info'> - " + size + " - " + _getDateFormatForAttachment(lastModified) + "</p>" +
-						"</a>\
+							"</a>\
 						</li>");
 				}
 				
@@ -254,14 +254,17 @@ var napkin = napkin || {};
 			function _removeFileItem() {
 				var jThis = $(this);
 				var fileName = jThis.attr("fileName");
-				$.ajax({
-				    url: location.href + "/order_attachments/remove/" + fileName,
-				    type: 'DELETE',
-				    success: function(result) {
-				        console.log("ok");
-				        napkin.buildFileInfoList();
-				    }
-				});
+				//TODO: Add confirm dialog. Better role check
+				if (parseInt($("#maininfotable").attr('ur'))==2){
+					$.ajax({
+						url: location.href + "/order_attachments/remove/" + fileName,
+						type: 'DELETE',
+						success: function(result) {
+							console.log("ok");
+							napkin.buildFileInfoList();
+						}
+					});
+				}
 			}
 		});
 		
@@ -475,73 +478,44 @@ var napkin = napkin || {};
         return dayStr + " " + monthNames[monthIndex] + " " + day + ". " + date.getHours() + ":" + minutes;
 	}
 	
-	// function approve() {
-	// 	var files = [];
-	// 	for(var key in mjUpLi) {
-	// 		files.push(key);
-	// 	}
-	// 	if(!files.length) {
-	// 		console.info("No attachments to approve!");
-	// 		return;
-	// 	}
-	// 	$.ajax({
-	// 	    url: location.href + "/approve",
-	// 	    type: 'POST',
-	// 	    data: {
-	// 	    	files: files
-	// 	    },
-	// 	    success: function(result) {
-	// 	        console.log("ok");
-	// 	        if(Array.isArray(result)) {
-	// 	        	for(var x = 0; x < result.length; ++x) {
-	// 	        		mjUpLi[result[x]].remove();
-	// 	        		delete mjUpLi[result[x]];
-	// 	        	}
-	// 	        }
-	// 	        if($.isEmptyObject()) {
-	// 	        	jRemoveAllFiles.hide();
-	// 	        }
-	// 	        napkin.buildFileInfoList();
-	// 	    },
-	// 	    error: function() {
-	// 	    	console.log("fail");
-	// 	    }
-	// 	});
-	// }
+
 	function approve() {
 			     $('.loading-spinner').show();
 			  var urltostatus=$(this).attr('foraction');
-			   var st=$(this).attr('st');
-				   var ur=$(this).attr('ur');
-					  // var pi=$(this).attr('pi');
-						  var commentText=$("#statuscahngecomment").val();
+			   var st=parseInt($(this).attr('st'));
+			   var ur=parseInt($(this).attr('ur'));
+			  // var pi=$(this).attr('pi');
+			  var commentText=$("#statuscahngecomment").val();
 			    //when DTP, printproof required
-			  if (parseInt(st)==2&&parseInt(ur)==4&&$('#proofprevdiv').is(":hidden")){
+			  if (st==2&&ur==4&&$('#proofprevdiv').is(":hidden")){
 				   $("#printproof p").css( "border", "2px dotted red" );
 				   $('.loading-spinner').hide();
-				   console.log("no");
+				   console.log("printproof required");
 				   return;
-				  }
+				  } else
 				//when rejection comment required
 			  if (urltostatus.slice(-1)=="o"&&parseInt($(this).attr('pi'))!=3&&!commentText.length){
-			   $("#statuscahngecomment").css( "border", "2px dotted red" );
-						$('.loading-spinner').hide();
-			   return;
+				  $("#statuscahngecomment").css( "border", "2px dotted red" );
+				  $('.loading-spinner').hide();
+				  console.log("rejection comment required");
+				  return;
 			  }
 			  var files = [];
 			  for(var key in mjUpLi) {
 				   files.push(key);
 				  }
 			  if(!files.length&&!_bean.printproof.name) {
-			   if (parseInt($(this).attr('ur'))==5&&parseInt(st)==2){
-					    console.info("No attachments to approve!");
-					    $(".dropzone").css( "border", "2px dotted red" );
-					                $('.loading-spinner').hide();
-					    return;
-					   }else{
-					    changeStatusAndAddComment(urltostatus,commentText);
-					   }
-				  }else {
+				   if ((ur==4&&st==5)||(ur==2&&st==1)){
+						console.info("No attachments to approve!");
+						$(".dropzone").css( "border", "2px dotted red" );
+									$('.loading-spinner').hide();
+						return;
+				   }else{
+						changeStatusAndAddComment(urltostatus,commentText);
+				   }
+			  }else {
+				  console.info(" attachments to approve!");
+
 				  $.ajax({
 							    url: location.href + "/approve",
 							    type: 'POST',
@@ -574,6 +548,7 @@ var napkin = napkin || {};
 			 }
 
 			 function changeStatusAndAddComment(urltostatus,commentText) {
+				 console.log("changeStatusAndAddComment");
 					  $.ajax({
 						   url: urltostatus,
 						   type: 'POST',
