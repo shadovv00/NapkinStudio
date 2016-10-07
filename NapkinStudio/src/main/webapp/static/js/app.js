@@ -198,15 +198,28 @@ var napkin = napkin || {};
 						size = " ???";
 					}
 					
-					jAtUi.append(
-						"<li>\
-							<i class='_attachmentPreview attachment-preview fa fa-eye' data-toggle='modal' data-target='._attachmentModal' fileName='" + name + "'></i>\
-							<span class='_removeAttachment remove-icon-align remove-attachment glyphicon glyphicon-remove' fileName='" + name + "'></span>\
-							<a href='" + location.href + "/order_attachments/" + name + "' download='" + name + "' title='download' class='_download_attachment download-attachment'>" +
-								"<i class='icon-align material-icons'>attach_file</i>" + name + "" +
-								"<p class='file-info'> - " + size + " - " + _getDateFormatForAttachment(lastModified) + "</p>" +
-							"</a>\
-						</li>");
+					// jAtUi.append(
+					// 	"<li>\
+					// 		<i class='_attachmentPreview attachment-preview fa fa-eye' data-toggle='modal' data-target='._attachmentModal' fileName='" + name + "'></i>\
+					// 		<span class='_removeAttachment remove-icon-align remove-attachment glyphicon glyphicon-remove' fileName='" + name + "'></span>\
+					// 		<a href='" + location.href + "/order_attachments/" + name + "' download='" + name + "' title='download' class='_download_attachment download-attachment'>" +
+					// 			"<i class='icon-align material-icons'>attach_file</i>" + name + "" +
+					// 			"<p class='file-info'> - " + size + " - " + _getDateFormatForAttachment(lastModified) + "</p>" +
+					// 		"</a>\
+					// 	</li>");
+
+					var jAtUiLi = $("<li></li>");
+					jAtUiLi.append("<i class='_attachmentPreview attachment-preview fa fa-eye' data-toggle='modal' data-target='._attachmentModal' fileName='" + name + "'></i>");
+
+					//TODO: Better role check
+					if (parseInt($("#maininfotable").attr('ur'))==2) {
+						jAtUiLi.append("<span class='_removeAttachment remove-icon-align remove-attachment glyphicon glyphicon-remove' fileName='" + name + "'></span>");
+					}
+					jAtUiLi.append("<a href='" + location.href + "/order_attachments/" + name + "' download='" + name + "' title='download' class='_download_attachment download-attachment'>" +
+									"<i class='icon-align material-icons'>attach_file</i>" + name + "" +
+									"<p class='file-info'> - " + size + " - " + _getDateFormatForAttachment(lastModified) + "</p>" +
+								"</a>");
+					jAtUi.append(jAtUiLi);
 				}
 				
 			} else {
@@ -254,9 +267,8 @@ var napkin = napkin || {};
 			function _removeFileItem() {
 				var jThis = $(this);
 				var fileName = jThis.attr("fileName");
-				//TODO: Add confirm dialog. Better role check
-				if (parseInt($("#maininfotable").attr('ur'))==2){
-					$.ajax({
+				//TODO: Add confirm dialog.
+				$.ajax({
 						url: location.href + "/order_attachments/remove/" + fileName,
 						type: 'DELETE',
 						success: function(result) {
@@ -264,7 +276,7 @@ var napkin = napkin || {};
 							napkin.buildFileInfoList();
 						}
 					});
-				}
+
 			}
 		});
 		
