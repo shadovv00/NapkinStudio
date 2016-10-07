@@ -55,7 +55,7 @@ public class InitDBManager {
     @Autowired
     private IStatusChangeDao statusChangeDao;
 
-//    @PostConstruct
+    @PostConstruct
 
     public void init() {
 
@@ -264,6 +264,73 @@ public class InitDBManager {
 
 
 
+        //Customer
+        statusSAPStatusRole = new StatusSAPStatusRole();
+        statusSAPStatusRole.setRole(CustomRole);
+        statusSAPStatusRole.setSAPStatus(SAPStatus1);
+        statusSAPStatusRole.setStatus(status2);
+        statusSAPStatusRoleDao.save(statusSAPStatusRole);
+
+        statusSAPStatusRole = new StatusSAPStatusRole();
+        statusSAPStatusRole.setRole(CustomRole);
+        statusSAPStatusRole.setSAPStatus(SAPStatus2);
+        statusSAPStatusRole.setStatus(status2);
+        statusSAPStatusRoleDao.save(statusSAPStatusRole);
+
+        statusSAPStatusRole = new StatusSAPStatusRole();
+        statusSAPStatusRole.setRole(CustomRole);
+        statusSAPStatusRole.setSAPStatus(SAPStatus3);
+        statusSAPStatusRole.setStatus(status2);
+        statusSAPStatusRoleDao.save(statusSAPStatusRole);
+
+        statusSAPStatusRole = new StatusSAPStatusRole();
+        statusSAPStatusRole.setRole(CustomRole);
+        statusSAPStatusRole.setSAPStatus(SAPStatus4);
+        statusSAPStatusRole.setStatus(status4);
+        statusSAPStatusRoleDao.save(statusSAPStatusRole);
+
+        statusSAPStatusRole = new StatusSAPStatusRole();
+        statusSAPStatusRole.setRole(CustomRole);
+        statusSAPStatusRole.setSAPStatus(SAPStatus5);
+        statusSAPStatusRole.setStatus(status5);
+        statusSAPStatusRoleDao.save(statusSAPStatusRole);
+
+        statusSAPStatusRole = new StatusSAPStatusRole();
+        statusSAPStatusRole.setRole(CustomRole);
+        statusSAPStatusRole.setSAPStatus(SAPStatus7);
+        statusSAPStatusRole.setStatus(status5);
+        statusSAPStatusRoleDao.save(statusSAPStatusRole);
+
+        statusSAPStatusRole = new StatusSAPStatusRole();
+        statusSAPStatusRole.setRole(CustomRole);
+        statusSAPStatusRole.setSAPStatus(SAPStatus6);
+        statusSAPStatusRole.setStatus(status6);
+        statusSAPStatusRoleDao.save(statusSAPStatusRole);
+
+        statusSAPStatusRole = new StatusSAPStatusRole();
+        statusSAPStatusRole.setRole(CustomRole);
+        statusSAPStatusRole.setSAPStatus(SAPStatus8);
+        statusSAPStatusRole.setStatus(status8);
+        statusSAPStatusRoleDao.save(statusSAPStatusRole);
+
+        statusSAPStatusRole = new StatusSAPStatusRole();
+        statusSAPStatusRole.setRole(CustomRole);
+        statusSAPStatusRole.setSAPStatus(SAPStatus9);
+        statusSAPStatusRole.setStatus(status9);
+        statusSAPStatusRoleDao.save(statusSAPStatusRole);
+
+        statusSAPStatusRole = new StatusSAPStatusRole();
+        statusSAPStatusRole.setRole(CustomRole);
+        statusSAPStatusRole.setSAPStatus(SAPStatus10);
+        statusSAPStatusRole.setStatus(status10);
+        statusSAPStatusRoleDao.save(statusSAPStatusRole);
+
+        statusSAPStatusRole = new StatusSAPStatusRole();
+        statusSAPStatusRole.setRole(CustomRole);
+        statusSAPStatusRole.setSAPStatus(SAPStatus11);
+        statusSAPStatusRole.setStatus(status11);
+        statusSAPStatusRoleDao.save(statusSAPStatusRole);
+
         //DEPTOR
         statusSAPStatusRole = new StatusSAPStatusRole();
         statusSAPStatusRole.setRole(debtorRole);
@@ -330,6 +397,7 @@ public class InitDBManager {
         statusSAPStatusRole.setSAPStatus(SAPStatus11);
         statusSAPStatusRole.setStatus(status11);
         statusSAPStatusRoleDao.save(statusSAPStatusRole);
+
 
         /////DTP
 
