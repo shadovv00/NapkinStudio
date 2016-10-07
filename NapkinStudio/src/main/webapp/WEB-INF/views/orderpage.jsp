@@ -973,7 +973,7 @@
                 break;
         }
 
-        if (statusId > 6 && status !== "Rejected")
+        if (statusId >= 5 && status !== "Rejected")
             $(".add-comment-btn").hide();
 
         $(".comment-container").hover(function () {
