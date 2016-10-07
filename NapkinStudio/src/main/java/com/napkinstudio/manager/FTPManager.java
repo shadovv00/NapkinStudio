@@ -17,6 +17,8 @@ import com.napkinstudio.entity.SynchronizationDate;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.net.ftp.FTPSClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.napkinstudio.entity.User;
@@ -30,7 +32,11 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 
 @Service("ftpService")
+@PropertySource({ "classpath:project.properties" })
 public class FTPManager {
+	
+	@Autowired
+    Environment env;
 	
 	@Autowired
 	XStream xstream;
@@ -51,11 +57,11 @@ public class FTPManager {
 		String message = "ok";
 		
 		String
-//				host = "localhost",//"10.4.0.129",//194.44.213.118:44808
+				host = env.getProperty("ftp.host"),//"localhost",//"10.4.0.129",//194.44.213.118:44808
 //				host = "10.4.0.129",
-				host = "194.44.213.118:44",
-				username = "catdogcat",
-				password = "2cats1dog";
+//				host = "194.44.213.118:44",
+				username = env.getProperty("ftp.user"),//"catdogcat",
+				password = env.getProperty("ftp.pass");//"2cats1dog";
 //				username = "ftpuser",
 //				password = "123";
 
@@ -64,7 +70,8 @@ public class FTPManager {
 		String 	pathToIsBusyFile = "checkisbusy.txt",
 				pathToKeepInSyncFile = "keepinsync.txt",
 				pathToFileToSAP = "DataTransferToSAP.xml",
-				pathToFileFromSAP = "DataTransferFromSAP.xml";
+				pathToFileFromSAP = "DataTransferFromSAP.xml",
+				sPathToOrdersDirectory = "orders";
 		
         InputStream
         		is_ = null,

@@ -55,7 +55,7 @@ public class InitDBManager {
     @Autowired
     private IStatusChangeDao statusChangeDao;
 
-    @PostConstruct
+//    @PostConstruct
 
     public void init() {
 
