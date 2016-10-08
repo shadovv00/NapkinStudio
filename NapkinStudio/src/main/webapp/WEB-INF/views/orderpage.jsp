@@ -134,7 +134,7 @@
                     <tr class="table-title" valign="top">
                         <th width="50%">
                             <b>Order Informatie</b>
-                        </th>
+                        </th>s
                         <th width="50%">
                             <b>Artikel informatie</b>
                         </th>
@@ -255,7 +255,7 @@
                 <div width="100%" style="margin-bottom: 10px">
                     <b class="opmerkingen-wrapper">Opmerkingen</b>
                     <ul class="coments-table" width="100%" style="list-style-type:none">
-                        <li width="100%" class="comments">
+                        <li width="100%" class="comments to-deptor-comments">
                             <table width="100%">
                                 <td width="17%" style="vertical-align: top">
                                     <b>Voor PVI</b>
@@ -265,10 +265,12 @@
                                      <a id="PVI-button" class="add-comment-btn">Add comment</a>
                                  </td>--%>
                                 <td>
-                                    <ul style="list-style-type:none">
+                                    <ul class="comments-list" style="list-style-type:none">
                                         <c:choose>
-                                            <c:when test="${PVIComments.size() gt 0}">
+                                            <c:when test="${PVIComments.size() > 0 }">
                                                 <c:forEach items="${PVIComments}" var="PVIComment">
+
+                                                    <c:if test="${user.role.id == 2  || user.role.id == 4 || user.userId == PVIComment.fromUser.userId }">
                                                     <li>
                                                         <div>
                                                             <div class="comment-container">
@@ -307,11 +309,12 @@
                                                             </div>
                                                         </div>
                                                     </li>
+                                                    </c:if>
                                                 </c:forEach>
                                             </c:when>
                                             <c:otherwise>
                                                 <c:out value="No comments for PVI"/>
-                                            </c:otherwise>
+                                        </c:otherwise>
                                         </c:choose>
                                         <li id="form-container">
 
@@ -343,7 +346,7 @@
                                 </td>
                             </table>
                         </li>
-                        <li width="100%" class="comments">
+                        <li width="100%" class="comments ">
                             <table width="100%">
                                 <td width="17%" style="vertical-align: top">
                                     <b>Voor DTP</b>
@@ -353,7 +356,7 @@
                                 <td>
 
 
-                                    <ul style="list-style-type:none">
+                                    <ul class="comments-list" style="list-style-type:none">
                                         <c:choose>
                                             <c:when test="${DTPComments.size() gt 0}">
                                                 <c:forEach items="${DTPComments}" var="DTPComment">
@@ -407,20 +410,21 @@
                                 </td>
                             </table>
                         </li>
-                        <li width="100%" class="comments to-deptor-comments">
+                        <li width="100%" class="comments to-deptor-comments to-customer-comments">
                             <table width="100%">
                                 <td width="17%" style="vertical-align: top">
                                     <b>Voor debiteur</b>
-                                    <a  class="add-comment-btn" data-for-role="1">Add comment</a>
+                                    <a id="debtor-button" class="add-comment-btn" data-for-role="1">Add comment</a>
                                 </td>
                                 <%--<td width="3%" style="vertical-align: top">
                                     <a class="btn add-comment-btn">Add comment</a>
                                 </td>--%>
                                 <td>
-                                    <ul style="list-style-type:none">
+                                    <ul class="comments-list" style="list-style-type:none">
                                         <c:choose>
                                             <c:when test="${DeptorComments.size() gt 0}">
                                                 <c:forEach items="${DeptorComments}" var="DeptorComment">
+                                                    <c:if test="${user.role.id != 5 ||  user.userId == DeptorComment.fromUser.userId }">
                                                     <li>
                                                         <div>
                                                             <div class="comment-container">
@@ -458,6 +462,7 @@
                                                             </div>
                                                         </div>
                                                     </li>
+                                                    </c:if>
                                                 </c:forEach>
                                             </c:when>
                                             <c:otherwise>
@@ -481,7 +486,7 @@
                                     <a class="btn add-comment-btn">Add comment</a>
                                 </td>--%>
                                 <td>
-                                    <ul style="list-style-type:none">
+                                    <ul class="comments-list" style="list-style-type:none">
                                         <c:choose>
                                             <c:when test="${CustomerComments.size() gt 0}">
                                                 <c:forEach items="${CustomerComments}" var="CustomerComment">
@@ -545,7 +550,7 @@
                                     <a class="btn add-comment-btn">Add comment</a>
                                 </td>--%>
                                 <td>
-                                    <ul style="list-style-type:none">
+                                    <ul class="comments-list" style="list-style-type:none">
                                         <c:choose>
                                             <c:when test="${StampsManufacComments.size() gt 0}">
                                                 <c:forEach items="${StampsManufacComments}" var="StampsManufacComment">
@@ -609,7 +614,7 @@
                                     <a class="btn add-comment-btn" id="production-button">Add comment</a>
                                 </td>--%>
                                 <td>
-                                    <ul style="list-style-type:none">
+                                    <ul class="comments-list" style="list-style-type:none">
                                         <c:choose>
                                             <c:when test="${ProductionComments.size() gt 0}">
                                                 <c:forEach items="${ProductionComments}" var="ProductionComment">
@@ -798,7 +803,7 @@
 
         $(".add-comment-btn").click(function () {
 
-
+//            debugger;
             var roleId = $(this).attr("data-for-role");
             var commentsList = $(this).parent().next().find("ul");
 
@@ -809,26 +814,7 @@
 
 
             commentsList.append(formContainer);
-            <%--var text = "<form:form commandName='comment' action='/NapkinStudio/addComment' cssClass='form-horizontal addCommentForm' method='post' > </form:form>";--%>
-//            var $form =  $(this).parent().next().find("form");
-//            $liTag.append($form);
-//            commentsList.append($liTag);
-            <%----%>
-            <%--liTag = liTag + "<form\:form commandName='comment' method='post' action='/NapkinStudio/addComment' cssClass='form-horizontal addCommentForm' >";--%>
-            <%--liTag = liTag +   "<div class='form-group'>";--%>
-            <%--liTag = liTag + "<div class='col-sm-5'>"--%>
-            <%--liTag = liTag + "<form\:textarea path='commText'   cssClass='form-control' /> <form:hidden path='forRole.id' value='2'/>";--%>
 
-            <%--liTag = liTag+  "</div> </div> <div class='col-sm-5'> ";--%>
-            <%--liTag = liTag + "<input type='submit'value='Save'class='btn btn-large btn-primary' style='float: left;'>";--%>
-            <%--liTag = liTag   + "<a class='btn cancel-button btn-danger'style='float:right;'>Cancel</a> </div>";--%>
-            <%--liTag = liTag   + " </form\:form>"--%>
-            <%--liTag = liTag + "</li>"--%>
-            <%--var $addCommentsForm = $(liTag);--%>
-            <%--commentsList.append($addCommentsForm);--%>
-            <%--console.log($(this).parent().next().find("ul"));--%>
-            //
-//            console.log($(this).parent().next().find("form"));
             $(this).parent().next().find("form").show();
             $(this).parent().next().find(".cancel-button").show();
 
@@ -940,18 +926,40 @@
 
         });
 
+
+
         switch (role) {
+
             case "ROLE_DEPTOR":
+
                 $(".comments").not(".to-deptor-comments").hide();
+//debugger;
+                  var commentsList = $("#PVI-button").parent().next().find("ul");
+                    var length = commentsList.children().length;
+                    var PVICOmmentsLength = +"${PVIComments.size()}";
+                   if(length < 2 && PVICOmmentsLength > 0){
+                    var $p = $("<li><p>No comments for PVI</p></li>")
+                     commentsList.prepend($p);
+                   }
+
                 if (status === "Waiting for approval") {
-                    $(".to-deptor-comments").find(".add-comment-btn").show();
+                    $(".to-deptor-comments").find(".add-comment-btn").not("#PVI-button").show();
                     console.log("waiting for approval>>>");
                 }
                 break;
             case "ROLE_CUSTOMER":
                 $(".comments").not(".to-customer-comments").hide();
+//                    debugger;
+                var commentsList = $("#debtor-button").parent().next().find("ul");
+                var debtorCommentsLength = +"${DeptorComments.size()}";
+                var length = commentsList.children().length;
+                    if(length == 0 && debtorCommentsLength > 0) {
+
+                        var $p = $("<li><p>No comments for debtor</p></li>")
+                        commentsList.prepend($p);
+                    }
                 if (status === "Waiting for approval")
-                    $(".comments").not(".to-customer-comments").find(".add-comment-btn").hide();
+                    $(".to-customer-comments").find(".add-comment-btn").not("#debtor-button").show();
                 break;
             case "ROLE_PVI":
                 $("#DTP-button").show();
