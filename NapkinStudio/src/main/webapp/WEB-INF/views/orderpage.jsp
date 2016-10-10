@@ -126,15 +126,12 @@
             <td width="10%">
             </td>
             <td width="65%" align="left">
-                <%--<div style="margin-bottom: 10px">--%>
-                <%--&lt;%&ndash;stautus                 <c:out value="${theOrder.SAPstatus.statusSAPStatuseRoles[0].status.name}" />&ndash;%&gt;--%>
-                <%--</div>--%>
                 <%--6.4-5 Order and Article info/////////////////////////////////////////////////--%>
                     <table id="maininfotable" width="100%" border="0" style="margin-bottom: 10px; margin-top: 10px" st=${theOrder.SAPstatus.id} ur=${user.role.id}>
                     <tr class="table-title" valign="top">
                         <th width="50%">
                             <b>Order Informatie</b>
-                        </th>s
+                        </th>
                         <th width="50%">
                             <b>Artikel informatie</b>
                         </th>
@@ -675,7 +672,6 @@
 
                         <%--Files and comments for StatusChange--%>
                         <c:if test="${
-                                    (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
                                     ((theOrder.SAPstatus.id==1)&&user.role.id==2)||
                                     (theOrder.SAPstatus.id==2&&user.role.id==4)||
                                     (theOrder.SAPstatus.id==5&&user.role.id==4&&theOrder.processId==5)||
@@ -692,8 +688,8 @@
                         </c:if>
                         <%--Appove without comments and files adding--%>
                         <c:if test="${
-                                (theOrder.SAPstatus.id==6&&user.role.id==2)||
                                 (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
+                                (theOrder.SAPstatus.id==6&&user.role.id==2)||
                                 (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Deptor')||
                                 (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
                                 (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==1)||
@@ -707,6 +703,7 @@
                         </c:if>
                         <%--Discard without comments and files adding--%>
                         <c:if test="${
+                                (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
                                 (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.processId==3)
                      }">
                             <a href="<c:url value='/changestatus/${theOrder.orderId}/no' />"
@@ -724,7 +721,6 @@
                         </c:if>
                         <%--Discard with comments and files adding--%>
                         <c:if test="${
-                                (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
                                 (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Deptor')||
                                 (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
                                 (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==1)||

@@ -500,14 +500,14 @@ var napkin = napkin || {};
 			  var commentText=$("#statuscahngecomment").val();
 			    //when DTP, printproof required
 			  if (st==2&&ur==4&&$('#proofprevdiv').is(":hidden")){
-				   $("#printproof p").css( "border", "2px dotted red" );
+                   $("#printproof p").addClass("custom-not-fielded");
 				   $('.loading-spinner').hide();
 				   console.log("printproof required");
 				   return;
 				  } else
 				//when rejection comment required
-			  if (urltostatus.slice(-1)=="o"&&parseInt($(this).attr('pi'))!=3&&!commentText.length){
-				  $("#statuscahngecomment").css( "border", "2px dotted red" );
+			  if (urltostatus.slice(-1)=="o"&&(parseInt($(this).attr('pi'))!=3||ur!=2)&&!commentText.length){
+                  $("#statuscahngecomment").addClass("custom-not-fielded");
 				  $('.loading-spinner').hide();
 				  console.log("rejection comment required");
 				  return;
@@ -519,8 +519,8 @@ var napkin = napkin || {};
 			  if(!files.length&&!_bean.printproof.name) {
 				   if ((ur==4&&st==5)||(ur==2&&st==1)){
 						console.info("No attachments to approve!");
-						$(".dropzone").css( "border", "2px dotted red" );
-									$('.loading-spinner').hide();
+                        $(".dropzone").addClass("custom-not-fielded");
+						$('.loading-spinner').hide();
 						return;
 				   }else{
 						changeStatusAndAddComment(urltostatus,commentText);

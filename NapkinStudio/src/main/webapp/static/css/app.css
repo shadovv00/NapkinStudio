@@ -864,3 +864,8 @@ remove-attachment:hover {
 }
 
 
+.custom-not-fielded{
+    border: 1px solid red;
+    border-radius: 5px;
+}
+
