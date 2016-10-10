@@ -56,7 +56,7 @@ public class MailManager {
                 if (object instanceof Comments) {
                     Comments comment = (Comments) object;
                     order = comment.getOrder();
-                    String link = "http://10.4.0.66:8080/NapkinStudio/orders/" + order.getOrderId().toString();
+                    String link = "http://10.4.0.129:8080/NapkinStudio/orders/" + order.getOrderId().toString();
                     helper.setTo(comment.getToUser().getEmail());
 
 
@@ -73,7 +73,7 @@ public class MailManager {
 
                 } else if (object instanceof Order) {
                     order = (Order) object;
-                    String link = "http://10.4.0.66:8080/NapkinStudio/orders/" + order.getOrderId().toString();
+                    String link = "http://10.4.0.129:8080/NapkinStudio/orders/" + order.getOrderId().toString();
                     helper.setTo(order.getItsUsers().get(0).getUser().getEmail());
                     model.put("order", order);
                     model.put("link", link);
