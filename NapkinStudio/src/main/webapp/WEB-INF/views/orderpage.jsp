@@ -811,32 +811,28 @@
 
         $(".add-comment-btn").click(function () {
 
+            var excist = $(this).parent().next().find("form").length;
+            var formContainer = $("#form-container");
+            var commentForm = formContainer.find("form");
 
-//            debugger;
-            var commentForm = $(this).parent().next().find("form");
+            if (excist && commentForm.is(":visible"))
+                commentForm.hide(350);
+            else if (excist && !commentForm.is(":visible"))
+                commentForm.show(700);
+            else if (!excist) {
+                var that = $(this);
+                commentForm.hide(350,function(){
 
-            if (commentForm.length) {
-
-                var visiable = commentForm.is(":visible");
-
-                if (visiable)
-                    commentForm.hide(350);
-                else
-                    commentForm.show(700);
-
-            } else {
-
-                var roleId = $(this).attr("data-for-role");
-                var commentsList = $(this).parent().next().find("ul");
-                var formContainer = $("#form-container");
+                var roleId = that.attr("data-for-role");
+                var commentsList = that.parent().next().find("ul");
 
                 formContainer.find("textarea").val("");
                 formContainer.find("#for-role").val(roleId);
                 commentsList.append(formContainer);
-
-                $(this).parent().next().find("form").show(700);
+                commentForm.show(700);
+                });
             }
-
+//
 
         });
 
