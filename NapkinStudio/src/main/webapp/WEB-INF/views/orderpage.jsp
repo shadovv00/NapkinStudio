@@ -127,7 +127,8 @@
             </td>
             <td width="65%" align="left">
                 <%--6.4-5 Order and Article info/////////////////////////////////////////////////--%>
-                    <table id="maininfotable" width="100%" border="0" style="margin-bottom: 10px; margin-top: 10px" st=${theOrder.SAPstatus.id} ur=${user.role.id}>
+                <table id="maininfotable" width="100%" border="0" style="margin-bottom: 10px; margin-top: 10px"
+                       st=${theOrder.SAPstatus.id} ur=${user.role.id}>
                     <tr class="table-title" valign="top">
                         <th width="50%">
                             <b>Order Informatie</b>
@@ -244,9 +245,9 @@
                 <c:if test="${(theOrder.SAPstatus.id==2&&user.role.id==4)||
                                 (theOrder.SAPstatus.id>2)}">
                     <%--<div width="100%" style="margin-bottom: 10px">--%>
-                        <%--<b>Drukproef</b>--%>
+                    <%--<b>Drukproef</b>--%>
                     <%--</div>--%>
-                <div id="printproof"></div>
+                    <div id="printproof"></div>
                 </c:if>
                 <%--6.6 Comments/////////////////////////////////////////////////--%>
                 <div width="100%" style="margin-bottom: 10px">
@@ -268,50 +269,50 @@
                                                 <c:forEach items="${PVIComments}" var="PVIComment">
 
                                                     <c:if test="${user.role.id == 2  || user.role.id == 4 || user.userId == PVIComment.fromUser.userId }">
-                                                    <li>
-                                                        <div>
-                                                            <div class="comment-container">
-                                                                <p class="commentText"
-                                                                   data-unread="${PVIComment.unread}">
-                                                                        ${PVIComment.commText}
-                                                                </p>
-                                                                <p>
-                                                                        <%--${PVIComment.fromUser.lastModifiedDate}--%>
-                                                                    <c:choose>
-                                                                        <c:when test="${DateUtils.isSameDay(PVIComment.fromUser.lastModifiedDate, today)}">
-                                                                            Today <fmt:formatDate
-                                                                                value="${PVIComment.fromUser.lastModifiedDate}"
-                                                                                pattern=" HH:mm"/>
-                                                                        </c:when>
-                                                                        <c:when test="${DateUtils.isSameDay(PVIComment.fromUser.lastModifiedDate, yesterday)}">
-                                                                            Yesterday <fmt:formatDate
-                                                                                value="${PVIComment.fromUser.lastModifiedDate}"
-                                                                                pattern=" HH:mm"/>
-                                                                        </c:when>
-                                                                        <c:otherwise>
-                                                                            <fmt:formatDate
+                                                        <li>
+                                                            <div>
+                                                                <div class="comment-container">
+                                                                    <p class="commentText"
+                                                                       data-unread="${PVIComment.unread}">
+                                                                            ${PVIComment.commText}
+                                                                    </p>
+                                                                    <p>
+                                                                            <%--${PVIComment.fromUser.lastModifiedDate}--%>
+                                                                        <c:choose>
+                                                                            <c:when test="${DateUtils.isSameDay(PVIComment.fromUser.lastModifiedDate, today)}">
+                                                                                Today <fmt:formatDate
                                                                                     value="${PVIComment.fromUser.lastModifiedDate}"
-                                                                                    pattern=" EEEE d/MM/yyyy HH:mm"/>
-                                                                        </c:otherwise>
-                                                                    </c:choose>
-                                                                        ${PVIComment.fromUser.firstName} ${PVIComment.fromUser.lastName}
-                                                                </p>
-                                                                <c:if test="${PVIComment.fromUser.userId == user.userId}">
-                                                                    <a class="btn edit-comment"
-                                                                       commentId="${PVIComment.id}">edit</a>
-                                                                    <a class="btn delete-comment"
-                                                                       commentId="${PVIComment.id}">delete</a>
-                                                                </c:if>
+                                                                                    pattern=" HH:mm"/>
+                                                                            </c:when>
+                                                                            <c:when test="${DateUtils.isSameDay(PVIComment.fromUser.lastModifiedDate, yesterday)}">
+                                                                                Yesterday <fmt:formatDate
+                                                                                    value="${PVIComment.fromUser.lastModifiedDate}"
+                                                                                    pattern=" HH:mm"/>
+                                                                            </c:when>
+                                                                            <c:otherwise>
+                                                                                <fmt:formatDate
+                                                                                        value="${PVIComment.fromUser.lastModifiedDate}"
+                                                                                        pattern=" EEEE d/MM/yyyy HH:mm"/>
+                                                                            </c:otherwise>
+                                                                        </c:choose>
+                                                                            ${PVIComment.fromUser.firstName} ${PVIComment.fromUser.lastName}
+                                                                    </p>
+                                                                    <c:if test="${PVIComment.fromUser.userId == user.userId}">
+                                                                        <a class="btn edit-comment"
+                                                                           commentId="${PVIComment.id}">edit</a>
+                                                                        <a class="btn delete-comment"
+                                                                           commentId="${PVIComment.id}">delete</a>
+                                                                    </c:if>
 
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </li>
+                                                        </li>
                                                     </c:if>
                                                 </c:forEach>
                                             </c:when>
                                             <c:otherwise>
                                                 <c:out value="No comments for PVI"/>
-                                        </c:otherwise>
+                                            </c:otherwise>
                                         </c:choose>
                                         <li id="form-container">
 
@@ -331,7 +332,8 @@
                                                 <div class="col-sm-5">
                                                     <input type="submit"
                                                            value="Save"
-                                                           class="btn btn-large btn-primary send-comment-btn" style="float: left;">
+                                                           class="btn btn-large btn-primary send-comment-btn"
+                                                           style="float: left;">
                                                     <a class="btn cancel-button btn-danger "
                                                        style="float:right;">Cancel</a>
                                                 </div>
@@ -360,7 +362,8 @@
                                                     <li>
                                                         <div>
                                                             <div class="comment-container">
-                                                                <p class="commentText" data-unread="${DTPComment.unread}">
+                                                                <p class="commentText"
+                                                                   data-unread="${DTPComment.unread}">
                                                                         ${DTPComment.commText}
                                                                 </p>
                                                                 <p>
@@ -422,43 +425,44 @@
                                             <c:when test="${DeptorComments.size() gt 0}">
                                                 <c:forEach items="${DeptorComments}" var="DeptorComment">
                                                     <c:if test="${user.role.id != 5 ||  user.userId == DeptorComment.fromUser.userId }">
-                                                    <li>
-                                                        <div>
-                                                            <div class="comment-container">
-                                                                <p class="commentText"   data-unread="${DeptorComment.unread}">
-                                                                        ${DeptorComment.commText}
-                                                                </p>
-                                                                <p>
-                                                                        <%--${DeptorComment.fromUser.lastModifiedDate}--%>
-                                                                    <c:choose>
-                                                                        <c:when test="${DateUtils.isSameDay(DeptorComment.fromUser.lastModifiedDate, today)}">
-                                                                            Today <fmt:formatDate
-                                                                                value="${DeptorComment.fromUser.lastModifiedDate}"
-                                                                                pattern=" HH:mm"/>
-                                                                        </c:when>
-                                                                        <c:when test="${DateUtils.isSameDay(DeptorComment.fromUser.lastModifiedDate, yesterday)}">
-                                                                            Yesterday <fmt:formatDate
-                                                                                value="${DeptorComment.fromUser.lastModifiedDate}"
-                                                                                pattern=" HH:mm"/>
-                                                                        </c:when>
-                                                                        <c:otherwise>
-                                                                            <fmt:formatDate
+                                                        <li>
+                                                            <div>
+                                                                <div class="comment-container">
+                                                                    <p class="commentText"
+                                                                       data-unread="${DeptorComment.unread}">
+                                                                            ${DeptorComment.commText}
+                                                                    </p>
+                                                                    <p>
+                                                                            <%--${DeptorComment.fromUser.lastModifiedDate}--%>
+                                                                        <c:choose>
+                                                                            <c:when test="${DateUtils.isSameDay(DeptorComment.fromUser.lastModifiedDate, today)}">
+                                                                                Today <fmt:formatDate
                                                                                     value="${DeptorComment.fromUser.lastModifiedDate}"
-                                                                                    pattern=" EEEE d/MM/yyyy HH:mm"/>
-                                                                        </c:otherwise>
-                                                                    </c:choose>
-                                                                        ${DeptorComment.fromUser.firstName} ${DeptorComment.fromUser.lastName}
-                                                                </p>
-                                                                <c:if test="${DeptorComment.fromUser.userId == user.userId}">
-                                                                    <a class="btn edit-comment"
-                                                                       commentId="${DeptorComment.id}">edit</a>
-                                                                    <a class="btn delete-comment"
-                                                                       commentId="${DeptorComment.id}">delete</a>
-                                                                </c:if>
+                                                                                    pattern=" HH:mm"/>
+                                                                            </c:when>
+                                                                            <c:when test="${DateUtils.isSameDay(DeptorComment.fromUser.lastModifiedDate, yesterday)}">
+                                                                                Yesterday <fmt:formatDate
+                                                                                    value="${DeptorComment.fromUser.lastModifiedDate}"
+                                                                                    pattern=" HH:mm"/>
+                                                                            </c:when>
+                                                                            <c:otherwise>
+                                                                                <fmt:formatDate
+                                                                                        value="${DeptorComment.fromUser.lastModifiedDate}"
+                                                                                        pattern=" EEEE d/MM/yyyy HH:mm"/>
+                                                                            </c:otherwise>
+                                                                        </c:choose>
+                                                                            ${DeptorComment.fromUser.firstName} ${DeptorComment.fromUser.lastName}
+                                                                    </p>
+                                                                    <c:if test="${DeptorComment.fromUser.userId == user.userId}">
+                                                                        <a class="btn edit-comment"
+                                                                           commentId="${DeptorComment.id}">edit</a>
+                                                                        <a class="btn delete-comment"
+                                                                           commentId="${DeptorComment.id}">delete</a>
+                                                                    </c:if>
 
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </li>
+                                                        </li>
                                                     </c:if>
                                                 </c:forEach>
                                             </c:when>
@@ -490,7 +494,8 @@
                                                     <li>
                                                         <div>
                                                             <div class="comment-container">
-                                                                <p class="commentText"   data-unread="${CustomerComment.unread}" >
+                                                                <p class="commentText"
+                                                                   data-unread="${CustomerComment.unread}">
                                                                         ${CustomerComment.commText}
                                                                 </p>
                                                                 <p>
@@ -554,7 +559,8 @@
                                                     <li>
                                                         <div>
                                                             <div class="comment-container">
-                                                                <p class="commentText" data-unread="${StampsManufacComment.unread}">
+                                                                <p class="commentText"
+                                                                   data-unread="${StampsManufacComment.unread}">
                                                                         ${StampsManufacComment.commText}
                                                                 </p>
                                                                 <p>
@@ -618,7 +624,8 @@
                                                     <li>
                                                         <div>
                                                             <div class="comment-container">
-                                                                <p class="commentText" data-unread="${ProductionComment.unread}">
+                                                                <p class="commentText"
+                                                                   data-unread="${ProductionComment.unread}">
                                                                         ${ProductionComment.commText}
                                                                 </p>
                                                                 <p>
@@ -668,10 +675,10 @@
                 </div>
                 <div id="order-attachment" class="order-attachment" orderId="${theOrder.orderId}"></div>
 
-                    <div display="block" style="margin-bottom: 10px">
+                <div display="block" style="margin-bottom: 10px">
 
-                        <%--Files and comments for StatusChange--%>
-                        <c:if test="${
+                    <%--Files and comments for StatusChange--%>
+                    <c:if test="${
                                     ((theOrder.SAPstatus.id==1)&&user.role.id==2)||
                                     (theOrder.SAPstatus.id==2&&user.role.id==4)||
                                     (theOrder.SAPstatus.id==5&&user.role.id==4&&theOrder.processId==5)||
@@ -681,13 +688,14 @@
                                     (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==2)||
                                     (theOrder.SAPstatus.id==6&&user.role.id==2)
                          }">
-                            <div id="order-new-attachment" style="padding-top: 15px; padding-bottom: 15px"></div>
-                            <div >
-                                <textarea id="statuscahngecomment" path="commText" placeholder="Enter comment" style="margin-bottom: 15px; border-radius:5px; "></textarea>
-                            </div>
-                        </c:if>
-                        <%--Appove without comments and files adding--%>
-                        <c:if test="${
+                        <div id="order-new-attachment" style="padding-top: 15px; padding-bottom: 15px"></div>
+                        <div>
+                            <textarea id="statuscahngecomment" path="commText" placeholder="Enter comment"
+                                      style="margin-bottom: 15px; border-radius:5px; "></textarea>
+                        </div>
+                    </c:if>
+                    <%--Appove without comments and files adding--%>
+                    <c:if test="${
                                 (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
                                 (theOrder.SAPstatus.id==6&&user.role.id==2)||
                                 (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Deptor')||
@@ -698,40 +706,44 @@
                                 (theOrder.SAPstatus.id==5&&user.role.id==2&&theOrder.processId==4)||
                                 (theOrder.SAPstatus.id==7&&user.role.id==2)
                      }">
-                            <a href="<c:url value='/changestatus/${theOrder.orderId}/yes' />"
-                               class="btn btn-success">Goedkeuren</a>
-                        </c:if>
-                        <%--Discard without comments and files adding--%>
-                        <c:if test="${
+                        <a href="<c:url value='/changestatus/${theOrder.orderId}/yes' />"
+                           class="btn btn-success">Goedkeuren</a>
+                    </c:if>
+                    <%--Discard without comments and files adding--%>
+                    <c:if test="${
                                 (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
                                 (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.processId==3)
                      }">
-                            <a href="<c:url value='/changestatus/${theOrder.orderId}/no' />"
-                               class="btn  btn-success" style="background-color: grey!important">Annuleren</a>
-                        </c:if>
-                        <%--Appove with comments and files adding--%>
-                        <c:if test="${
+                        <a href="<c:url value='/changestatus/${theOrder.orderId}/no' />"
+                           class="btn  btn-success" style="background-color: grey!important">Annuleren</a>
+                    </c:if>
+                    <%--Appove with comments and files adding--%>
+                    <c:if test="${
                                 ((theOrder.SAPstatus.id==1)&&user.role.id==2)||
                                 (theOrder.SAPstatus.id==2&&user.role.id==4)||
                                 (theOrder.SAPstatus.id==5&&user.role.id==4&&theOrder.processId==5)
                      }">
-                            <button type="button" class="approve-btn btn btn-success"
-                                    foraction="/NapkinStudio/changestatus/${theOrder.orderId}/yes" st=${theOrder.SAPstatus.id} ur=${user.role.id} pi=${theOrder.processId}
-                            >Goedkeuren</button>
-                        </c:if>
-                        <%--Discard with comments and files adding--%>
-                        <c:if test="${
+                        <button type="button" class="approve-btn btn btn-success"
+                                foraction="/NapkinStudio/changestatus/${theOrder.orderId}/yes"
+                                st=${theOrder.SAPstatus.id} ur=${user.role.id} pi=${theOrder.processId}
+                        >Goedkeuren
+                        </button>
+                    </c:if>
+                    <%--Discard with comments and files adding--%>
+                    <c:if test="${
                                 (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Deptor')||
                                 (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
                                 (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==1)||
                                 (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==2)||
                                 (theOrder.SAPstatus.id==6&&user.role.id==2)
                      }">
-                            <button type="button" class="approve-btn btn "
-                                    foraction="/NapkinStudio/changestatus/${theOrder.orderId}/no" st=${theOrder.SAPstatus.id} ur=${user.role.id} pi=${theOrder.processId}
-                            >Annuleren</button>
-                        </c:if>
-                    </div>
+                        <button type="button" class="approve-btn btn "
+                                foraction="/NapkinStudio/changestatus/${theOrder.orderId}/no"
+                                st=${theOrder.SAPstatus.id} ur=${user.role.id} pi=${theOrder.processId}
+                        >Annuleren
+                        </button>
+                    </c:if>
+                </div>
 
 
             </td>
@@ -799,20 +811,32 @@
 
         $(".add-comment-btn").click(function () {
 
+
 //            debugger;
-            var roleId = $(this).attr("data-for-role");
-            var commentsList = $(this).parent().next().find("ul");
+            var commentForm = $(this).parent().next().find("form");
 
-            var formContainer = $("#form-container");
-            formContainer.find("textarea").val("");
-            var input = formContainer.find("#for-role");
-            input.val(roleId);
+            if (commentForm.length) {
 
+                var visiable = commentForm.is(":visible");
 
-            commentsList.append(formContainer);
+                if (visiable)
+                    commentForm.hide(350);
+                else
+                    commentForm.show(700);
 
-            $(this).parent().next().find("form").show();
-            $(this).parent().next().find(".cancel-button").show();
+            } else {
+
+                var roleId = $(this).attr("data-for-role");
+                var commentsList = $(this).parent().next().find("ul");
+                var formContainer = $("#form-container");
+
+                formContainer.find("textarea").val("");
+                formContainer.find("#for-role").val(roleId);
+                commentsList.append(formContainer);
+
+                $(this).parent().next().find("form").show(700);
+            }
+
 
         });
 
@@ -822,9 +846,9 @@
 
 
         $(".cancel-button").click(function () {
-           var form =  $(this).parent().parent();
+            var form = $(this).parent().parent();
             form.find("textarea").val("");
-            form.hide();
+            form.hide(350);
 
         });
 
@@ -923,20 +947,19 @@
         });
 
 
-
         switch (role) {
 
             case "ROLE_DEPTOR":
 
                 $(".comments").not(".to-deptor-comments").hide();
 //debugger;
-                  var commentsList = $("#PVI-button").parent().next().find("ul");
-                    var length = commentsList.children().length;
-                    var PVICOmmentsLength = +"${PVIComments.size()}";
-                   if(length < 2 && PVICOmmentsLength > 0){
+                var commentsList = $("#PVI-button").parent().next().find("ul");
+                var length = commentsList.children().length;
+                var PVICOmmentsLength = +"${PVIComments.size()}";
+                if (length < 2 && PVICOmmentsLength > 0) {
                     var $p = $("<li><p>No comments for PVI</p></li>")
-                     commentsList.prepend($p);
-                   }
+                    commentsList.prepend($p);
+                }
 
                 if (status === "Waiting for approval") {
                     $(".to-deptor-comments").find(".add-comment-btn").not("#PVI-button").show();
@@ -949,11 +972,11 @@
                 var commentsList = $("#debtor-button").parent().next().find("ul");
                 var debtorCommentsLength = +"${DeptorComments.size()}";
                 var length = commentsList.children().length;
-                    if(length == 0 && debtorCommentsLength > 0) {
+                if (length == 0 && debtorCommentsLength > 0) {
 
-                        var $p = $("<li><p>No comments for debtor</p></li>")
-                        commentsList.prepend($p);
-                    }
+                    var $p = $("<li><p>No comments for debtor</p></li>")
+                    commentsList.prepend($p);
+                }
                 if (status === "Waiting for approval")
                     $(".to-customer-comments").find(".add-comment-btn").not("#debtor-button").show();
                 break;
@@ -990,10 +1013,10 @@
         });
 
         $(".commentText").each(function () {
-        var unread = $(this).attr("data-unread");
+            var unread = $(this).attr("data-unread");
             console.log(unread);
-        if(unread === "true")
-            $(this).parent().css("color", "#29abe2");
+            if (unread === "true")
+                $(this).parent().css("color", "#29abe2");
         });
 
 
