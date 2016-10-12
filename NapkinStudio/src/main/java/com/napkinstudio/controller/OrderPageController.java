@@ -225,7 +225,7 @@ public class OrderPageController {
 //        List<ProgresBarFields> barFields = progresBarFieldsManager.findAll();
 //        int orderId = theOrder.getOrderId();
 //        int roleId = user.getRoles().get(0).getId();
-        List<Object[]> barFields = progresBarFieldsManager.findBarByRolePVICheckReject(orderId, roleId, theOrder.getPVIcheckScen(), theOrder.getRejected());
+        List<Object[]> barFields = progresBarFieldsManager.findBarByRolePVICheckReject(orderId, roleId, theOrder.getPVIcheckScen(), theOrder.getRejected(), theOrder.getRepeated() );
 //        System.out.println(barFields);
 //        System.out.println(barFields.toString());
 //        System.out.println(barFields.size());

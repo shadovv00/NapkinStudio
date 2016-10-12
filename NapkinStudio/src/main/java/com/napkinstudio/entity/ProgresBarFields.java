@@ -36,7 +36,7 @@ query = "SELECT s.name as name, MAX(tm.lastdate) as date " +
             "INNER JOIN orders AS o ON o.orderId = sc.order_orderId " +
             "WHERE o.orderId =:orderId " +
             ") tm ON ss.id = tm.reid " +
-        "WHERE r.id = :roleId AND pbf.pVIcheckScen =:pVIcheckScen AND pbf.rejected =:rejected " +
+        "WHERE r.id = :roleId AND pbf.pVIcheckScen =:pVIcheckScen AND pbf.rejected =:rejected AND pbf.repeated =:repeated " +
         "GROUP BY s.name order by pbf.id "
 
 //        , resultClass = Object[].class
