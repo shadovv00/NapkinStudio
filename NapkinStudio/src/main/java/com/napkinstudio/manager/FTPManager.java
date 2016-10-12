@@ -415,9 +415,6 @@ public class FTPManager {
 			System.out.println("FTP client received network error");
 			message = "FTP client received network error";
 			ioe.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} finally {
 			try {
 				if(reader != null) reader.close();
