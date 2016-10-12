@@ -59,7 +59,7 @@ public class InitDBManager {
     @Autowired
     private IStatusChangeDao statusChangeDao;
 
-//    @PostConstruct
+    @PostConstruct
 
     public void init() {
 
@@ -545,6 +545,25 @@ public class InitDBManager {
         order1.setApprovalBy("Deptor");
         order1.setDebCheckScen(true);
         order1.setRepeated(false);
+
+        order1.setDebNum("1234567");
+        order1.setDebOrderNum("A5682345");
+        order1.setDebCont("Jan de Wit");
+        order1.setDelivAddr("Amerikalaan 3/n" +
+                "5202 CA ‘s- Hertogenbosch");
+        order1.setDelivAddrCont("Saskia Jansen");
+        order1.setUnloadTimes("2");
+        order1.setDelivInstruct("Telefoon: 06 12 34 56 78; ma t/m vr 8:00 - 17:00");
+        order1.setSize("33 x 33 cm");
+        order1.setMaterial("2-laags");
+        order1.setFoldingMeth("4-vouw");
+        order1.setNapkinCol("Wit");
+        order1.setColor1("pms 228 U");
+        order1.setColor2("-");
+        order1.setColor3("-");
+        order1.setColor4("-");
+
+
 //        order1.setComments(commentsList);
         orderDao.save(order1);
 
@@ -695,6 +714,24 @@ public class InitDBManager {
         order3.setDebCheckScen(true);
         order3.setApprovalBy("Customer");
         order3.setRepeated(false);
+
+
+        order3.setDebNum("1234567");
+        order3.setDebOrderNum("A5682345");
+        order3.setDebCont("Jan de Wit");
+        order3.setDelivAddr("Amerikalaan 3/n" +
+                "5202 CA ‘s- Hertogenbosch");
+        order3.setDelivAddrCont("Saskia Jansen");
+        order3.setUnloadTimes("2");
+        order3.setDelivInstruct("Telefoon: 06 12 34 56 78; ma t/m vr 8:00 - 17:00");
+        order3.setSize("33 x 33 cm");
+        order3.setMaterial("2-laags");
+        order3.setFoldingMeth("4-vouw");
+        order3.setNapkinCol("Wit");
+        order3.setColor1("pms 228 U");
+        order3.setColor2("-");
+        order3.setColor3("-");
+        order3.setColor4("-");
         orderDao.save(order3);
 
         UserOrder user1Order3 = new UserOrder();
@@ -736,6 +773,24 @@ public class InitDBManager {
         order2.setDebCheckScen(false);
         order2.setApprovalBy("Customer");
         order2.setRepeated(false);
+
+        order2.setDebNum("1234567");
+        order2.setDebOrderNum("A5682345");
+        order2.setDebCont("Jan de Wit");
+        order2.setDelivAddr("Amerikalaan 3/n" +
+                "5202 CA ‘s- Hertogenbosch");
+        order2.setDelivAddrCont("Saskia Jansen");
+        order2.setUnloadTimes("2");
+        order2.setDelivInstruct("Telefoon: 06 12 34 56 78; ma t/m vr 8:00 - 17:00");
+        order2.setSize("33 x 33 cm");
+        order2.setMaterial("2-laags");
+        order2.setFoldingMeth("4-vouw");
+        order2.setNapkinCol("Wit");
+        order2.setColor1("pms 228 U");
+        order2.setColor2("-");
+        order2.setColor3("-");
+        order2.setColor4("-");
+
         orderDao.save(order2);
 
         UserOrder user1Order2 = new UserOrder();
