@@ -1,10 +1,7 @@
 package com.napkinstudio.sapcommunicationmodels;
 
-import com.napkinstudio.util.CommentsFromSAP;
-import com.napkinstudio.util.Orders;
+import com.napkinstudio.util.*;
 
-import com.napkinstudio.util.UserOrdersFromSAP;
-import com.napkinstudio.util.UsersFromSAP;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 @XStreamAlias("DataTransferFromSAP")
@@ -14,6 +11,7 @@ public class DataTransferFromSAP {
 	private Orders orders;
 	private CommentsFromSAP commentaries;
 	private UserOrdersFromSAP userOrdersConnection;
+    private StatusChangesFromSAP statusChangeHistory;
 //	@XStreamImplicit
 //	private List<Order> order;
 
@@ -31,26 +29,9 @@ public class DataTransferFromSAP {
 	public UserOrdersFromSAP getSapUserOrders() {return userOrdersConnection;}
 	public void setSapUserOrders(UserOrdersFromSAP userOrdersConnection) {this.userOrdersConnection = userOrdersConnection;}
 
+    public StatusChangesFromSAP getSapStatusChanges() {return statusChangeHistory;}
+    public void setSapStatusChanges(StatusChangesFromSAP statusChangeHistory) {this.statusChangeHistory = statusChangeHistory;}
 
-//	public String getField() {
-//		return field;
-//	}
-//	public void setField(String field) {
-//		this.field = field;
-//	}
-//	public List<Order> getOrders() {
-//		return order;
-//	}
-//	public void setOrders(List<Order> order) {
-//		this.order = order;
-//	}
-
-
-
-//	@Override
-//	public String toString() {
-//		return "DataTransferStore [field=" + order + "]";
-//	}
 
 }
 

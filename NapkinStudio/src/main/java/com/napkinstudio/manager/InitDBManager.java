@@ -2,6 +2,7 @@ package com.napkinstudio.manager;
 
 import com.napkinstudio.dao.*;
 import com.napkinstudio.entity.*;
+import com.napkinstudio.entity.Process;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,9 @@ public class InitDBManager {
 
     @Autowired
     private IStatusSAPStatusRole statusSAPStatusRoleDao;
+
+    @Autowired
+    private IProcessDao processDao;
 
     @Autowired
     private IProgresBarFieldsDao progresBarFieldsDao ;
@@ -540,6 +544,7 @@ public class InitDBManager {
         order1.setRejected(false);
         order1.setApprovalBy("Deptor");
         order1.setDebCheckScen(true);
+        order1.setRepeated(false);
 //        order1.setComments(commentsList);
         orderDao.save(order1);
 
@@ -567,6 +572,26 @@ public class InitDBManager {
         4 "to dtp"
         5 "to cliche"
 */
+        Process proc1 = new Process();
+        proc1.setProcessId((byte) 1);
+        proc1.setProcessName("to deptor first");
+        Process proc2 = new Process();
+        proc2.setProcessId((byte) 2);
+        proc2.setProcessName("to user");
+        Process proc3 = new Process();
+        proc3.setProcessId((byte) 3);
+        proc3.setProcessName("to deptor fin");
+        Process proc4 = new Process();
+        proc4.setProcessId((byte) 4);
+        proc4.setProcessName("to dtp");
+        Process proc5 = new Process();
+        proc5.setProcessId((byte) 5);
+        proc5.setProcessName("to cliche");
+        processDao.save(proc1);
+        processDao.save(proc2);
+        processDao.save(proc3);
+        processDao.save(proc4);
+        processDao.save(proc5);
 
 
 
@@ -669,6 +694,7 @@ public class InitDBManager {
         order3.setRejected(false);
         order3.setDebCheckScen(true);
         order3.setApprovalBy("Customer");
+        order3.setRepeated(false);
         orderDao.save(order3);
 
         UserOrder user1Order3 = new UserOrder();
@@ -709,6 +735,7 @@ public class InitDBManager {
         order2.setRejected(false);
         order2.setDebCheckScen(false);
         order2.setApprovalBy("Customer");
+        order2.setRepeated(false);
         orderDao.save(order2);
 
         UserOrder user1Order2 = new UserOrder();
@@ -755,6 +782,7 @@ public class InitDBManager {
         proofRequestSetUp.setRole(PVIRole);
         proofRequestSetUp.setRejected(false);
         proofRequestSetUp.setPVIcheckScen(false);
+        proofRequestSetUp.setRepeated(false);
         progresBarFieldsDao.save(proofRequestSetUp);
 
         ProgresBarFields proofRequest = new ProgresBarFields();
@@ -763,6 +791,7 @@ public class InitDBManager {
         proofRequest.setRole(PVIRole);
         proofRequest.setRejected(false);
         proofRequest.setPVIcheckScen(false);
+        proofRequest.setRepeated(false);
         progresBarFieldsDao.save(proofRequest);
 
         ProgresBarFields waitForAppr = new ProgresBarFields();
@@ -771,6 +800,7 @@ public class InitDBManager {
         waitForAppr.setRole(PVIRole);
         waitForAppr.setRejected(false);
         waitForAppr.setPVIcheckScen(false);
+        waitForAppr.setRepeated(false);
         progresBarFieldsDao.save(waitForAppr);
 
         ProgresBarFields appr = new ProgresBarFields();
@@ -779,6 +809,7 @@ public class InitDBManager {
         appr.setRole(PVIRole);
         appr.setRejected(false);
         appr.setPVIcheckScen(false);
+        appr.setRepeated(false);
         progresBarFieldsDao.save(appr);
 
         ProgresBarFields stordr = new ProgresBarFields();
@@ -787,6 +818,7 @@ public class InitDBManager {
         stordr.setRole(PVIRole);
         stordr.setRejected(false);
         stordr.setPVIcheckScen(false);
+        stordr.setRepeated(false);
         progresBarFieldsDao.save(stordr);
 
         ProgresBarFields stres = new ProgresBarFields();
@@ -795,15 +827,17 @@ public class InitDBManager {
         stres.setRole(PVIRole);
         stres.setRejected(false);
         stres.setPVIcheckScen(false);
+        stres.setRepeated(false);
         progresBarFieldsDao.save(stres);
 
-        ProgresBarFields stres1 = new ProgresBarFields();
-        stres1.setStatus(status99);
-        stres1.setSAPStatus(SAPStatus11);
-        stres1.setRole(PVIRole);
-        stres1.setRejected(false);
-        stres1.setPVIcheckScen(false);
-        progresBarFieldsDao.save(stres1);
+//        ProgresBarFields stres1 = new ProgresBarFields();
+//        stres1.setStatus(status99);
+//        stres1.setSAPStatus(SAPStatus11);
+//        stres1.setRole(PVIRole);
+//        stres1.setRejected(false);
+//        stres1.setPVIcheckScen(false);
+//        stres1.setRepeated(false);
+//        progresBarFieldsDao.save(stres1);
 
         ProgresBarFields onhold = new ProgresBarFields();
         onhold.setStatus(status9);
@@ -811,6 +845,7 @@ public class InitDBManager {
         onhold.setRole(PVIRole);
         onhold.setRejected(false);
         onhold.setPVIcheckScen(false);
+        onhold.setRepeated(false);
         progresBarFieldsDao.save(onhold);
 
         ProgresBarFields orddel = new ProgresBarFields();
@@ -819,7 +854,37 @@ public class InitDBManager {
         orddel.setRole(PVIRole);
         orddel.setRejected(false);
         orddel.setPVIcheckScen(false);
+        orddel.setRepeated(false);
         progresBarFieldsDao.save(orddel);
+
+        /////////repeated case///////////////////////////////////////////
+        ProgresBarFields stres1 = new ProgresBarFields();
+        stres1.setStatus(status99);
+        stres1.setSAPStatus(SAPStatus11);
+        stres1.setRole(PVIRole);
+        stres1.setRejected(false);
+        stres1.setPVIcheckScen(false);
+        stres1.setRepeated(true);
+        progresBarFieldsDao.save(stres1);
+
+        onhold = new ProgresBarFields();
+        onhold.setStatus(status9);
+        onhold.setSAPStatus(SAPStatus9);
+        onhold.setRole(PVIRole);
+        onhold.setRejected(false);
+        onhold.setPVIcheckScen(false);
+        onhold.setRepeated(true);
+        progresBarFieldsDao.save(onhold);
+
+        orddel = new ProgresBarFields();
+        orddel.setStatus(status10);
+        orddel.setSAPStatus(SAPStatus10);
+        orddel.setRole(PVIRole);
+        orddel.setRejected(false);
+        orddel.setPVIcheckScen(false);
+        orddel.setRepeated(true);
+        progresBarFieldsDao.save(orddel);
+
 ////////PVI//////////////////////////////////////////////no pvi check, rej
         proofRequestSetUp = new ProgresBarFields();
         proofRequestSetUp.setStatus(status1);
@@ -827,6 +892,7 @@ public class InitDBManager {
         proofRequestSetUp.setRole(PVIRole);
         proofRequestSetUp.setRejected(true);
         proofRequestSetUp.setPVIcheckScen(false);
+        proofRequestSetUp.setRepeated(false);
         progresBarFieldsDao.save(proofRequestSetUp);
 
         proofRequest = new ProgresBarFields();
@@ -835,6 +901,7 @@ public class InitDBManager {
         proofRequest.setRole(PVIRole);
         proofRequest.setRejected(true);
         proofRequest.setPVIcheckScen(false);
+        proofRequest.setRepeated(false);
         progresBarFieldsDao.save(proofRequest);
 
         waitForAppr = new ProgresBarFields();
@@ -843,6 +910,7 @@ public class InitDBManager {
         waitForAppr.setRole(PVIRole);
         waitForAppr.setRejected(true);
         waitForAppr.setPVIcheckScen(false);
+        waitForAppr.setRepeated(false);
         progresBarFieldsDao.save(waitForAppr);
 
         ProgresBarFields rej = new ProgresBarFields();
@@ -851,6 +919,7 @@ public class InitDBManager {
         rej.setRole(PVIRole);
         rej.setRejected(true);
         rej.setPVIcheckScen(false);
+        rej.setRepeated(false);
         progresBarFieldsDao.save(rej);
 
         onhold = new ProgresBarFields();
@@ -859,6 +928,7 @@ public class InitDBManager {
         onhold.setRole(PVIRole);
         onhold.setRejected(true);
         onhold.setPVIcheckScen(false);
+        onhold.setRepeated(false);
         progresBarFieldsDao.save(onhold);
 
         ////////PVI////////////////////////////////////////////// pvi check, no rej
@@ -868,6 +938,7 @@ public class InitDBManager {
         proofRequestSetUp.setRole(PVIRole);
         proofRequestSetUp.setRejected(false);
         proofRequestSetUp.setPVIcheckScen(true);
+        proofRequestSetUp.setRepeated(false);
         progresBarFieldsDao.save(proofRequestSetUp);
 
          proofRequest = new ProgresBarFields();
@@ -876,6 +947,7 @@ public class InitDBManager {
         proofRequest.setRole(PVIRole);
         proofRequest.setRejected(false);
         proofRequest.setPVIcheckScen(true);
+        proofRequest.setRepeated(false);
         progresBarFieldsDao.save(proofRequest);
 
         ProgresBarFields checkPvi = new ProgresBarFields();
@@ -884,6 +956,7 @@ public class InitDBManager {
         checkPvi.setRole(PVIRole);
         checkPvi.setRejected(false);
         checkPvi.setPVIcheckScen(true);
+        checkPvi.setRepeated(false);
         progresBarFieldsDao.save(checkPvi);
 
          waitForAppr = new ProgresBarFields();
@@ -892,6 +965,7 @@ public class InitDBManager {
         waitForAppr.setRole(PVIRole);
         waitForAppr.setRejected(false);
         waitForAppr.setPVIcheckScen(true);
+        waitForAppr.setRepeated(false);
         progresBarFieldsDao.save(waitForAppr);
 
          appr = new ProgresBarFields();
@@ -900,6 +974,7 @@ public class InitDBManager {
         appr.setRole(PVIRole);
         appr.setRejected(false);
         appr.setPVIcheckScen(true);
+        appr.setRepeated(false);
         progresBarFieldsDao.save(appr);
 
          stordr = new ProgresBarFields();
@@ -908,6 +983,7 @@ public class InitDBManager {
         stordr.setRole(PVIRole);
         stordr.setRejected(false);
         stordr.setPVIcheckScen(true);
+        stordr.setRepeated(false);
         progresBarFieldsDao.save(stordr);
 
          stres = new ProgresBarFields();
@@ -916,15 +992,17 @@ public class InitDBManager {
         stres.setRole(PVIRole);
         stres.setRejected(false);
         stres.setPVIcheckScen(true);
+        stres.setRepeated(false);
         progresBarFieldsDao.save(stres);
 
-         stres1 = new ProgresBarFields();
-        stres1.setStatus(status99);
-        stres1.setSAPStatus(SAPStatus11);
-        stres1.setRole(PVIRole);
-        stres1.setRejected(false);
-        stres1.setPVIcheckScen(true);
-        progresBarFieldsDao.save(stres1);
+//         stres1 = new ProgresBarFields();
+//        stres1.setStatus(status99);
+//        stres1.setSAPStatus(SAPStatus11);
+//        stres1.setRole(PVIRole);
+//        stres1.setRejected(false);
+//        stres1.setPVIcheckScen(true);
+//        stres1.setRepeated(false);
+//        progresBarFieldsDao.save(stres1);
 
          onhold = new ProgresBarFields();
         onhold.setStatus(status9);
@@ -932,6 +1010,7 @@ public class InitDBManager {
         onhold.setRole(PVIRole);
         onhold.setRejected(false);
         onhold.setPVIcheckScen(true);
+        onhold.setRepeated(false);
         progresBarFieldsDao.save(onhold);
 
         orddel = new ProgresBarFields();
@@ -940,7 +1019,37 @@ public class InitDBManager {
         orddel.setRole(PVIRole);
         orddel.setRejected(false);
         orddel.setPVIcheckScen(true);
+        orddel.setRepeated(false);
         progresBarFieldsDao.save(orddel);
+
+        /////////repeated case///////////////////////////////////////////
+        stres1 = new ProgresBarFields();
+        stres1.setStatus(status99);
+        stres1.setSAPStatus(SAPStatus11);
+        stres1.setRole(PVIRole);
+        stres1.setRejected(false);
+        stres1.setPVIcheckScen(true);
+        stres1.setRepeated(true);
+        progresBarFieldsDao.save(stres1);
+
+        onhold = new ProgresBarFields();
+        onhold.setStatus(status9);
+        onhold.setSAPStatus(SAPStatus9);
+        onhold.setRole(PVIRole);
+        onhold.setRejected(false);
+        onhold.setPVIcheckScen(true);
+        onhold.setRepeated(true);
+        progresBarFieldsDao.save(onhold);
+
+        orddel = new ProgresBarFields();
+        orddel.setStatus(status10);
+        orddel.setSAPStatus(SAPStatus10);
+        orddel.setRole(PVIRole);
+        orddel.setRejected(false);
+        orddel.setPVIcheckScen(true);
+        orddel.setRepeated(true);
+        progresBarFieldsDao.save(orddel);
+
 ////////PVI////////////////////////////////////////////// pvi check, rej
         proofRequestSetUp = new ProgresBarFields();
         proofRequestSetUp.setStatus(status1);
@@ -948,6 +1057,7 @@ public class InitDBManager {
         proofRequestSetUp.setRole(PVIRole);
         proofRequestSetUp.setRejected(true);
         proofRequestSetUp.setPVIcheckScen(true);
+        proofRequestSetUp.setRepeated(false);
         progresBarFieldsDao.save(proofRequestSetUp);
 
         proofRequest = new ProgresBarFields();
@@ -956,6 +1066,7 @@ public class InitDBManager {
         proofRequest.setRole(PVIRole);
         proofRequest.setRejected(true);
         proofRequest.setPVIcheckScen(true);
+        proofRequest.setRepeated(false);
         progresBarFieldsDao.save(proofRequest);
 
         checkPvi = new ProgresBarFields();
@@ -964,6 +1075,7 @@ public class InitDBManager {
         checkPvi.setRole(PVIRole);
         checkPvi.setRejected(true);
         checkPvi.setPVIcheckScen(true);
+        checkPvi.setRepeated(false);
         progresBarFieldsDao.save(checkPvi);
 
         waitForAppr = new ProgresBarFields();
@@ -972,6 +1084,7 @@ public class InitDBManager {
         waitForAppr.setRole(PVIRole);
         waitForAppr.setRejected(true);
         waitForAppr.setPVIcheckScen(true);
+        waitForAppr.setRepeated(false);
         progresBarFieldsDao.save(waitForAppr);
 
          rej = new ProgresBarFields();
@@ -980,6 +1093,7 @@ public class InitDBManager {
         rej.setRole(PVIRole);
         rej.setRejected(true);
         rej.setPVIcheckScen(true);
+        rej.setRepeated(false);
         progresBarFieldsDao.save(rej);
 
         onhold = new ProgresBarFields();
@@ -988,6 +1102,7 @@ public class InitDBManager {
         onhold.setRole(PVIRole);
         onhold.setRejected(true);
         onhold.setPVIcheckScen(true);
+        onhold.setRepeated(false);
         progresBarFieldsDao.save(onhold);
 
 
@@ -998,6 +1113,7 @@ public class InitDBManager {
         proofRequestSetUp.setRole(debtorRole);
         proofRequestSetUp.setRejected(false);
         proofRequestSetUp.setPVIcheckScen(false);
+        proofRequestSetUp.setRepeated(false);
         progresBarFieldsDao.save(proofRequestSetUp);
 
          proofRequest = new ProgresBarFields();
@@ -1006,6 +1122,7 @@ public class InitDBManager {
         proofRequest.setRole(debtorRole);
         proofRequest.setRejected(false);
         proofRequest.setPVIcheckScen(false);
+        proofRequest.setRepeated(false);
         progresBarFieldsDao.save(proofRequest);
 
          waitForAppr = new ProgresBarFields();
@@ -1014,6 +1131,7 @@ public class InitDBManager {
         waitForAppr.setRole(debtorRole);
         waitForAppr.setRejected(false);
         waitForAppr.setPVIcheckScen(false);
+        waitForAppr.setRepeated(false);
         progresBarFieldsDao.save(waitForAppr);
 
          appr = new ProgresBarFields();
@@ -1022,14 +1140,16 @@ public class InitDBManager {
         appr.setRole(debtorRole);
         appr.setRejected(false);
         appr.setPVIcheckScen(false);
+        appr.setRepeated(false);
         progresBarFieldsDao.save(appr);
 
-         stordr = new ProgresBarFields();
+        stordr = new ProgresBarFields();
         stordr.setStatus(status98);
         stordr.setSAPStatus(SAPStatus7);
         stordr.setRole(debtorRole);
         stordr.setRejected(false);
         stordr.setPVIcheckScen(false);
+        stordr.setRepeated(false);
         progresBarFieldsDao.save(stordr);
 
          stres = new ProgresBarFields();
@@ -1038,15 +1158,17 @@ public class InitDBManager {
         stres.setRole(debtorRole);
         stres.setRejected(false);
         stres.setPVIcheckScen(false);
+        stres.setRepeated(false);
         progresBarFieldsDao.save(stres);
 
-        stres1 = new ProgresBarFields();
-        stres1.setStatus(status98);
-        stres1.setSAPStatus(SAPStatus11);
-        stres1.setRole(debtorRole);
-        stres1.setRejected(false);
-        stres1.setPVIcheckScen(false);
-        progresBarFieldsDao.save(stres1);
+//        stres1 = new ProgresBarFields();
+//        stres1.setStatus(status98);
+//        stres1.setSAPStatus(SAPStatus11);
+//        stres1.setRole(debtorRole);
+//        stres1.setRejected(false);
+//        stres1.setPVIcheckScen(false);
+//        stres1.setRepeated(false);
+//        progresBarFieldsDao.save(stres1);
 
         onhold = new ProgresBarFields();
         onhold.setStatus(status9);
@@ -1054,6 +1176,7 @@ public class InitDBManager {
         onhold.setRole(debtorRole);
         onhold.setRejected(false);
         onhold.setPVIcheckScen(false);
+        onhold.setRepeated(false);
         progresBarFieldsDao.save(onhold);
 
         orddel = new ProgresBarFields();
@@ -1062,7 +1185,36 @@ public class InitDBManager {
         orddel.setRole(debtorRole);
         orddel.setRejected(false);
         orddel.setPVIcheckScen(false);
+        orddel.setRepeated(false);
         progresBarFieldsDao.save(orddel);
+        /////////repeated case///////////////////////////////////////////
+        stres1 = new ProgresBarFields();
+        stres1.setStatus(status99);
+        stres1.setSAPStatus(SAPStatus11);
+        stres1.setRole(debtorRole);
+        stres1.setRejected(false);
+        stres1.setPVIcheckScen(false);
+        stres1.setRepeated(true);
+        progresBarFieldsDao.save(stres1);
+
+        onhold = new ProgresBarFields();
+        onhold.setStatus(status9);
+        onhold.setSAPStatus(SAPStatus9);
+        onhold.setRole(debtorRole);
+        onhold.setRejected(false);
+        onhold.setPVIcheckScen(false);
+        onhold.setRepeated(true);
+        progresBarFieldsDao.save(onhold);
+
+        orddel = new ProgresBarFields();
+        orddel.setStatus(status10);
+        orddel.setSAPStatus(SAPStatus10);
+        orddel.setRole(debtorRole);
+        orddel.setRejected(false);
+        orddel.setPVIcheckScen(false);
+        orddel.setRepeated(true);
+        progresBarFieldsDao.save(orddel);
+
 ////////Debtor//////////////////////////////////////////////no pvi check, rej
         proofRequestSetUp = new ProgresBarFields();
         proofRequestSetUp.setStatus(status2);
@@ -1070,6 +1222,7 @@ public class InitDBManager {
         proofRequestSetUp.setRole(debtorRole);
         proofRequestSetUp.setRejected(true);
         proofRequestSetUp.setPVIcheckScen(false);
+        proofRequestSetUp.setRepeated(false);
         progresBarFieldsDao.save(proofRequestSetUp);
 
         proofRequest = new ProgresBarFields();
@@ -1078,6 +1231,7 @@ public class InitDBManager {
         proofRequest.setRole(debtorRole);
         proofRequest.setRejected(true);
         proofRequest.setPVIcheckScen(false);
+        proofRequest.setRepeated(false);
         progresBarFieldsDao.save(proofRequest);
 
         waitForAppr = new ProgresBarFields();
@@ -1086,6 +1240,7 @@ public class InitDBManager {
         waitForAppr.setRole(debtorRole);
         waitForAppr.setRejected(true);
         waitForAppr.setPVIcheckScen(false);
+        waitForAppr.setRepeated(false);
         progresBarFieldsDao.save(waitForAppr);
 
         rej = new ProgresBarFields();
@@ -1094,6 +1249,7 @@ public class InitDBManager {
         rej.setRole(debtorRole);
         rej.setRejected(true);
         rej.setPVIcheckScen(false);
+        rej.setRepeated(false);
         progresBarFieldsDao.save(rej);
 
         onhold = new ProgresBarFields();
@@ -1102,6 +1258,7 @@ public class InitDBManager {
         onhold.setRole(debtorRole);
         onhold.setRejected(true);
         onhold.setPVIcheckScen(false);
+        onhold.setRepeated(false);
         progresBarFieldsDao.save(onhold);
 
         ////////Debtor////////////////////////////////////////////// pvi check, no rej
@@ -1111,6 +1268,7 @@ public class InitDBManager {
         proofRequestSetUp.setRole(debtorRole);
         proofRequestSetUp.setRejected(false);
         proofRequestSetUp.setPVIcheckScen(true);
+        proofRequestSetUp.setRepeated(false);
         progresBarFieldsDao.save(proofRequestSetUp);
 
         proofRequest = new ProgresBarFields();
@@ -1119,6 +1277,7 @@ public class InitDBManager {
         proofRequest.setRole(debtorRole);
         proofRequest.setRejected(false);
         proofRequest.setPVIcheckScen(true);
+        proofRequest.setRepeated(false);
         progresBarFieldsDao.save(proofRequest);
 
         checkPvi = new ProgresBarFields();
@@ -1127,6 +1286,7 @@ public class InitDBManager {
         checkPvi.setRole(debtorRole);
         checkPvi.setRejected(false);
         checkPvi.setPVIcheckScen(true);
+        checkPvi.setRepeated(false);
         progresBarFieldsDao.save(checkPvi);
 
         waitForAppr = new ProgresBarFields();
@@ -1135,6 +1295,7 @@ public class InitDBManager {
         waitForAppr.setRole(debtorRole);
         waitForAppr.setRejected(false);
         waitForAppr.setPVIcheckScen(true);
+        waitForAppr.setRepeated(false);
         progresBarFieldsDao.save(waitForAppr);
 
         appr = new ProgresBarFields();
@@ -1143,6 +1304,7 @@ public class InitDBManager {
         appr.setRole(debtorRole);
         appr.setRejected(false);
         appr.setPVIcheckScen(true);
+        appr.setRepeated(false);
         progresBarFieldsDao.save(appr);
 
         stordr = new ProgresBarFields();
@@ -1151,6 +1313,7 @@ public class InitDBManager {
         stordr.setRole(debtorRole);
         stordr.setRejected(false);
         stordr.setPVIcheckScen(true);
+        stordr.setRepeated(false);
         progresBarFieldsDao.save(stordr);
 
         stres = new ProgresBarFields();
@@ -1159,15 +1322,17 @@ public class InitDBManager {
         stres.setRole(debtorRole);
         stres.setRejected(false);
         stres.setPVIcheckScen(true);
+        stres.setRepeated(false);
         progresBarFieldsDao.save(stres);
 
-        stres1 = new ProgresBarFields();
-        stres1.setStatus(status98);
-        stres1.setSAPStatus(SAPStatus11);
-        stres1.setRole(debtorRole);
-        stres1.setRejected(false);
-        stres1.setPVIcheckScen(true);
-        progresBarFieldsDao.save(stres1);
+//        stres1 = new ProgresBarFields();
+//        stres1.setStatus(status98);
+//        stres1.setSAPStatus(SAPStatus11);
+//        stres1.setRole(debtorRole);
+//        stres1.setRejected(false);
+//        stres1.setPVIcheckScen(true);
+//        stres1.setRepeated(false);
+//        progresBarFieldsDao.save(stres1);
 
         onhold = new ProgresBarFields();
         onhold.setStatus(status9);
@@ -1175,6 +1340,7 @@ public class InitDBManager {
         onhold.setRole(debtorRole);
         onhold.setRejected(false);
         onhold.setPVIcheckScen(true);
+        onhold.setRepeated(false);
         progresBarFieldsDao.save(onhold);
 
         orddel = new ProgresBarFields();
@@ -1183,7 +1349,36 @@ public class InitDBManager {
         orddel.setRole(debtorRole);
         orddel.setRejected(false);
         orddel.setPVIcheckScen(true);
+        orddel.setRepeated(false);
         progresBarFieldsDao.save(orddel);
+        /////////repeated case///////////////////////////////////////////
+        stres1 = new ProgresBarFields();
+        stres1.setStatus(status99);
+        stres1.setSAPStatus(SAPStatus11);
+        stres1.setRole(debtorRole);
+        stres1.setRejected(false);
+        stres1.setPVIcheckScen(true);
+        stres1.setRepeated(true);
+        progresBarFieldsDao.save(stres1);
+
+        onhold = new ProgresBarFields();
+        onhold.setStatus(status9);
+        onhold.setSAPStatus(SAPStatus9);
+        onhold.setRole(debtorRole);
+        onhold.setRejected(false);
+        onhold.setPVIcheckScen(true);
+        onhold.setRepeated(true);
+        progresBarFieldsDao.save(onhold);
+
+        orddel = new ProgresBarFields();
+        orddel.setStatus(status10);
+        orddel.setSAPStatus(SAPStatus10);
+        orddel.setRole(debtorRole);
+        orddel.setRejected(false);
+        orddel.setPVIcheckScen(true);
+        orddel.setRepeated(true);
+        progresBarFieldsDao.save(orddel);
+
 ////////Debtor////////////////////////////////////////////// pvi check, rej
         proofRequestSetUp = new ProgresBarFields();
         proofRequestSetUp.setStatus(status2);
@@ -1191,6 +1386,7 @@ public class InitDBManager {
         proofRequestSetUp.setRole(debtorRole);
         proofRequestSetUp.setRejected(true);
         proofRequestSetUp.setPVIcheckScen(true);
+        proofRequestSetUp.setRepeated(false);
         progresBarFieldsDao.save(proofRequestSetUp);
 
         proofRequest = new ProgresBarFields();
@@ -1199,6 +1395,7 @@ public class InitDBManager {
         proofRequest.setRole(debtorRole);
         proofRequest.setRejected(true);
         proofRequest.setPVIcheckScen(true);
+        proofRequest.setRepeated(false);
         progresBarFieldsDao.save(proofRequest);
 
         checkPvi = new ProgresBarFields();
@@ -1207,6 +1404,7 @@ public class InitDBManager {
         checkPvi.setRole(debtorRole);
         checkPvi.setRejected(true);
         checkPvi.setPVIcheckScen(true);
+        checkPvi.setRepeated(false);
         progresBarFieldsDao.save(checkPvi);
 
         waitForAppr = new ProgresBarFields();
@@ -1215,6 +1413,7 @@ public class InitDBManager {
         waitForAppr.setRole(debtorRole);
         waitForAppr.setRejected(true);
         waitForAppr.setPVIcheckScen(true);
+        waitForAppr.setRepeated(false);
         progresBarFieldsDao.save(waitForAppr);
 
         rej = new ProgresBarFields();
@@ -1223,6 +1422,7 @@ public class InitDBManager {
         rej.setRole(debtorRole);
         rej.setRejected(true);
         rej.setPVIcheckScen(true);
+        rej.setRepeated(false);
         progresBarFieldsDao.save(rej);
 
         onhold = new ProgresBarFields();
@@ -1231,6 +1431,7 @@ public class InitDBManager {
         onhold.setRole(debtorRole);
         onhold.setRejected(true);
         onhold.setPVIcheckScen(true);
+        onhold.setRepeated(false);
         progresBarFieldsDao.save(onhold);
 
 
@@ -1241,6 +1442,7 @@ public class InitDBManager {
         proofRequestSetUp.setRole(DTPRole);
         proofRequestSetUp.setRejected(false);
         proofRequestSetUp.setPVIcheckScen(false);
+        proofRequestSetUp.setRepeated(false);
         progresBarFieldsDao.save(proofRequestSetUp);
 
         proofRequest = new ProgresBarFields();
@@ -1249,6 +1451,7 @@ public class InitDBManager {
         proofRequest.setRole(DTPRole);
         proofRequest.setRejected(false);
         proofRequest.setPVIcheckScen(false);
+        proofRequest.setRepeated(false);
         progresBarFieldsDao.save(proofRequest);
 
         waitForAppr = new ProgresBarFields();
@@ -1257,6 +1460,7 @@ public class InitDBManager {
         waitForAppr.setRole(DTPRole);
         waitForAppr.setRejected(false);
         waitForAppr.setPVIcheckScen(false);
+        waitForAppr.setRepeated(false);
         progresBarFieldsDao.save(waitForAppr);
 
         appr = new ProgresBarFields();
@@ -1265,6 +1469,7 @@ public class InitDBManager {
         appr.setRole(DTPRole);
         appr.setRejected(false);
         appr.setPVIcheckScen(false);
+        appr.setRepeated(false);
         progresBarFieldsDao.save(appr);
 
         stordr = new ProgresBarFields();
@@ -1273,6 +1478,7 @@ public class InitDBManager {
         stordr.setRole(DTPRole);
         stordr.setRejected(false);
         stordr.setPVIcheckScen(false);
+        stordr.setRepeated(false);
         progresBarFieldsDao.save(stordr);
 
         stres = new ProgresBarFields();
@@ -1281,6 +1487,7 @@ public class InitDBManager {
         stres.setRole(DTPRole);
         stres.setRejected(false);
         stres.setPVIcheckScen(false);
+        stres.setRepeated(false);
         progresBarFieldsDao.save(stres);
 
         onhold = new ProgresBarFields();
@@ -1289,6 +1496,7 @@ public class InitDBManager {
         onhold.setRole(DTPRole);
         onhold.setRejected(false);
         onhold.setPVIcheckScen(false);
+        onhold.setRepeated(false);
         progresBarFieldsDao.save(onhold);
 
         orddel = new ProgresBarFields();
@@ -1297,6 +1505,7 @@ public class InitDBManager {
         orddel.setRole(DTPRole);
         orddel.setRejected(false);
         orddel.setPVIcheckScen(false);
+        orddel.setRepeated(false);
         progresBarFieldsDao.save(orddel);
 ////////DTP//////////////////////////////////////////////no pvi check, rej
         proofRequestSetUp = new ProgresBarFields();
@@ -1305,6 +1514,7 @@ public class InitDBManager {
         proofRequestSetUp.setRole(DTPRole);
         proofRequestSetUp.setRejected(true);
         proofRequestSetUp.setPVIcheckScen(false);
+        proofRequestSetUp.setRepeated(false);
         progresBarFieldsDao.save(proofRequestSetUp);
 
         proofRequest = new ProgresBarFields();
@@ -1313,6 +1523,7 @@ public class InitDBManager {
         proofRequest.setRole(DTPRole);
         proofRequest.setRejected(true);
         proofRequest.setPVIcheckScen(false);
+        proofRequest.setRepeated(false);
         progresBarFieldsDao.save(proofRequest);
 
         waitForAppr = new ProgresBarFields();
@@ -1321,6 +1532,7 @@ public class InitDBManager {
         waitForAppr.setRole(DTPRole);
         waitForAppr.setRejected(true);
         waitForAppr.setPVIcheckScen(false);
+        waitForAppr.setRepeated(false);
         progresBarFieldsDao.save(waitForAppr);
 
         rej = new ProgresBarFields();
@@ -1329,6 +1541,7 @@ public class InitDBManager {
         rej.setRole(DTPRole);
         rej.setRejected(true);
         rej.setPVIcheckScen(false);
+        rej.setRepeated(false);
         progresBarFieldsDao.save(rej);
 
         onhold = new ProgresBarFields();
@@ -1337,6 +1550,7 @@ public class InitDBManager {
         onhold.setRole(DTPRole);
         onhold.setRejected(true);
         onhold.setPVIcheckScen(false);
+        onhold.setRepeated(false);
         progresBarFieldsDao.save(onhold);
 
         ////////DTP////////////////////////////////////////////// pvi check, no rej
@@ -1346,6 +1560,7 @@ public class InitDBManager {
         proofRequestSetUp.setRole(DTPRole);
         proofRequestSetUp.setRejected(false);
         proofRequestSetUp.setPVIcheckScen(true);
+        proofRequestSetUp.setRepeated(false);
         progresBarFieldsDao.save(proofRequestSetUp);
 
         proofRequest = new ProgresBarFields();
@@ -1354,6 +1569,7 @@ public class InitDBManager {
         proofRequest.setRole(DTPRole);
         proofRequest.setRejected(false);
         proofRequest.setPVIcheckScen(true);
+        proofRequest.setRepeated(false);
         progresBarFieldsDao.save(proofRequest);
 
         checkPvi = new ProgresBarFields();
@@ -1362,6 +1578,7 @@ public class InitDBManager {
         checkPvi.setRole(DTPRole);
         checkPvi.setRejected(false);
         checkPvi.setPVIcheckScen(true);
+        checkPvi.setRepeated(false);
         progresBarFieldsDao.save(checkPvi);
 
         waitForAppr = new ProgresBarFields();
@@ -1370,6 +1587,7 @@ public class InitDBManager {
         waitForAppr.setRole(DTPRole);
         waitForAppr.setRejected(false);
         waitForAppr.setPVIcheckScen(true);
+        waitForAppr.setRepeated(false);
         progresBarFieldsDao.save(waitForAppr);
 
         appr = new ProgresBarFields();
@@ -1378,6 +1596,7 @@ public class InitDBManager {
         appr.setRole(DTPRole);
         appr.setRejected(false);
         appr.setPVIcheckScen(true);
+        appr.setRepeated(false);
         progresBarFieldsDao.save(appr);
 
         stordr = new ProgresBarFields();
@@ -1386,6 +1605,7 @@ public class InitDBManager {
         stordr.setRole(DTPRole);
         stordr.setRejected(false);
         stordr.setPVIcheckScen(true);
+        stordr.setRepeated(false);
         progresBarFieldsDao.save(stordr);
 
         stres = new ProgresBarFields();
@@ -1394,6 +1614,7 @@ public class InitDBManager {
         stres.setRole(DTPRole);
         stres.setRejected(false);
         stres.setPVIcheckScen(true);
+        stres.setRepeated(false);
         progresBarFieldsDao.save(stres);
 
         onhold = new ProgresBarFields();
@@ -1402,6 +1623,7 @@ public class InitDBManager {
         onhold.setRole(DTPRole);
         onhold.setRejected(false);
         onhold.setPVIcheckScen(true);
+        onhold.setRepeated(false);
         progresBarFieldsDao.save(onhold);
 
         orddel = new ProgresBarFields();
@@ -1410,6 +1632,7 @@ public class InitDBManager {
         orddel.setRole(DTPRole);
         orddel.setRejected(false);
         orddel.setPVIcheckScen(true);
+        orddel.setRepeated(false);
         progresBarFieldsDao.save(orddel);
 ////////DTP////////////////////////////////////////////// pvi check, rej
         proofRequestSetUp = new ProgresBarFields();
@@ -1418,6 +1641,7 @@ public class InitDBManager {
         proofRequestSetUp.setRole(DTPRole);
         proofRequestSetUp.setRejected(true);
         proofRequestSetUp.setPVIcheckScen(true);
+        proofRequestSetUp.setRepeated(false);
         progresBarFieldsDao.save(proofRequestSetUp);
 
         proofRequest = new ProgresBarFields();
@@ -1426,6 +1650,7 @@ public class InitDBManager {
         proofRequest.setRole(DTPRole);
         proofRequest.setRejected(true);
         proofRequest.setPVIcheckScen(true);
+        proofRequest.setRepeated(false);
         progresBarFieldsDao.save(proofRequest);
 
         checkPvi = new ProgresBarFields();
@@ -1434,6 +1659,7 @@ public class InitDBManager {
         checkPvi.setRole(DTPRole);
         checkPvi.setRejected(true);
         checkPvi.setPVIcheckScen(true);
+        checkPvi.setRepeated(false);
         progresBarFieldsDao.save(checkPvi);
 
         waitForAppr = new ProgresBarFields();
@@ -1442,6 +1668,7 @@ public class InitDBManager {
         waitForAppr.setRole(DTPRole);
         waitForAppr.setRejected(true);
         waitForAppr.setPVIcheckScen(true);
+        waitForAppr.setRepeated(false);
         progresBarFieldsDao.save(waitForAppr);
 
         rej = new ProgresBarFields();
@@ -1450,6 +1677,7 @@ public class InitDBManager {
         rej.setRole(DTPRole);
         rej.setRejected(true);
         rej.setPVIcheckScen(true);
+        rej.setRepeated(false);
         progresBarFieldsDao.save(rej);
 
         onhold = new ProgresBarFields();
@@ -1458,6 +1686,7 @@ public class InitDBManager {
         onhold.setRole(DTPRole);
         onhold.setRejected(true);
         onhold.setPVIcheckScen(true);
+        onhold.setRepeated(false);
         progresBarFieldsDao.save(onhold);
 
 

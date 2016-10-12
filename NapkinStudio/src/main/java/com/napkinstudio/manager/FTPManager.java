@@ -13,8 +13,10 @@ import java.util.List;
 
 import com.napkinstudio.entity.*;
 import com.napkinstudio.util.CommentFromSAP;
+import com.napkinstudio.util.StatusChangeFromSAP;
 import com.napkinstudio.util.UserOrderFromSAP;
 import com.napkinstudio.util.UsersFromSAP;
+import com.napkinstudio.util.FileTransfer;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.net.ftp.FTPSClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +58,17 @@ public class FTPManager {
 	@Autowired
 	private UserOrderManager userOrderManager;
 
+    @Autowired
+    private SAPstatusManager sapStatusManager;
+
+    @Autowired
+    private StatusChangeManager statusChangeManager;
+
+ 	@Autowired
+	private SynchronizationDateManager synchro_dateManager;
+
 	@Autowired
-    private SynchronizationDateManager synchro_dateManager;
+	private FileTransfer fileTransfer;
 
 
 //	@Autowired
@@ -277,6 +288,17 @@ public class FTPManager {
 									userOrderManager.save(newUserOrder);
 								}
 							}
+                            if(dtfs.getSapStatusChanges()!=null&&dtfs.getSapStatusChanges().getStatusChanges()!=null) {
+                                LinkedList<StatusChangeFromSAP> statusChanges = dtfs.getSapStatusChanges().getStatusChanges();
+                                System.out.println("statusChanges.size=" + statusChanges.size());
+                                for (StatusChangeFromSAP statusChangesSAP : statusChanges) {
+                                    StatusChange newStatusChange = new StatusChange();
+                                    newStatusChange.setSAPstatus(sapStatusManager.findById(statusChangesSAP.getSAPstatus()));
+                                    newStatusChange.setOrder(orderManager.findById(statusChangesSAP.getOrder()));
+                                    newStatusChange.setDateTime(statusChangesSAP.getDateTime());
+                                    statusChangeManager.save(newStatusChange);
+                                }
+                            }
 
 							//set date of the "fromSAP" file read
 			                synchroData.setDateFromSAP(new Date());
@@ -285,6 +307,9 @@ public class FTPManager {
 			                is1.close();
 			                System.out.println("is1 is closed? Answer: " + ftpClient.completePendingCommand());
 		            	}
+
+						//here I download attachments from ftp and save them to local storage
+						fileTransfer.transferOrdersFromFtpToLocalStorage(ftpClient);
 		            	
 		            }
 		            if(fileToSAPStatus.equals("accepted")) {
@@ -390,9 +415,6 @@ public class FTPManager {
 			System.out.println("FTP client received network error");
 			message = "FTP client received network error";
 			ioe.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} finally {
 			try {
 				if(reader != null) reader.close();

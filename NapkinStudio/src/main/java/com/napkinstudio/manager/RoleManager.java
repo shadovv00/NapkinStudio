@@ -1,11 +1,12 @@
 package com.napkinstudio.manager;
 
-import com.napkinstudio.dao.IRoleDao;
-import com.napkinstudio.entity.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.napkinstudio.dao.IRoleDao;
+import com.napkinstudio.entity.Role;
 
 /**
  * Created by User1 on 02.08.2016.
@@ -30,7 +31,8 @@ public class RoleManager {
     public Role findByUserId(Integer id) {
         return roleDao.findByUserId(id);
     }
-
+    
+    
 //    public List<Role> findCommentsByOrderId() {
 //        return roleDao.findCommentsByOrderId();
 //    }

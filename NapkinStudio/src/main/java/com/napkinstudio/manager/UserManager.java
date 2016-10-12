@@ -1,15 +1,16 @@
 package com.napkinstudio.manager;
 
-import com.napkinstudio.dao.IUserDao;
-import com.napkinstudio.entity.User;
-import com.napkinstudio.util.FTPCommunicator;
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
+import com.napkinstudio.dao.IUserDao;
+import com.napkinstudio.entity.User;
+import com.napkinstudio.util.FTPCommunicator;
 
 /**
  * Created by User1 on 20.07.2016.
@@ -55,4 +56,5 @@ public class UserManager {
     public User findByEmail(String email) {
         return IUserDao.findByEmail(email);
     }
+   
 }

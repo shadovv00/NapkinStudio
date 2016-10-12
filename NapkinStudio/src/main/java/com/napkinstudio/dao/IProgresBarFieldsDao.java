@@ -14,7 +14,8 @@ public interface IProgresBarFieldsDao extends JpaRepository<ProgresBarFields,Int
 
     public List<ProgresBarFields> findAll();
     public List<Object[]> findBarByRolePVICheckReject(@Param("orderId") Integer orderId, @Param("roleId") Integer roleId,
-                                                      @Param("pVIcheckScen") Boolean pVIcheckScen, @Param("rejected") Boolean rejected);
+                                                      @Param("pVIcheckScen") Boolean pVIcheckScen, @Param("rejected") Boolean rejected,
+                                                      @Param("repeated") Boolean repeated);
 
 
 }

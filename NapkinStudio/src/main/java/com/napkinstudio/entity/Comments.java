@@ -1,5 +1,7 @@
 package com.napkinstudio.entity;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 import static javax.persistence.CascadeType.MERGE;
 
 import java.util.Date;
@@ -26,6 +28,7 @@ import javax.persistence.*;
 }
 )
 @Entity
+//@XStreamAlias("comment")
 
 @Table(name = "comments")
 public class Comments extends AbstractEntity {
