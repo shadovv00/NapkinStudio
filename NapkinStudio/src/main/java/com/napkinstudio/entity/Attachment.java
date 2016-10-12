@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import java.util.Date;
 
 
 @NamedQueries({
@@ -29,6 +30,8 @@ public class Attachment {
 	
 	private String name;
 //	private String extension;
+	private Date appendDate;
+
 	
 	@ManyToOne
     @JoinColumn(name = "ROLE_ID")
@@ -79,5 +82,12 @@ public class Attachment {
 	public void setOrder(Order order) {
 		this.order = order;
 	}
-	
+
+	public Date getAppendDate() {
+		return this.appendDate;    }
+	public void setAppendDate(Date appendDate) {
+		this.appendDate = appendDate;    }
+
+
+
 }
