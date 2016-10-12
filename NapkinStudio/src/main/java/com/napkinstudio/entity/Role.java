@@ -1,5 +1,7 @@
 package com.napkinstudio.entity;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.List;
@@ -13,11 +15,29 @@ import static javax.persistence.CascadeType.REMOVE;
  */
 
 
+
+//@NamedNativeQuery(name = "Role.findCommentsByOrderId",
+//
+//        query = "select * from role as r inner join comments  as c on c.forRole_id = r.id"
+////                "        LEFT JOIN" +
+////                "    (SELECT " +
+////                "        c.commText as comtext, c.forRole_id" +
+////                "    FROM" +
+////                "        comments AS c" +
+////                "    INNER JOIN orders AS o ON o.orderId = c.order_orderId" +
+////                "    WHERE" +
+////                "    o.orderId =: id) comm ON r.id = comm.forRole_id"
+//
+//)
+
 @NamedQueries({
 
+            //to display comments through roles
+//     @NamedQuery(name="Role.findCommentsByOrderId",query = "Select role From Role  role left join role.comments  c as (select comments from Comments comments inner join comments.order order where order.orderId = 1402130001)"),
         @NamedQuery(name = "Role.findByUserId", query = "SELECT r FROM  Role r  inner join r.users u WHERE u.userId  =:id"), })
 
 @Entity
+@XStreamAlias("role")
 @Table(name="Role")
 public class Role {
 
@@ -27,8 +47,11 @@ public class Role {
 
     private String name;
 
-    @ManyToMany(mappedBy = "roles")
+    @OneToMany(mappedBy = "role")
     private List<User> users;
+
+    @OneToMany(mappedBy = "forRole")
+    private List<Comments> comments;
 
     @OneToMany(mappedBy = "role",
             cascade = {CascadeType.MERGE, CascadeType.REMOVE})
@@ -40,6 +63,16 @@ public class Role {
 
     public Set<StatusSAPStatusRole> getStatusSAPStatuseRoles() {
         return statusSAPStatuseRoles;
+    }
+
+    @OneToMany(mappedBy = "role",
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    private Set<ProgresBarFields> progresBarFieldses;
+    public Set<ProgresBarFields> getProgresBarFieldses() {
+        return progresBarFieldses;
+    }
+    public void setProgresBarFieldses(Set<ProgresBarFields> progresBarFieldses) {
+        this.progresBarFieldses = progresBarFieldses;
     }
 
 

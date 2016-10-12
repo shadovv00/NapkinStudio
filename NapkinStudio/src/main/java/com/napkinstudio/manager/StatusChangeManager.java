@@ -15,6 +15,11 @@ public class StatusChangeManager {
 @Autowired
 private IStatusChangeDao statusChangeDao;
 
+    @Transactional
+    public void save(StatusChange statusChange) {
+        statusChangeDao.save(statusChange);
+    }
+
 //    @Transactional
 //    public List<Comments> findByRoleId(Integer id) {
 //        return statusDao.findByRoleId(id);

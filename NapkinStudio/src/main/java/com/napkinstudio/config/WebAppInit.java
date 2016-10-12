@@ -1,6 +1,11 @@
 package com.napkinstudio.config;
 
+import javax.servlet.Filter;
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.ServletRegistration;
+
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /**
@@ -56,5 +61,31 @@ public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitial
     protected String getServletName() {
         return "dispatcher";
     }
+    
+    @Override
+	protected Filter[] getServletFilters() {
+		CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+		characterEncodingFilter.setEncoding("UTF-8");
+		return new Filter[] { characterEncodingFilter };
+	}
+
+             @Override
+             protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+                 registration.setMultipartConfig(getMultipartConfigElement());
+             }
+
+             private MultipartConfigElement getMultipartConfigElement() {
+                 MultipartConfigElement multipartConfigElement = new MultipartConfigElement( LOCATION, MAX_FILE_SIZE, MAX_REQUEST_SIZE, FILE_SIZE_THRESHOLD);
+                 return multipartConfigElement;
+             }
+
+             private static final String LOCATION = "D:/temp/"; // Temporary location where files will be stored
+
+             private static final long MAX_FILE_SIZE = 209715200; // 200MB : Max file size.
+             // Beyond that size spring will throw exception.
+             private static final long MAX_REQUEST_SIZE = 209715200; // 200MB : Total request size containing Multi part.
+
+             private static final int FILE_SIZE_THRESHOLD = 0; // Size threshold after which files will be written to disk
+
 
 }

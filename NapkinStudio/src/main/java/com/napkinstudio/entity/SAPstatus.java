@@ -1,7 +1,9 @@
 package com.napkinstudio.entity;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by User1 on 29.07.2016.
@@ -11,6 +13,7 @@ import java.util.Set;
 
         /*@NamedQuery(name = "Status.findByRoleId", query = "SELECT s FROM  Status s  inner join s.roles r WHERE r.id  =:id"), */})
 @Entity
+@XStreamAlias("sapStatus")
 @Table(name="SAPstatus")
 public class SAPstatus {
     @Id
@@ -20,16 +23,43 @@ public class SAPstatus {
     private String name;
 
     @OneToMany(mappedBy = "SAPStatus",
+            cascade = {CascadeType.REMOVE})
+    private List<StatusSAPStatusRole> statusSAPStatuseRoles;
+
+    public List<StatusSAPStatusRole> getUserGroups() {
+        return statusSAPStatuseRoles;
+    }
+
+    public void setStatusSAPStatuseRoles(List<StatusSAPStatusRole> statusSAPStatuseRoles) {
+        this.statusSAPStatuseRoles = statusSAPStatuseRoles;
+    }
+
+    public List<StatusSAPStatusRole> getStatusSAPStatuseRoles() {
+        return statusSAPStatuseRoles;
+    }
+
+    @OneToMany(mappedBy = "SAPStatus",
             cascade = {CascadeType.MERGE, CascadeType.REMOVE})
-    private Set<StatusSAPStatusRole> statusSAPStatuseRoles;
-
-    public Set<StatusSAPStatusRole> getUserGroups() {
-        return statusSAPStatuseRoles;
+    private List<ProgresBarFields> progresBarFieldses;
+    public List<ProgresBarFields> getProgresBarFieldses() {
+        return progresBarFieldses;
+    }
+    public void setProgresBarFieldses(List<ProgresBarFields> progresBarFieldses) {
+        this.progresBarFieldses = progresBarFieldses;
     }
 
-    public Set<StatusSAPStatusRole> getStatusSAPStatuseRoles() {
-        return statusSAPStatuseRoles;
+    @OneToMany(mappedBy = "sapStatus",
+            cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    private List<StatusChange> statusChanges;
+    public List<StatusChange> getStatusChangees() {
+        return statusChanges;
     }
+    public void setStatusChangees(List<StatusChange> statusChanges) {
+        this.statusChanges = statusChanges;
+    }
+
+
+
     //    @ManyToMany(mappedBy = "sapStatuses")
 //    private List<Status> statuses;
 

@@ -1,20 +1,14 @@
 package com.napkinstudio.entity;
 
-import javax.persistence.*;
-
-import java.util.Date;
-import java.util.List;
-import com.napkinstudio.entity.Article;
-import com.napkinstudio.entity.Customer;
-import com.napkinstudio.entity.User;
-import com.napkinstudio.entity.StatusChange;
-import com.napkinstudio.entity.SAPstatus;
-
-import static javax.persistence.CacheStoreMode.REFRESH;
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.REMOVE;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
+
+import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
+
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.REMOVE;
 
 
 @Entity
@@ -24,14 +18,12 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 //        @NamedQuery(name = "User.findAllByLastName", query = "SELECT u FROM  User  u  WHERE u.lastName  =:lastName"),
 //        @NamedQuery(name = "User.findByLogin", query = "SELECT u FROM  User  u  WHERE u.login   =:login"),
 //        @NamedQuery(name = "User.deleteById", query = "DELETE FROM User u WHERE u.userId = ?1"),
-        /*@NamedQuery(name = "User.deactivateById", query = "update User as u set u.enabled =0  where u.userId = ?1"),
-        @NamedQuery(name = "User.activateById", query = "update User as u set u.enabled =1  where u.userId = ?1"),*/ })
+        @NamedQuery(name = "Order.getUpdatedOrders", query = "SELECT o FROM  Order  o  WHERE o.lastModifiedDate >=:lastModifiedDate")})
 
 @Table(name = "orders")
 @XStreamAlias("order")
-public class Order {
+public class Order extends  AbstractEntity{
 
- 
     @Id
 //    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer orderId;
@@ -44,6 +36,8 @@ public class Order {
     private String delivAddrCont;
     private String delivInstruct;
     private String unloadTimes;
+    private Date deliveryDate;
+    private String printName;
 
     private String itemNum;
     private String debItemNum;
@@ -57,12 +51,18 @@ public class Order {
     private String color4;
     private String version;
 
-    private String pVIcheckScen;
-    private String debCheckScen;
+    private Boolean rejected;
+    private Boolean pVIcheckScen;
+    private Boolean debCheckScen;
+    private Boolean repeated;
+    private byte processId;
     private Boolean toDeptor;
+    private Boolean toDtp;
     private Boolean deleted;
-    private Date lastUpdate;
-    
+
+    @Transient
+    private Integer unreadCommentsCount;
+
     
 //    @OneToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
 //    private Article article;
@@ -84,11 +84,12 @@ public class Order {
 //        return users;    }
 //    public void setUsers(List<User> users) {
 //        this.users = users;    }
-    @OneToMany(mappedBy="order",fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
-    private List<User_orders> itsUsers;
-    public List<User_orders> getItsUsers() {
+    @OneToMany(mappedBy="order",fetch = FetchType.LAZY,cascade = {REMOVE})
+    @XStreamImplicit
+    private List<UserOrder> itsUsers;
+    public List<UserOrder> getItsUsers() {
         return itsUsers;    }
-    public void setItsUsers(List<User_orders> itsUsers) {
+    public void setItsUsers(List<UserOrder> itsUsers) {
         this.itsUsers = itsUsers;    }
 
 
@@ -106,7 +107,7 @@ public class Order {
     public void setStatusChanges(List<StatusChange> statusChanges) {
         this.statusChanges = statusChanges;    }
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})
+    @ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE,REMOVE})
     private SAPstatus sapStatus;
     public SAPstatus getSAPstatus() {
         return sapStatus;    }
@@ -224,14 +225,30 @@ public class Order {
 
 
 
-    public String getPVIcheckScen() {
-        return pVIcheckScen;    }   
-    public void setPVIcheckScen(String pVIcheckScen) {
+
+    public Boolean getRejected() {
+        return rejected;    }
+    public void setRejected(Boolean rejected) {
+        this.rejected = rejected;    }
+
+//    public Boolean getPVIcheckScen() {
+//        return pVIcheckScen;    }
+//    public void setPVIcheckScen(Boolean pVIcheckScen) {
+//        this.pVIcheckScen = pVIcheckScen;    }
+    public Boolean getPVIcheckScen() {
+        return pVIcheckScen;    }
+    public void setPVIcheckScen(Boolean pVIcheckScen) {
         this.pVIcheckScen = pVIcheckScen;    }
 
-    public String getDebCheckScen() {
+    public Boolean getRepeated() {
+        return repeated;    }
+    public void setRepeated(Boolean repeated) {
+        this.repeated = repeated;    }
+
+
+    public Boolean getDebCheckScen() {
         return debCheckScen;    }   
-    public void setDebCheckScen(String debCheckScen) {
+    public void setDebCheckScen(Boolean debCheckScen) {
         this.debCheckScen = debCheckScen;    }
 
     public Boolean getToDeptor() {
@@ -239,15 +256,52 @@ public class Order {
     public void setToDeptor(Boolean toDeptor) {
         this.toDeptor = toDeptor;    }
 
+    public Boolean getToDtp() {
+        return toDtp;    }
+    public void setToDtp(Boolean toDtp) {
+        this.toDtp = toDtp;    }
+
+    public byte getProcessId() {
+        return processId;    }
+    public void setProcessId(byte processId) {
+        this.processId = processId;    }
+
+
+
     public Boolean getDeleted() {
         return deleted;    }
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;    }
 
-	public Date getUpdate() {
-		return this.lastUpdate;	}
-	public void setUpdate(Date lastUpdate) {
-		this.lastUpdate = lastUpdate;	}
+    public Date getDeliveryDate() {
+        return deliveryDate;
+    }
 
-    
+    public void setDeliveryDate(Date deliveryDate) {
+        this.deliveryDate = deliveryDate;
+    }
+
+    public String getPrintName() {
+        return printName;
+    }
+
+    public void setPrintName(String printName) {
+        this.printName = printName;
+    }
+
+    public SAPstatus getSapStatus() {
+        return sapStatus;
+    }
+
+    public void setSapStatus(SAPstatus sapStatus) {
+        this.sapStatus = sapStatus;
+    }
+
+    public Integer getUnreadCommentsCount() {
+        return unreadCommentsCount;
+    }
+
+    public void setUnreadCommentsCount(Integer unreadedCommentsCount) {
+        this.unreadCommentsCount = unreadedCommentsCount;
+    }
 }

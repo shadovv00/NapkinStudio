@@ -1,42 +1,46 @@
 package com.napkinstudio.sapcommunicationmodels;
 
-import com.napkinstudio.entity.Orders;
-import java.util.ArrayList;
-import java.util.List;
+import com.napkinstudio.util.CommentsFromSAP;
+import com.napkinstudio.util.Orders;
 
-import com.napkinstudio.entity.Order;
-import com.thoughtworks.xstream.XStream;
+import com.napkinstudio.util.UserOrdersFromSAP;
+import com.napkinstudio.util.UsersFromSAP;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 @XStreamAlias("DataTransferFromSAP")
 public class DataTransferFromSAP {
 //	private String field;
+	private UsersFromSAP users;
 	private Orders orders;
+	private CommentsFromSAP commentaries;
+	private UserOrdersFromSAP userOrdersConnection;
 //	@XStreamImplicit
 //	private List<Order> order;
+
+
+
+	public Orders getSapOrders() {return orders;}
+	public void setSapOrders(Orders orders) {this.orders = orders;}
+
+	public UsersFromSAP getSapUsers() {return users;}
+	public void setSapUsers(UsersFromSAP users) {this.users = users;}
+
+	public CommentsFromSAP getSapComments() {return commentaries;}
+	public void setSapComments(CommentsFromSAP commentaries) {this.commentaries = commentaries;}
+
+	public UserOrdersFromSAP getSapUserOrders() {return userOrdersConnection;}
+	public void setSapUserOrders(UserOrdersFromSAP userOrdersConnection) {this.userOrdersConnection = userOrdersConnection;}
 
 
 //	public String getField() {
 //		return field;
 //	}
-
 //	public void setField(String field) {
 //		this.field = field;
 //	}
-
-	public Orders getSapOrders() {
-		return orders;
-	}
-
-	public void setSapOrders(Orders orders) {
-		this.orders = orders;
-	}
-
 //	public List<Order> getOrders() {
 //		return order;
 //	}
-//
 //	public void setOrders(List<Order> order) {
 //		this.order = order;
 //	}

@@ -1,15 +1,11 @@
 package com.napkinstudio.entity;
 
-import com.napkinstudio.entity.Order;
-import com.napkinstudio.entity.SAPstatus;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REMOVE;
-
-import java.io.Serializable;
-import java.lang.Integer;
-import java.util.Date;
-import javax.persistence.*;
 
 /**
  * Entity implementation class for Entity: StatusChange
@@ -22,6 +18,7 @@ public class StatusChange implements Serializable {
 
 	   
 	@Id
+	@GeneratedValue
 	private Integer Id;
 	
     @ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE,REMOVE})

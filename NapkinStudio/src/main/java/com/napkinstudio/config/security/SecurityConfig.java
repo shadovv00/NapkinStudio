@@ -1,24 +1,21 @@
 package com.napkinstudio.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationTrustResolver;
+import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
-import org.springframework.security.authentication.AuthenticationTrustResolver;
-import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-
-import javax.sql.DataSource;
 
 /**
  * Created by User1 on 22.07.2016.
@@ -38,8 +35,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests()
+				.antMatchers("/save-file/*").authenticated()
         .antMatchers("/orders").authenticated()
-        .and().formLogin().loginPage("/login").defaultSuccessUrl("/orders").failureUrl("/login?error")
+		.antMatchers("/orders/*").authenticated()
+		.antMatchers("/orderpage").authenticated()
+		.antMatchers("/changestatus/*").authenticated()
+		.antMatchers("/changestatus/*/*").authenticated()
+       .and().formLogin().loginPage("/login").defaultSuccessUrl("/orders").failureUrl("/login?error")
         .loginProcessingUrl("/login").usernameParameter("username").passwordParameter("password")
         .and()
         .logout().logoutSuccessUrl("/")
@@ -49,7 +51,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //		.and().csrf().and().exceptionHandling().accessDeniedPage("/Access_Denied")
 		;
 
-
+		http
+		// ...
+		.headers()
+			.frameOptions().sameOrigin()
+			.httpStrictTransportSecurity().disable();
 
 //        .antMatchers("/orders").authenticated()
 //        .and().formLogin().loginPage("/login").defaultSuccessUrl("/orders").failureUrl("/login?error")

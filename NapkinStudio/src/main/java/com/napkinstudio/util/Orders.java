@@ -1,4 +1,4 @@
-package com.napkinstudio.entity;
+package com.napkinstudio.util;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

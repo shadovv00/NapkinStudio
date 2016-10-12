@@ -5,18 +5,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 
-import com.napkinstudio.entity.Order;
-import com.napkinstudio.entity.SynchronizationDate;
+import com.napkinstudio.entity.*;
+import com.napkinstudio.util.CommentFromSAP;
+import com.napkinstudio.util.UserOrderFromSAP;
+import com.napkinstudio.util.UsersFromSAP;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.net.ftp.FTPSClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import com.napkinstudio.entity.User;
 import com.napkinstudio.sapcommunicationmodels.DataTransferFromSAP;
 import com.napkinstudio.sapcommunicationmodels.DataTransferToSAP;
 //import com.napkinstudio.sapcommunicationmodels.DataTransferFromSAP;
@@ -27,7 +32,11 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 
 @Service("ftpService")
+@PropertySource({ "classpath:project.properties" })
 public class FTPManager {
+	
+	@Autowired
+    Environment env;
 	
 	@Autowired
 	XStream xstream;
@@ -35,21 +44,36 @@ public class FTPManager {
 	@Autowired
 	private OrderManager orderManager;
 
-    @Autowired
+	@Autowired
+	private UserManager userManager;
+
+	@Autowired
+	private RoleManager roleManager;
+
+	@Autowired
+	private CommentsManager commentsManager;
+
+	@Autowired
+	private UserOrderManager userOrderManager;
+
+	@Autowired
     private SynchronizationDateManager synchro_dateManager;
 
-	
+
 //	@Autowired
 	FTPSClient ftpClient;
 	
 	public String handle() {
+		System.out.println("FTPManager start");
+
 		String message = "ok";
 		
 		String
-//				host = "localhost",//"10.4.0.129",
-				host = "10.4.0.129",
-				username = "catdogcat",
-				password = "2cats1dog";
+				host = env.getProperty("ftp.host"),//"localhost",//"10.4.0.129",//194.44.213.118:44808
+//				host = "10.4.0.129",
+//				host = "194.44.213.118:44",
+				username = env.getProperty("ftp.user"),//"catdogcat",
+				password = env.getProperty("ftp.pass");//"2cats1dog";
 //				username = "ftpuser",
 //				password = "123";
 
@@ -58,7 +82,8 @@ public class FTPManager {
 		String 	pathToIsBusyFile = "checkisbusy.txt",
 				pathToKeepInSyncFile = "keepinsync.txt",
 				pathToFileToSAP = "DataTransferToSAP.xml",
-				pathToFileFromSAP = "DataTransferFromSAP.xml";
+				pathToFileFromSAP = "DataTransferFromSAP.xml",
+				sPathToOrdersDirectory = "orders";
 		
         InputStream
         		is_ = null,
@@ -99,7 +124,9 @@ public class FTPManager {
 					ftpClient.enterLocalPassiveMode();
 					
 //					ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-                    SynchronizationDate synchroData= new SynchronizationDate();
+                    SynchronizationDate synchroData= synchro_dateManager.findById(1);
+//					System.out.println(synchroData);
+					if (synchroData==null){synchroData=new SynchronizationDate();}
                     synchroData.setId(1);
 
 					is_ = ftpClient.retrieveFileStream(pathToIsBusyFile);
@@ -193,12 +220,65 @@ public class FTPManager {
 							xstream.processAnnotations(DataTransferFromSAP.class);
 							dtfs = (DataTransferFromSAP) xstream.fromXML(is1);
                             //write to db
-							LinkedList<Order> orders = dtfs.getSapOrders().getOrders();
-							for (Order order: orders) {
-								System.out.println(order.getDebNum());
-								orderManager.save(order);
+
+							if(dtfs.getSapOrders()!=null&&dtfs.getSapOrders().getOrders()!=null) {
+								LinkedList<Order> orders = dtfs.getSapOrders().getOrders();
+//								System.out.println("orders=" + dtfs.getSapOrders());
+//								System.out.println("orders.=" + dtfs.getSapOrders().getOrders());
+//								System.out.println("orders.size=" + orders.size());
+								for (Order order : orders) {
+									Order thisOrder = orderManager.findById(order.getOrderId());
+//								for each field update
+//								for(Field field : order.getClass().getDeclaredFields()){
+//									System.out.println(field);
+//									if (field.get()!=null){}
+//								}
+//								order.setUpdate(new Date());
+									if (thisOrder != null && order.getLastModifiedDate() != null && thisOrder.getLastModifiedDate().after(order.getLastModifiedDate())) {
+										order.setLastModifiedDate(thisOrder.getLastModifiedDate());
+									}
+									orderManager.save(order);
+								}
 							}
-                            //set date of the "fromSAP" file read
+							if(dtfs.getSapUsers()!=null&&dtfs.getSapUsers().getUsers()!=null) {
+								LinkedList<User> users = dtfs.getSapUsers().getUsers();
+								System.out.println("users.size=" + users.size());
+								for (User userSAP : users) {
+									User thisUser = userManager.findById(userSAP.getUserId());
+									if (thisUser != null && userSAP.getLastModifiedDate() != null && thisUser.getLastModifiedDate().after(userSAP.getLastModifiedDate())) {
+										userSAP.setLastModifiedDate(thisUser.getLastModifiedDate());
+									}
+									userManager.save(userSAP);
+								}
+							}
+							if(dtfs.getSapComments()!=null&&dtfs.getSapComments().getComments()!=null) {
+								LinkedList<CommentFromSAP> comments = dtfs.getSapComments().getComments();
+								System.out.println("comments.size=" + comments.size());
+								for (CommentFromSAP commentSAP : comments) {
+									Comments newComment = new Comments();
+									newComment.setCommText(commentSAP.getCommText());
+									newComment.setToUser(userManager.findById(commentSAP.getToUser()));
+									newComment.setFromUser(userManager.findById(commentSAP.getFromUser()));
+									newComment.setForRole(roleManager.findById(commentSAP.getForRole()));
+									newComment.setOrder(orderManager.findById(commentSAP.getOrder()));
+									newComment.setDateTime(commentSAP.getDateTime());
+									newComment.setDeleted(commentSAP.getDeleted());
+									commentsManager.save(newComment);
+								}
+							}
+							if(dtfs.getSapUserOrders()!=null&&dtfs.getSapUserOrders().getUserOrders()!=null) {
+								LinkedList<UserOrderFromSAP> userOrders = dtfs.getSapUserOrders().getUserOrders();
+								System.out.println("userOrders.size=" + userOrders.size());
+								for (UserOrderFromSAP userOrdersSAP : userOrders) {
+									UserOrder newUserOrder = new UserOrder();
+									newUserOrder.setUser(userManager.findById(userOrdersSAP.getUser()));
+									newUserOrder.setOrder(orderManager.findById(userOrdersSAP.getOrder()));
+									newUserOrder.setLastLook(new Date(1411419600000L));
+									userOrderManager.save(newUserOrder);
+								}
+							}
+
+							//set date of the "fromSAP" file read
 			                synchroData.setDateFromSAP(new Date());
                             synchroData.setErrorFromSAP(false);
 			                fileFromSAPStatus = "accepted";
@@ -220,17 +300,29 @@ public class FTPManager {
 //			                us.setLogin("trdd");
 //			                dtts.setUser(us);
 			                //read from db
-                            LinkedList<Order> outOrders = new LinkedList<Order>();
-                            Order s_order = new Order();
-                            s_order.setOrderId(123);
-                            s_order.setDebItemNum("123");
-                            s_order.setApprovalBy("123");
-                            outOrders.add(s_order);
-                            Order s_order1 = new Order();
-                            s_order1.setOrderId(890);
-                            s_order1.setDebItemNum("890");
-                            s_order1.setApprovalBy("890");
-                            outOrders.add(s_order1);
+							System.out.print("/////////////////////////orderManager///////////////////////////");
+
+							LinkedList<Order> outOrders = orderManager.getUpdatedOrders(synchroData.getDateToSAP());
+//                            LinkedList<Order> outOrders = new LinkedList<Order>();
+							System.out.print(outOrders);
+							if (outOrders!=null){
+								System.out.print(outOrders.size());
+							}
+
+//                            Order s_order = new Order();
+//                            s_order.setOrderId(123);
+//                            s_order.setDebItemNum("123");
+//                            s_order.setApprovalBy("123");
+//							SAPstatus s_sapstatus= new SAPstatus();
+//							s_sapstatus.setId(1);
+//							s_sapstatus.setName("test status name");
+//							s_order.setSAPstatus(s_sapstatus);
+//                            outOrders.add(s_order);
+//                            Order s_order1 = new Order();
+//                            s_order1.setOrderId(890);
+//                            s_order1.setDebItemNum("890");
+//                            s_order1.setApprovalBy("890");
+//                            outOrders.add(s_order1);
 			                dtts.setOrders(outOrders);
                             xstream.processAnnotations(DataTransferToSAP.class);
 			                xstream.toXML(dtts, os2);

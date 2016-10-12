@@ -7,30 +7,31 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 /**
  * Created by User1 on 02.08.2016.
  */
 @Service
 public class RoleManager {
 
-        @Autowired
-        private IRoleDao roleDao;
+    @Autowired
+    private IRoleDao roleDao;
 
-        @Transactional
-        public void save(Role role) {
-            roleDao.save(role);
-        }
+    @Transactional
+    public void save(Role role) {
+        roleDao.save(role);
+    }
 
-        @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-        public Role findById(Integer id) {
-            return roleDao.findOne(id);
-        }
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public Role findById(Integer id) {
+        return roleDao.findOne(id);
+    }
 
-        @Transactional
-         public List<Role> findByUserId(Integer id) {
-            return roleDao.findByUserId(id);
-        }
+    @Transactional
+    public Role findByUserId(Integer id) {
+        return roleDao.findByUserId(id);
+    }
 
+//    public List<Role> findCommentsByOrderId() {
+//        return roleDao.findCommentsByOrderId();
+//    }
 }
