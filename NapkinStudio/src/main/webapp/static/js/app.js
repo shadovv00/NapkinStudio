@@ -165,17 +165,17 @@ var napkin = napkin || {};
 		var jAt = jShowAtBlock;
 		var jAtUi;
 		var attachmentList;
-		var name, size, lastModified;
+		var name, size, lastModified, allowDelete;
 		var jDwldAll;
+		var jRemBtn;
 		
 		$.get(location.href + "/order_attachments", function(response) {
-//			console.log(response);
 			jAt.html("");
 			jAt.append("<b>Opmerkingen</b>");
 			jDwldAll = $("<button type='button' class='btn btn-link'>Download all</button>");
 			jAtUi = $("<ul></ul>");
-			if(Array.isArray(response)) {
-				attachmentList = response;
+			if(Array.isArray(response["attachmentList"])) {
+				attachmentList = response["attachmentList"];
 				if(attachmentList.length) {
 					jAt.append(jDwldAll);
 					jAt.append(jAtUi);
@@ -187,7 +187,7 @@ var napkin = napkin || {};
 					name = attachmentList[x].name;
 					size = attachmentList[x].size;
 					lastModified = new Date(attachmentList[x].lastModified);
-					
+					allowDelete = attachmentList[x].allowDelete;
 					if(size < 1024) {
 						size = size + " b";
 					} else if (1024 <= size && size <= 1024 * 1024) {
@@ -212,8 +212,8 @@ var napkin = napkin || {};
 					jAtUiLi.append("<i class='_attachmentPreview attachment-preview fa fa-eye' data-toggle='modal' data-target='._attachmentModal' fileName='" + name + "'></i>");
 
 					//TODO: Better role check
-					if (parseInt($("#maininfotable").attr('ur'))==2) {
-						jAtUiLi.append("<span class='_removeAttachment remove-icon-align remove-attachment glyphicon glyphicon-remove' fileName='" + name + "'></span>");
+					if (allowDelete) {
+						jAtUiLi.append(jRemBtn = $("<span class='_removeAttachment remove-icon-align remove-attachment glyphicon glyphicon-remove' fileName='" + name + "' data-toggle='confirmation'></span>"));
 					}
 					jAtUiLi.append("<a href='" + location.href + "/order_attachments/" + name + "' download='" + name + "' title='download' class='_download_attachment download-attachment'>" +
 									"<i class='icon-align material-icons'>attach_file</i>" + name + "" +
@@ -232,7 +232,9 @@ var napkin = napkin || {};
 				$(this).find(".remove-attachment").hide();
 			});
 			$(".order-attachment li ._attachmentPreview").on("click", _previewAttachment);
-			$(".order-attachment li span._removeAttachment").on("click", _removeFileItem);
+			if(jRemBtn) {
+				jRemBtn.on("click", _removeFileItem);
+			}
 			jDwldAll.on("click", _downloadAll);
 			
 			function _previewAttachment() {

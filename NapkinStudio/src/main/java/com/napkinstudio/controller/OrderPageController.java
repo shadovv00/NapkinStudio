@@ -1,52 +1,62 @@
 package com.napkinstudio.controller;
 
 
-import com.napkinstudio.entity.*;
-import com.napkinstudio.manager.*;
-import com.napkinstudio.simplemodel.FileInfo;
-import com.napkinstudio.util.MultiFileValidator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.*;
-import java.net.URLConnection;
-import java.nio.charset.Charset;
-import java.nio.file.*;
-import java.security.Principal;
-import java.util.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.napkinstudio.entity.Comments;
+import com.napkinstudio.entity.MultiFileBucket;
+import com.napkinstudio.entity.Order;
+import com.napkinstudio.entity.Role;
+import com.napkinstudio.entity.SAPstatus;
+import com.napkinstudio.entity.StatusChange;
+import com.napkinstudio.entity.StatusSAPStatusRole;
+import com.napkinstudio.entity.User;
+import com.napkinstudio.entity.UserOrder;
+import com.napkinstudio.manager.CommentsManager;
+import com.napkinstudio.manager.MailManager;
+import com.napkinstudio.manager.OrderManager;
+import com.napkinstudio.manager.OrderPageManager;
+import com.napkinstudio.manager.ProgresBarFieldsManager;
+import com.napkinstudio.manager.RoleManager;
+import com.napkinstudio.manager.SAPstatusManager;
+import com.napkinstudio.manager.StatusChangeManager;
+import com.napkinstudio.manager.StatusManager;
+import com.napkinstudio.manager.StatusSAPStatusRoleManager;
+import com.napkinstudio.manager.UserManager;
+import com.napkinstudio.manager.UserOrderManager;
+import com.napkinstudio.util.MultiFileValidator;
 
 
 @Controller
 public class OrderPageController {
 
-    private final static String USER_HOME = System.getProperty("user.home");
-
-    private final static String UPLOAD_DIRECTORY = "napkinStorage";
-
-    private final static String ORDERS_DIRECTORY = "orders";
-
-    private final static String SEP = System.getProperty("file.separator");
-
-    private final static String ORDERS_TMP_DIRECTORY = "temp";
-
-    private final static String ORDERS_FINAL_DIRECTORY = "final";
-
-    private final static String ORDERS_PREVIEW_DIRECTORY = "preview";
-
-    private final static String ORDERS_PPTMP_DIRECTORY = "pptemp";
-
-    private final static String ORDERS_PPFINAL_DIRECTORY = "ppfinal";
-
+    @Autowired
+    OrderPageManager orderPageManager;
 
     @Autowired
     private UserManager userManager;
@@ -627,6 +637,29 @@ public class OrderPageController {
 
 
     }
+    
+ // functions for internal use
+    public Order approveOrders(Order theOrder, StatusChange statusChange) {
+        SAPstatus newSAPStatus = sapStatusManager.findById(5);
+        theOrder.setSAPstatus(newSAPStatus);
+        theOrder.setProcessId((byte) 4);
+        orderManager.save(theOrder);
+        statusChange.setOrder(theOrder);
+        statusChange.setSAPstatus(newSAPStatus);
+        statusChangeManager.save(statusChange);
+        return theOrder;
+    }
+
+    public Order discardOrders(Order theOrder, StatusChange statusChange) {
+        SAPstatus newSAPStatus = sapStatusManager.findById(6);
+        theOrder.setSAPstatus(newSAPStatus);
+        theOrder.setRejected(true);
+        orderManager.save(theOrder);
+        statusChange.setOrder(theOrder);
+        statusChange.setSAPstatus(newSAPStatus);
+        statusChangeManager.save(statusChange);
+        return theOrder;
+    }
 
     private void prepareOrder(Order theOrder) {
 
@@ -709,431 +742,99 @@ public class OrderPageController {
     }
 
 
+    
     @RequestMapping(value = "/orders/{orderId}/save-printproof-to-tmp/", method = RequestMethod.POST)
-    public
     @ResponseBody
-    ResponseEntity<String> savePrintProofToTmpDirectory(@RequestParam("files[]") MultipartFile multipartFile, @PathVariable int orderId) {
-        System.out.println("###### PRINTPROOF ###### " + multipartFile.getOriginalFilename());
-        String fileName = multipartFile.getOriginalFilename();
-
-        String tmpPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_PPTMP_DIRECTORY;
-
-        Path directory = Paths.get(tmpPath);
-
-        if (Files.notExists(directory)) {
-            try {
-                Files.createDirectory(directory);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return new ResponseEntity<String>(fileName, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        } else {
-            //remove all files from tmp directory
-            try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(directory)) {
-                for (Path path : directoryStream) {
-                    try {
-                        Files.delete(Paths.get(path.toString()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } catch (IOException ex) {
-            }
-
-        }
-        try {
-            File file = new File(tmpPath + SEP + multipartFile.getOriginalFilename());
-            multipartFile.transferTo(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ResponseEntity<String>(fileName, HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<String>(fileName, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<String>(fileName, HttpStatus.OK);
+    public ResponseEntity<String> savePrintProofToTmpDirectory(@RequestParam("files[]") MultipartFile multipartFile, @PathVariable int orderId) {
+        return orderPageManager.savePrintProofToTmpDirectory(multipartFile, orderId);
     }
     
+    
+    
     @RequestMapping(value = "/orders/{orderId}/printproof/exist", method = RequestMethod.GET)
+    @ResponseBody
     public ResponseEntity<String> hasPriptproof(HttpServletResponse response, @PathVariable int orderId) {
-    	System.out.println(orderId + " has printproof");
-    	String ppFnlDirPathStr = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_PPFINAL_DIRECTORY;
-		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(ppFnlDirPathStr))) {
-			if(directoryStream.iterator().hasNext()) {
-				return new ResponseEntity<>("ok", HttpStatus.OK);
-			}
-		} catch (IOException ex) {}
-		return new ResponseEntity<>("no", HttpStatus.OK);
+    	return orderPageManager.hasPriptproof(response, orderId);
     }
+    
+    
 
     @RequestMapping(value = "/orders/{orderId}/printproof", method = RequestMethod.GET)
+    @ResponseBody
     public void getPrintproof(HttpServletResponse response, @PathVariable int orderId) {
-    	System.out.println("get printproof");
-    	String mimeType = null;
-    	InputStream is = null;
-    	String ppFnlDirPathStr = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_PPFINAL_DIRECTORY;
-		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(ppFnlDirPathStr))) {
-			for (Path path : directoryStream) {
-				try {
-					is = Files.newInputStream(path);
-					mimeType = Files.probeContentType(path);
-					String[] tokens = path.getFileName().toString().split("\\.(?=[^\\.]+$)");
-					System.out.println(Arrays.toString(tokens));
-					if(tokens.length == 2) {
-						if(tokens[1].toLowerCase().equals("svg")) {
-							mimeType = "image/svg+xml";
-						}
-					}
-					if (mimeType == null) {
-			            System.out.println("mimetype is not detectable, will take default");
-			            mimeType = "application/octet-stream";
-			        }
-			        System.out.println("mimetype : " + mimeType);
-			        response.setContentType(mimeType);
-			        response.setContentLength((int) Files.size(path));
-			        FileCopyUtils.copy(is, response.getOutputStream());
-				} catch (IOException e) {
-					e.printStackTrace();
-					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				}
-				break;
-			}
-		} catch (IOException ex) {
-		} finally {
-			try {
-				if(is != null) {
-					is.close();
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
+    	orderPageManager.getPrintproof(response, orderId);
     }
-
-
+    
+    
+    
+    @RequestMapping(value = "/orders/{orderId}/clear-tmp/", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<String> clearTmpDirectory(@PathVariable int orderId) {
+    	return orderPageManager.clearTmpDirectory(orderId);
+    }
+    
+    
+    
     @RequestMapping(value = "/orders/{orderId}/save-file-to-tmp/", method = RequestMethod.POST)
-    public
     @ResponseBody
-    ResponseEntity<String> saveFileToTmpDirectory(@RequestParam("files[]") MultipartFile multipartFile, @PathVariable int orderId) {
-
-        String fileName = null;
-        try {
-            fileName = new String(multipartFile.getOriginalFilename().getBytes("iso-8859-1"), "UTF-8");
-            System.out.println(new String(multipartFile.getOriginalFilename().getBytes("iso-8859-1"), "UTF-8"));
-        } catch (UnsupportedEncodingException e1) {
-            e1.printStackTrace();
-        }
-        String tmpPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_TMP_DIRECTORY + SEP + fileName;
-
-        try {
-            File file = new File(tmpPath);
-            file.getParentFile().mkdirs();
-            multipartFile.transferTo(file);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ResponseEntity<String>(fileName, HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<String>(fileName, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<String>(fileName, HttpStatus.CREATED);
+    public ResponseEntity<String> saveFileToTmpDirectory(@RequestParam("files[]") MultipartFile multipartFile, @PathVariable int orderId) {
+    	return orderPageManager.saveFileToTmpDirectory(multipartFile, orderId);
     }
-
+    
+    
+    
     @RequestMapping(value = "/orders/{orderId}/order_attachments/remove_temp/{fileName:.*}", method = RequestMethod.DELETE)
-    public
     @ResponseBody
-    ResponseEntity<String> removeAtachment(@PathVariable int orderId, @PathVariable String fileName) {
-        System.out.println("> remove-temp-file " + fileName);
-        String tmpPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_TMP_DIRECTORY + SEP + fileName;
-
-        try {
-            File file = new File(tmpPath);
-            if (file.delete()) {
-                System.out.println(file.getName() + " is deleted!");
-                return new ResponseEntity<String>(fileName, HttpStatus.OK);
-            } else {
-                System.out.println(file.getName() + " not found!");
-                return new ResponseEntity<String>(fileName, HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<String>(fileName, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<String> removeAtachment(@PathVariable int orderId, @PathVariable String fileName) {
+        return orderPageManager.removeAtachment(orderId, fileName);
     }
-
+    
+    
+    
     @RequestMapping(value = "/orders/{orderId}/order_attachments/remove_all_temps", method = RequestMethod.POST)
-    public
     @ResponseBody
-    ResponseEntity<List<String>> removeAllAtachments(@PathVariable int orderId, @RequestParam("files[]") List<String> files) {
-        System.out.println("> remove all temps " + files);
-        String tmpPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_TMP_DIRECTORY + SEP;
-
-        List<String> removedfiles = new ArrayList<>();
-        Path filePath = null;
-        for (String fileName : files) {
-            filePath = Paths.get(tmpPath + fileName);
-            try {
-                Files.delete(filePath);
-                removedfiles.add(fileName);
-            } catch (NoSuchFileException x) {
-                System.err.format("%s: no such file or directory%n", filePath);
-            } catch (DirectoryNotEmptyException x) {
-                System.err.format("%s not empty%n", filePath);
-            } catch (IOException x) {
-                // File permission problems are caught here.
-                System.err.println(x);
-            }
-        }
-        return new ResponseEntity<>(removedfiles, HttpStatus.OK);
+    public ResponseEntity<List<String>> removeAllAtachments(@PathVariable int orderId, @RequestParam("files[]") List<String> files) {
+        return orderPageManager.removeAllAtachments(orderId, files);
     }
-
-
-    // functions for internal use
-    public Order approveOrders(Order theOrder, StatusChange statusChange) {
-        SAPstatus newSAPStatus = sapStatusManager.findById(5);
-        theOrder.setSAPstatus(newSAPStatus);
-        theOrder.setProcessId((byte) 4);
-        orderManager.save(theOrder);
-        statusChange.setOrder(theOrder);
-        statusChange.setSAPstatus(newSAPStatus);
-        statusChangeManager.save(statusChange);
-        return theOrder;
-    }
-
-    public Order discardOrders(Order theOrder, StatusChange statusChange) {
-        SAPstatus newSAPStatus = sapStatusManager.findById(6);
-        theOrder.setSAPstatus(newSAPStatus);
-        theOrder.setRejected(true);
-        orderManager.save(theOrder);
-        statusChange.setOrder(theOrder);
-        statusChange.setSAPstatus(newSAPStatus);
-        statusChangeManager.save(statusChange);
-        return theOrder;
-    }
-
-
-//    @RequestMapping(value = "/orders/addcoment")
-//    public String addComment () {
-//
-//                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-//        System.out.println(ordId);
-//
-//
-//
-//        return "redirect:/orders/{orderId}";
-//    }
-
-
+    
+    
+    
     @RequestMapping(value = "/orders/{orderId}/order_attachments", method = RequestMethod.GET)
-    public
     @ResponseBody
-    ArrayList<FileInfo> getAllOrderAttachments(@PathVariable String orderId) {
-
-        ArrayList<FileInfo> fileInfoList = new ArrayList<>();
-        FileInfo fileInfo;
-        File file;
-
-        String fnlDirPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_FINAL_DIRECTORY + SEP;
-
-        System.out.println(fnlDirPath);
-
-        File folder = new File(fnlDirPath);
-        if (folder.exists()) {
-            File[] listOfFiles = folder.listFiles();
-            for (int i = 0; i < listOfFiles.length; i++) {
-                file = listOfFiles[i];
-                if (file.isFile()) {
-                    System.out.println("File: " + file.getName());
-                    fileInfo = new FileInfo();
-                    fileInfo.setName(file.getName());
-                    fileInfo.setSize(file.length());
-                    fileInfo.setLastModified(new Date(file.lastModified()));
-                    fileInfoList.add(fileInfo);
-                } else if (file.isDirectory()) {
-                    System.out.println("Directory " + file.getName());
-                }
-            }
-        } else {
-            System.out.println("for this order any attachment is not available!");
-        }
-
-        return fileInfoList;
+    public ResponseEntity<Map<String, Object>> getAllOrderAttachments(@PathVariable String orderId) {
+    	return orderPageManager.getAllOrderAttachments(orderId);
     }
-
-
-    @RequestMapping(value = "/orders/{orderId}/approve", method = RequestMethod.POST)
-    public
+    
+    
+    
+    @RequestMapping(value = "/orders/{orderId}/order_attachments/{file:.*}", method = RequestMethod.GET)
+    public void downloadFile(HttpServletResponse response, @PathVariable String orderId, @PathVariable("file") String fileName) {
+    	try {
+			orderPageManager.downloadFile(response, orderId, fileName);
+		} catch (IOException e) {
+			System.out.println("Sth somewhere went wrong!");
+			e.printStackTrace();
+		}
+    }
+    
+    
+    
+    @RequestMapping(value = "/orders/{orderId}/order_attachments/remove/{fileName:.*}", method = RequestMethod.DELETE)
     @ResponseBody
-    ResponseEntity<Map<String, Object>> approve(
+    public ResponseEntity<String> removeOrderAttachment(@PathVariable String orderId, @PathVariable String fileName) {
+    	return orderPageManager.removeOrderAttachment(orderId, fileName);
+    }
+    
+    
+    
+    @RequestMapping(value = "/orders/{orderId}/approve", method = RequestMethod.POST)
+    @ResponseBody
+	public ResponseEntity<Map<String, Object>> approve(
             @PathVariable int orderId,
             @RequestParam(value = "files[]", required = false) List<String> files,
             @RequestParam(value = "printproof", required = false) String printproof) {
-        System.out.println("> approve");
-        System.out.println(files);
-
-        System.out.println(printproof);
-        Map<String, Object> respMap = new HashMap<>();
-
-        String tmpDirPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_TMP_DIRECTORY + SEP;
-        String fnlDirPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_FINAL_DIRECTORY + SEP;
-
-        Path pathFrom,
-                parhTo;
-        try {
-            Files.createDirectories(Paths.get(fnlDirPath));
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        if (files != null) {
-            List<String> movedFiles = new ArrayList<>();
-            for (String fileName : files) {
-                pathFrom = Paths.get(tmpDirPath + fileName);
-                parhTo = Paths.get(fnlDirPath + fileName);
-                 try {
-                     Files.move(pathFrom, parhTo, StandardCopyOption.REPLACE_EXISTING);
-                    movedFiles.add(fileName);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-
-                }
-
-            }
-            respMap.put("attachments", movedFiles);
-
-        } else {
-            respMap.put("attachments", null);
-
-        }
-
-                String pptpmDirPathStr = null,
-                ppFnlDirPathStr = null;
-        Path ppFnlDir = null,
-                ppTmpFile = null,
-                ppFnlFile = null;
-         if (printproof != null) {
-            pptpmDirPathStr = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_PPTMP_DIRECTORY;
-            ppFnlDirPathStr = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_PPFINAL_DIRECTORY;
-            ppFnlDir = Paths.get(ppFnlDirPathStr);
-             if (Files.notExists(ppFnlDir)) {
-                 try {
-                    Files.createDirectory(ppFnlDir);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    respMap.put("printproof", "error");
-                     return new ResponseEntity<>(respMap, HttpStatus.INTERNAL_SERVER_ERROR);
-
-                }
-            }
-             try {
-                             	//remove all files from pp final directory
-                                     	try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(ppFnlDir)) {
-                                 		for (Path path : directoryStream) {
-                                     			try {
-                                         				Files.delete(Paths.get(path.toString()));
-                                         			} catch (IOException e) {
-                                         				e.printStackTrace();
-                                         			}
-                                     		}
-                                 	} catch (IOException ex) {}
-                             	ppTmpFile = Paths.get(pptpmDirPathStr + SEP + printproof);
-                             	ppFnlFile = Paths.get(ppFnlDirPathStr + SEP + printproof);
-
-                                     	if(!printproof.equals("remove")) {
-                                 		Files.move(ppTmpFile, ppFnlFile, StandardCopyOption.REPLACE_EXISTING);
-                                 	}
-                     			respMap.put("printproof", printproof);
-                     		} catch (IOException e) {
-                     			e.printStackTrace();
-                     			respMap.put("printproof", "fail");
-                     		}
-                     } else {
-                     	respMap.put("printproof", null);
-        }
-        return new ResponseEntity<>(respMap, HttpStatus.OK);
-    }
-
-
-    @RequestMapping(value = "/orders/{orderId}/order_attachments/{file:.*}", method = RequestMethod.GET)
-    public void downloadFile(HttpServletResponse response, @PathVariable String orderId, @PathVariable("file") String fileName) throws IOException {
-        System.out.println("!! DOWNLOAD !!");
-        File file = null;
-
-        String fnlDirPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_FINAL_DIRECTORY + SEP;
-
-        System.out.println(fnlDirPath + fileName);
-        file = new File(fnlDirPath + fileName);
-
-        if (!file.exists()) {
-            String errorMessage = "Sorry. The file you are looking for does not exist";
-            System.out.println(errorMessage);
-            OutputStream outputStream = response.getOutputStream();
-            outputStream.write(errorMessage.getBytes(Charset.forName("UTF-8")));
-            outputStream.close();
-            return;
-        }
-
-        String mimeType = URLConnection.guessContentTypeFromName(file.getName());
-        if (mimeType == null) {
-            System.out.println("mimetype is not detectable, will take default");
-            mimeType = "application/octet-stream";
-        }
-
-        System.out.println("mimetype : " + mimeType);
-
-        response.setContentType(mimeType);
-        response.addHeader("X-Frame-Options", "SAMEORIGIN");
-  /*
-   * "Content-Disposition : inline" will show viewable types [like
-   * images/text/pdf/anything viewable by browser] right on browser while
-   * others(zip e.g) will be directly downloaded [may provide save as
-   * popup, based on your browser setting.]
-   */
-        response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() + "\""));
-
-  /*
-   * "Content-Disposition : attachment" will be directly download, may
-   * provide save as popup, based on your browser setting
-   */
-        // response.setHeader("Content-Disposition", String.format("attachment;
-        // filename=\"%s\"", file.getName()));
-
-        response.setContentLength((int) file.length());
-
-        InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
-
-        // Copy bytes from source to destination(outputstream in this example),
-        // closes both streams.
-        FileCopyUtils.copy(inputStream, response.getOutputStream());
-    }
-
-    @RequestMapping(value = "/orders/{orderId}/order_attachments/remove/{fileName:.*}", method = RequestMethod.DELETE)
-    public
-    @ResponseBody
-    ResponseEntity<String> removeOrderAttachment(@PathVariable String orderId, @PathVariable String fileName) {
-
-        String fnlDirPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_FINAL_DIRECTORY + SEP;
-        String path = fnlDirPath + fileName;
-        System.out.println(path);
-        File file = new File(path);
-        if (file.exists()) {
-            if (file.delete()) {
-                return new ResponseEntity<String>(HttpStatus.OK);
-            } else {
-                return new ResponseEntity<String>(HttpStatus.CONFLICT);
-            }
-        } else {
-            System.out.println("file not found!");
-            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
-        }
-    }
+    	return orderPageManager.approve(orderId, files, printproof);
+	}
 
 
 }

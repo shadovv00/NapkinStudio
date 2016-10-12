@@ -6,6 +6,7 @@ public class FileInfo {
 	private String name;
 	private long size;
 	private Date lastModified;
+	private boolean allowDelete;
 	
 	
 	public String getName() {
@@ -25,5 +26,11 @@ public class FileInfo {
 	}
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
+	}
+	public boolean isAllowDelete() {
+		return allowDelete;
+	}
+	public void setAllowDelete(boolean allowDelete) {
+		this.allowDelete = allowDelete;
 	}
 }
