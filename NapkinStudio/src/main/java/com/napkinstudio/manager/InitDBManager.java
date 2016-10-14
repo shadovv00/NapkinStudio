@@ -59,7 +59,7 @@ public class InitDBManager {
     @Autowired
     private IStatusChangeDao statusChangeDao;
 
-    @PostConstruct
+//    @PostConstruct
 
     public void init() {
 
@@ -573,16 +573,7 @@ public class InitDBManager {
         statchang1.setSAPstatus(SAPStatus1);
         statchang1.setDateTime(new Date());
         statusChangeDao.save(statchang1);
-        StatusChange statchang3 = new StatusChange();
-        statchang3.setOrder(order1);
-        statchang3.setSAPstatus(SAPStatus1);
-        statchang3.setDateTime(new Date());
-        statusChangeDao.save(statchang3);
-        StatusChange statchang2 = new StatusChange();
-        statchang2.setOrder(order1);
-        statchang2.setSAPstatus(SAPStatus1);
-        statchang2.setDateTime(new Date());
-        statusChangeDao.save(statchang2);
+
 
 //description of ProcessIds
 /*      1 "to deptor first"
@@ -818,6 +809,17 @@ public class InitDBManager {
         userOrderDao.save(user2Order2);
         userOrderDao.save(userO3rder2);
         userOrderDao.save(userO5rder2);
+
+        StatusChange statchang3 = new StatusChange();
+        statchang3.setOrder(order3);
+        statchang3.setSAPstatus(SAPStatus1);
+        statchang3.setDateTime(new Date());
+        statusChangeDao.save(statchang3);
+        StatusChange statchang2 = new StatusChange();
+        statchang2.setOrder(order2);
+        statchang2.setSAPstatus(SAPStatus1);
+        statchang2.setDateTime(new Date());
+        statusChangeDao.save(statchang2);
 
 
 // setting Fields for Progress Bar

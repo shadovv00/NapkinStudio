@@ -681,6 +681,7 @@
                     <c:if test="${
                                     ((theOrder.SAPstatus.id==1)&&user.role.id==2)||
                                     (theOrder.SAPstatus.id==2&&user.role.id==4)||
+                                    (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
                                     (theOrder.SAPstatus.id==5&&user.role.id==4&&theOrder.processId==5)||
                                     (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Deptor')||
                                     (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
@@ -706,16 +707,25 @@
                                 (theOrder.SAPstatus.id==5&&user.role.id==2&&theOrder.processId==4)||
                                 (theOrder.SAPstatus.id==7&&user.role.id==2)
                      }">
-                        <a href="<c:url value='/changestatus/${theOrder.orderId}/yes' />"
-                           class="btn btn-success">Goedkeuren</a>
+                        <%--<a href="<c:url value='/changestatus/${theOrder.orderId}/yes' />"--%>
+                           <%--class="btn btn-success">Goedkeuren</a>--%>
+                        <button type="button" class="approve-simple-btn btn btn-success"
+                                foraction="/NapkinStudio/changestatus/${theOrder.orderId}/yes"
+                                st=${theOrder.SAPstatus.id} ur=${user.role.id} pi=${theOrder.processId}
+                        >Goedkeuren
+                        </button>
                     </c:if>
                     <%--Discard without comments and files adding--%>
                     <c:if test="${
-                                (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
                                 (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.processId==3)
                      }">
-                        <a href="<c:url value='/changestatus/${theOrder.orderId}/no' />"
-                           class="btn  btn-success" style="background-color: grey!important">Annuleren</a>
+                        <%--<a href="<c:url value='/changestatus/${theOrder.orderId}/no' />"--%>
+                           <%--class="btn  btn-success" style="background-color: grey!important">Annuleren</a>--%>
+                        <button type="button" class="approve-simple-btn btn "
+                                foraction="/NapkinStudio/changestatus/${theOrder.orderId}/no"
+                                st=${theOrder.SAPstatus.id} ur=${user.role.id} pi=${theOrder.processId}
+                        >Annuleren
+                        </button>
                     </c:if>
                     <%--Appove with comments and files adding--%>
                     <c:if test="${
@@ -731,6 +741,7 @@
                     </c:if>
                     <%--Discard with comments and files adding--%>
                     <c:if test="${
+                                (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
                                 (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Deptor')||
                                 (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
                                 (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==1)||
@@ -763,42 +774,6 @@
     var statusId = +"${theOrder.sapStatus.statusSAPStatuseRoles[0].status.id}";
     console.log(role + " " + status + " " + statusId);
     $(document).ready(function () {
-
-//         $('#fileupload').fileupload({
-//             dataType: 'json',
-//             done: function (e, data) {
-// //                $('<p/>').text(data.result.fileName+"   "+data.result.fileSize).insertAfter('#progress');
-//                 $('<div class="row" name="'+data.result.fileName+'" style="display: inline">'+data.result.fileName+' '+data.result.fileSize+
-//                         ' <div class="floatRight">' +
-//                         '<input  value="Delete" type="button" class=" del-file-but btn btn-danger btn-sm" >' +
-// //                        '</div></div>').insertAfter('#progress');
-        <%--                         ' <a href="/remove-file/${theOrder.orderId}/'+data.result.fileName+'" class=" del-file-but  btn btn-danger custom-width">Discard</a> ' + --%>
-//                         '</div></div>').appendTo('#foruploadedfiles');
-//                 //                $.each(data.files, function (index, file) {
-// //                    $('<p/>').text(file.name+"   "+file.size+"Kb  "+file.lastModifiedDate).appendTo(document.body);
-// //                });
-//                 var orderId=$('#fileupload').attr("orderId");
-//                 $('<script>$(".del-file-but").click(function(){'+
-//                         'console.log("dqwdqw");'+
-//                         'console.log($(this));'+
-//                         'var thisElement=$(this);'+
-//                         '$.ajax({'+
-//                         '    url: 'remove-file/${theOrder.orderId}/"+thisElement.parent().parent().attr("name")','+
-//                         'success: function(result){'+
-//                         'console.log("dqwdqw"); napkin.buildFileInfoList();'+
-//                         'thisElement.parent().parent().remove();'+
-//                         '}});'+
-//                         '});</s'+'cript>').appendTo(document.body);
-//                 napkin.buildFileInfoList();
-//             },
-//             progressall: function (e, data) {
-//                 var progress = parseInt(data.loaded / data.total * 100, 10);
-//                 $('#progress .bar').css(
-//                         'width',
-//                         progress + '%'
-//                 );
-//             }
-//         });
 
 
         $(".addCommentForm").hide();

@@ -509,7 +509,7 @@ var napkin = napkin || {};
 	
 
 	function approve() {
-			     $('.loading-spinner').show();
+			  $('.loading-spinner').show();
 			  var urltostatus=$(this).attr('foraction');
 			   var st=parseInt($(this).attr('st'));
 			   var ur=parseInt($(this).attr('ur'));
@@ -523,7 +523,8 @@ var napkin = napkin || {};
 				   return;
 				  } else
 				//when rejection comment required
-			  if (urltostatus.slice(-1)=="o"&&(parseInt($(this).attr('pi'))!=3||ur!=2)&&!commentText.length){
+			  if (urltostatus.slice(-1)=="o"&&(parseInt($(this).attr('pi'))!=3)&&!commentText.length){
+			  // if (urltostatus.slice(-1)=="o"&&(parseInt($(this).attr('pi'))!=3||ur!=2)&&!commentText.length){
                   $("#statuscahngecomment").addClass("custom-not-fielded");
 				  $('.loading-spinner').hide();
 				  console.log("rejection comment required");
@@ -534,7 +535,8 @@ var napkin = napkin || {};
 				   files.push(key);
 				  }
 			  if(!files.length&&!_bean.printproof.name) {
-				   if ((ur==4&&st==5)||(ur==2&&st==1)){
+				   // if ((ur==4&&st==5)||(ur==2&&st==1)){
+				   if ((ur==2&&st==1)){
 						console.info("No attachments to approve!");
                         $(".dropzone").addClass("custom-not-fielded");
 						$('.loading-spinner').hide();
@@ -576,6 +578,12 @@ var napkin = napkin || {};
 				  }
 			 }
 
+	function approveSimple() {
+		$('.loading-spinner').show();
+		changeStatusAndAddComment($(this).attr('foraction'),"");
+	}
+
+
 			 function changeStatusAndAddComment(urltostatus,commentText) {
 				 console.log("changeStatusAndAddComment");
 					  $.ajax({
@@ -590,7 +598,7 @@ var napkin = napkin || {};
 						   },
 					   error: function() {
 						    console.log("fail");
-						                $('.loading-spinner').hide();
+						    $('.loading-spinner').hide();
 						   }
 					  });
 					 }
@@ -600,9 +608,10 @@ var napkin = napkin || {};
 
 				var jApproveBtn = $(".approve-btn");
 				jApproveBtn.on("click", approve);
+				$(".approve-simple-btn").on("click", approveSimple);
 				if ($("#order-new-attachment")){
 				    napkin.buildFileAttachmentBlock();
-				   }
+				}
 				napkin.buildFileInfoList();
 			});
 })(napkin);
