@@ -16,7 +16,7 @@
 </script>
 <html>
 <head>
-    <title>NapkinStudio</title>
+    <title>NapkinStudio Order page</title>
 
     <link href="<c:url value='/static/css/bootstrap.css' />" rel="stylesheet"></link>
     <link href="<c:url value='/static/css/app.css' />" rel="stylesheet"></link>

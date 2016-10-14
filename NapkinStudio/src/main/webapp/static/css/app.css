@@ -4,7 +4,7 @@ html{
 
 body{
 	/*height: 100%;*/
-	background-color:rgb(245, 245, 245);
+	background-color:rgb(249, 249, 249);
 }
 
 
@@ -118,6 +118,12 @@ body, #mainWrapper, .form-control{
 	height: 15px;
 }
 
+#orderstable th{
+	padding-left: 16px;
+	padding-right: 0px;
+}
+
+
 .back-btn {
     float: left;
     background: url("../image/img__Back.png") no-repeat 100%;
@@ -203,7 +209,7 @@ body, #mainWrapper, .form-control{
 .order-attachment .remove-attachment {
 	display: none;
 }
-remove-attachment:hover {
+.remove-attachment:hover {
 	display: inline-block !important;	
 }
 .icon-align {
