@@ -3,6 +3,7 @@ package com.napkinstudio.manager;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -22,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
@@ -321,6 +323,7 @@ public class OrderPageManager {
         System.out.println(role);
         Map<String, Attachment> mapAttachment = attachmentManager.findAttachmentMapByOrderIdRoleId(Integer.parseInt(orderId), role.getId());
         Map<String, Attachment> mapAllAttachment = attachmentManager.findAttachmentMapByOrderId(Integer.parseInt(orderId));
+        Attachment a;
         
         String fnlDirPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_FINAL_DIRECTORY + SEP;
 
@@ -329,24 +332,52 @@ public class OrderPageManager {
         File folder = new File(fnlDirPath);
         if (folder.exists()) {
             File[] listOfFiles = folder.listFiles();
-            for (int i = 0; i < listOfFiles.length; i++) {
-                file = listOfFiles[i];
-//                if(mapAllAttachment.get(file.getName()) == null) {
-//                	System.out.println("This file is absent in db \"" + file.getName() + "\", so I'm deleting it: "+ file.delete());
-//                	continue;
-//                }
-                if (file.isFile()) {
-                    System.out.println("File: " + file.getName());
-                    fileInfo = new FileInfo();
-                    fileInfo.setName(file.getName());
-                    fileInfo.setSize(file.length());
-                    fileInfo.setLastModified(new Date(file.lastModified()));
-                    fileInfo.setAllowDelete(allowDeleteAttachment(file.getName(), mapAttachment));
-                    fileInfoList.add(fileInfo);
-                } else if (file.isDirectory()) {
-                    System.out.println("Directory " + file.getName());
-                }
+            Map<String, File> mapOfFiles = new HashMap<>();
+            for(File f : listOfFiles) {
+            	mapOfFiles.put(f.getName(), f);
             }
+            for(String attachmentName : mapAllAttachment.keySet()) {
+            	a = mapAllAttachment.get(attachmentName);
+            	System.out.println("\t\t" + attachmentName);
+            	file = mapOfFiles.get(a.getName());
+            	if(file != null) {
+            		if (file.isFile()) {
+                        System.out.println("File: " + file.getName());
+                        fileInfo = new FileInfo();
+                        fileInfo.setName(file.getName());
+                        fileInfo.setSize(file.length());
+                        fileInfo.setLastModified(new Date(file.lastModified()));
+                        fileInfo.setAllowDelete(allowDeleteAttachment(file.getName(), mapAttachment));
+                        fileInfoList.add(fileInfo);
+                    } else if (file.isDirectory()) {
+                        System.out.println("Directory " + file.getName());
+                    }
+            	} else {
+            		System.out.println("file was not found in folder, thus it must be deleted from db either!");
+            		try {
+						throw new FileNotFoundException("file was not found in folder, thus it must be deleted from db either!");
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						attachmentManager.deleteAttachment(a);
+					}
+            	}
+            	mapOfFiles.remove(attachmentName);
+            }
+            
+            //delete all files from folder which is absent in the database
+            if(!mapOfFiles.isEmpty()) {
+            	try {
+            		throw new Exception("some files are present in database, hovewer they are not present in apropriate folder!");
+            	} catch (Exception e) {
+            		e.printStackTrace();
+            		for (String key : mapOfFiles.keySet()) {
+            			file = mapOfFiles.get(key);
+            			System.out.println("This file is absent in db \"" + file.getName() + "\", so I'm deleting it: "+ file.delete());
+            		}
+            	}            	
+            }
+            
         } else {
             System.out.println("for this order any attachment is not available!");
         }
@@ -501,6 +532,7 @@ public class OrderPageManager {
                 	 movedFiles.add(fileName);
                 	 attachment = new Attachment();
                 	 attachment.setName(fileName);
+                	 attachment.setAppendDate(new Date());
                 	 attachment.setOrder(order);
                 	 attachment.setRole(role);
                 	 attachmentsList.add(attachment);
