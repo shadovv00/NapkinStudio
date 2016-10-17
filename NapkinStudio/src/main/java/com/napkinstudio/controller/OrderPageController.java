@@ -242,11 +242,13 @@ public class OrderPageController {
                     initDate = (Date) object[1];
                 }
             }
-//////            remove old data from orevious rounds
+//////            remove old data from previous rounds
             if (object[1] instanceof Date) {
                 dateToComp = (Date) object[1];
             }
-            System.out.println(dateToComp + " compare to " + initDate);
+//            System.out.println(dateToComp + " compare to " + initDate+" = "+dateToComp.before(initDate));
+//            System.out.println(dateToComp.after(initDate));
+//            System.out.println(dateToComp.compareTo(initDate));
             if (dateToComp.before(initDate)) {
                 object[1] = null;
             }

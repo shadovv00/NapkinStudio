@@ -12,11 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.napkinstudio.entity.*;
-import com.napkinstudio.util.CommentFromSAP;
-import com.napkinstudio.util.StatusChangeFromSAP;
-import com.napkinstudio.util.UserOrderFromSAP;
-import com.napkinstudio.util.UsersFromSAP;
-import com.napkinstudio.util.FileTransfer;
+import com.napkinstudio.util.*;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.net.ftp.FTPSClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +60,10 @@ public class FTPManager {
     @Autowired
     private StatusChangeManager statusChangeManager;
 
- 	@Autowired
+	@Autowired
+	private AttachmentManager attachmentManager;
+
+	@Autowired
 	private SynchronizationDateManager synchro_dateManager;
 
 	@Autowired
@@ -299,6 +298,20 @@ public class FTPManager {
                                     statusChangeManager.save(newStatusChange);
                                 }
                             }
+							if(dtfs.getSapAttachments()!=null&&dtfs.getSapAttachments().getAttachments()!=null) {
+								LinkedList<AttachmentFormSAP> attachments = dtfs.getSapAttachments().getAttachments();
+								LinkedList<Attachment> newAttachmentList = new LinkedList<>();
+								System.out.println("attachments.size=" + attachments.size());
+								for (AttachmentFormSAP attachmentsSAP : attachments) {
+									Attachment newAttachment = new Attachment();
+									newAttachment.setRole(roleManager.findById(attachmentsSAP.getRole()));
+									newAttachment.setOrder(orderManager.findById(attachmentsSAP.getOrder()));
+									newAttachment.setAppendDate(attachmentsSAP.getAppendDate());
+									newAttachmentList.add(newAttachment);
+								}
+								attachmentManager.save(newAttachmentList);
+							}
+
 
 							//set date of the "fromSAP" file read
 			                synchroData.setDateFromSAP(new Date());

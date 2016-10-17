@@ -12,6 +12,7 @@ public class DataTransferFromSAP {
 	private CommentsFromSAP commentaries;
 	private UserOrdersFromSAP userOrdersConnection;
     private StatusChangesFromSAP statusChangeHistory;
+	private AttachmentsFromSAP attachments;
 //	@XStreamImplicit
 //	private List<Order> order;
 
@@ -31,6 +32,9 @@ public class DataTransferFromSAP {
 
     public StatusChangesFromSAP getSapStatusChanges() {return statusChangeHistory;}
     public void setSapStatusChanges(StatusChangesFromSAP statusChangeHistory) {this.statusChangeHistory = statusChangeHistory;}
+
+	public AttachmentsFromSAP getSapAttachments() {return attachments;}
+	public void setSapAttachments(AttachmentsFromSAP attachments) {this.attachments = attachments;}
 
 
 }
