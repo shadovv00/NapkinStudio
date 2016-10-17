@@ -1,55 +1,23 @@
 package com.napkinstudio.controller;
 
 
-import java.io.IOException;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
+import com.napkinstudio.entity.*;
+import com.napkinstudio.manager.*;
+import com.napkinstudio.util.MultiFileValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.napkinstudio.entity.Comments;
-import com.napkinstudio.entity.MultiFileBucket;
-import com.napkinstudio.entity.Order;
-import com.napkinstudio.entity.Role;
-import com.napkinstudio.entity.SAPstatus;
-import com.napkinstudio.entity.StatusChange;
-import com.napkinstudio.entity.StatusSAPStatusRole;
-import com.napkinstudio.entity.User;
-import com.napkinstudio.entity.UserOrder;
-import com.napkinstudio.manager.CommentsManager;
-import com.napkinstudio.manager.MailManager;
-import com.napkinstudio.manager.OrderManager;
-import com.napkinstudio.manager.OrderPageManager;
-import com.napkinstudio.manager.ProgresBarFieldsManager;
-import com.napkinstudio.manager.RoleManager;
-import com.napkinstudio.manager.SAPstatusManager;
-import com.napkinstudio.manager.StatusChangeManager;
-import com.napkinstudio.manager.StatusManager;
-import com.napkinstudio.manager.StatusSAPStatusRoleManager;
-import com.napkinstudio.manager.UserManager;
-import com.napkinstudio.manager.UserOrderManager;
-import com.napkinstudio.util.MultiFileValidator;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.security.Principal;
+import java.util.*;
 
 
 @Controller
@@ -506,8 +474,9 @@ public class OrderPageController {
                         statusChange.setSAPstatus(newSAPStatus);
                         statusChangeManager.save(statusChange);
                     } else if (answer.equals("no")) {
-                        theOrder.setItsUsers(null);
-                        discardOrders(theOrder, statusChange);
+                        theOrder.setItsUsers(userOrderManager.findUserforOrdedByRole(theOrder.getOrderId(), 2));
+                                            discardOrders(theOrder, statusChange);
+                        prepareOrder(theOrder);
                     }
 
                 } else
@@ -697,7 +666,7 @@ public class OrderPageController {
         statusChanginLogic(theOrder, role, answer);
         if (!comment.getCommText().equals("") ) {
             comment.setFromUser(user);
-            comment.setToUser(theOrder.getItsUsers().get(0).getUser());
+//            comment.setToUser(theOrder.getItsUsers().get(0).getUser());
             comment.setForRole(theOrder.getSAPstatus().getStatusSAPStatuseRoles().get(0).getRole());
             comment.setOrder(theOrder);
             commentsManager.save(comment);
