@@ -66,7 +66,7 @@
 
 <section class="col-xs-12 logo-area" style="background-color: #f9f9f9; background-position-x: 10%">
     <a href="<c:url value="/logout"/>" style="float: right; margin: 20px 0">&nbsp;uitloggen </a>
-    <p style="float: right; margin: 20px 0">${user.role.name} - </p>
+    <p style="float: right; margin: 20px 0">${user.firstName} ${user.lastName} - </p>
 </section>
 <section class="subheader col-xs-12" style="background-color: white">
     <h2 style="margin-left: 9%">Orderoverzicht</h2>
@@ -76,7 +76,7 @@
     <div class="col-xs-2 order-status-wrapper">
         <ul class="status-filter-bar">
             <li>
-                <a id="all" class="ordersFilter" >All orders (${fn:length(userOrders)})</a>
+                <a id="all" class="ordersFilter" >Alle orders (${fn:length(userOrders)})</a>
                 <ul class="status-filter-bar">
                     <li>
                         <a id="in-progress" class="ordersFilter"  data-filter-column="3"
@@ -85,20 +85,18 @@
                             <c:if test="${user.role.id == 2}">
                                 <li>
                                     <a class="ordersFilter"  data-filter-column="3"
-                                       data-filter-text="1">Proof request set up</a>
+                                       data-filter-text="1">Klaargezet</a>
                                 </li>
                             </c:if>
                             <li>
                                 <a class="ordersFilter"  data-filter-column="3"
-                                   data-filter-text="2">Proof
-                                    requested</a>
+                                   data-filter-text="2">Aangevraagd</a>
                             </li>
                             <c:if test="${user.role.id == 2 || user.role.id == 4}">
                                 <li>
 
                                     <a class="ordersFilter" data-filter-column="3"
-                                       data-filter-text="3">Check
-                                        by PVI</a>
+                                       data-filter-text="3">Controle PVI</a>
                                 </li>
                             </c:if>
 
@@ -106,23 +104,22 @@
                             <li>
 
                                 <a class="ordersFilter"  data-filter-column="3"
-                                   data-filter-text="4">Waiting for approval</a>
+                                   data-filter-text="4">Drukproef ter goedkeuring aangeboden</a>
                             </li>
 
                             <li>
                                 <a class="ordersFilter"  data-filter-column="3"
-                                   data-filter-text="5">Approved</a>
+                                   data-filter-text="5">Afgekeurd</a>
 
                             </li>
                             <li>
                                 <a class="ordersFilter"  data-filter-column="3"
-                                   data-filter-text="6">Rejected</a>
+                                   data-filter-text="6">Goedgekeurd</a>
                             </li>
                             <c:if test="${user.role.id == 2}">
                                 <li>
                                     <a class="ordersFilter"  data-filter-column="3"
-                                       data-filter-text="7">Stamps
-                                        ordered</a>
+                                       data-filter-text="7">Clichés besteld</a>
                                 </li>
                             </c:if>
                         </ul>
@@ -134,13 +131,11 @@
                             <ul class="planned">
                                 <li>
                                     <a class="ordersFilter"  data-filter-column="3"
-                                       data-filter-text="8">New
-                                        orders</a>
+                                       data-filter-text="8">Nieuwe orders</a>
                                 </li>
                                 <li>
                                     <a class="ordersFilter"  data-filter-column="3"
-                                       data-filter-text="11">Existing
-                                        art.nr.</a>
+                                       data-filter-text="11">Uitgeleverd</a>
                                 </li>
                             </ul>
                         </li>
@@ -153,15 +148,13 @@
                 <%--<br>--%>
                 <li>
                     <a id="delivered" class="ordersFilter"  data-filter-column="3"
-                       data-filter-text="10">Order
-                        delivered</a>
+                       data-filter-text="10">Geproduceerd</a>
                 </li>
             </c:if>
             <c:if test="${user.role.id == 4}">
                 <li>
                     <a id="stamps-ordered" class="ordersFilter"  data-filter-column="3"
-                       data-filter-text="7">Stamps
-                        ordered</a>
+                       data-filter-text="7">Ontvangen</a>
                 </li>
             </c:if>
             <li>
@@ -178,14 +171,14 @@
         <table class="tablesorter table  table-hover" id="orderstable" style="font-size: 14px">
             <thead>
             <tr>
-                <th>Order number</th>
+                <th>Ordernr.</th>
                 <%--<th>Unread comments</th>--%>
-                <th>Debtor Order number</th>
+                <th>Debiteur Order nr</th>
                 <th>Item number</th>
                 <th>Status</th>
-                <th>Print name</th>
-                <th>Delivery date</th>
-                <th>Last modification</th>
+                <th>Bedrukking</th>
+                <th>Levering datum</th>
+                <th>Laatste wijziging</th>
                 <c:if test="${(theOrder.SAPstatus.id==7&&user.roles.id==2)||
 							(theOrder.SAPstatus.id==5&&user.roles.id==4&&theOrder.processId==5)}">
                     <th>ChangeStatus</th>

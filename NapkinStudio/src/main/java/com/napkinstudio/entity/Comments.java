@@ -41,7 +41,8 @@ public class Comments extends AbstractEntity {
 	@ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE})
 	private User fromUser;
     
-	@ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE})
+//	@ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE})
+	@Transient
 	private User toUser;
     
     @ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE})

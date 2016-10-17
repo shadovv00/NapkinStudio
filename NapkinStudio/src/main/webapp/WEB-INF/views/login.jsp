@@ -57,7 +57,7 @@
                                 <p>Log in om bestellingen te kunnen plaatsen
                                     en drukproeven te kunnen beoorelen.</p>
                                 <div class="input-group input-sm">
-                                    <input type="text" class="form-control" id="username" name="username" placeholder="E-mailadres" required>
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="login" required>
                                 </div>
                                 <div class="input-group input-sm">
                                     <input type="password" class="form-control" id="password" name="password" placeholder="Wachtwoord" required>
