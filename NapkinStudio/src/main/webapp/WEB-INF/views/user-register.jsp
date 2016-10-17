@@ -10,6 +10,7 @@
 <%--<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.css" />--%>
 	<script src="//code.jquery.com/jquery-3.1.0.min.js"></script>
 	<script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+	<title>NapkinStudio Registreren</title>
 </head>
 <header>
 	<div class="col-md-1 back-btn-wrapper" style="background-color: white">

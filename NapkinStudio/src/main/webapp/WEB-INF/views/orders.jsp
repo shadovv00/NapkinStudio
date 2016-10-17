@@ -35,7 +35,7 @@
 
 <html>
 <head>
-    <title>Title</title>
+    <title>NapkinStudio Orders</title>
     <link href="<c:url value='/static/css/bootstrap.css' />" rel="stylesheet"></link>
     <link href="<c:url value='/static/css/app.css' />" rel="stylesheet"></link>
     <link rel="stylesheet" type="text/css"
@@ -64,16 +64,16 @@
     <%--ChangeStatus--%>
 <%--</c:if>--%>
 
-<section class="col-md-12 logo-area" style="background-color: #f9f9f9; background-position-x: 10%">
+<section class="col-xs-12 logo-area" style="background-color: #f9f9f9; background-position-x: 10%">
     <a href="<c:url value="/logout"/>" style="float: right; margin: 20px 0">&nbsp;uitloggen </a>
     <p style="float: right; margin: 20px 0">${user.role.name} - </p>
 </section>
-<section class="subheader col-md-12" style="background-color: white">
+<section class="subheader col-xs-12" style="background-color: white">
     <h2 style="margin-left: 9%">Orderoverzicht</h2>
     <h5 style="color: #29abe2; margin-left: 9%; width: 100px">Alle orders</h5>
 </section>
 <section class="main-wrapper">
-    <div class="col-md-2 order-status-wrapper">
+    <div class="col-xs-2 order-status-wrapper">
         <ul class="status-filter-bar">
             <li>
                 <a id="all" class="ordersFilter" >All orders (${fn:length(userOrders)})</a>
@@ -173,8 +173,9 @@
 
         </ul>
     </div>
-    <div class="col-md-10">
-        <table class="tablesorter" id="orderstable">
+    <div class="col-xs-10">
+        <%--<table class="table  tablesorter table-hover" id="orderstable">--%>
+        <table class="tablesorter table  table-hover" id="orderstable" style="font-size: 14px">
             <thead>
             <tr>
                 <th>Order number</th>

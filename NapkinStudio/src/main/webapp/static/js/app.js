@@ -14,6 +14,8 @@ var napkin = napkin || {};
  								<input type="button">\
  							</span>');
 	$("#order-attachment").append(jShowAtBlock);
+	
+	
 	napkin.buildFileAttachmentBlock = function() {
 		var jAt = $("#order-new-attachment");
 		
@@ -55,6 +57,11 @@ var napkin = napkin || {};
 				
 	            $.each(data.files, function (index, file) {
 	            	fileName = file.name;
+	            	if(!/(\.|\/)(gif|jpe?g|png|svg|txt|docx?)$/i.test(fileName)){
+	            		console.log("It's not apropriate file!");
+	            	} else {
+	            		console.log("File has right extension!");
+	            	}
 	                console.info('Added file: ' + file.name);
 	                jIconDeleteFile.attr("fileName", file.name);
 	                jfileInfo.append(jIconDeleteFile);
@@ -96,6 +103,7 @@ var napkin = napkin || {};
 				});
 			}
 		});
+		
 		
 		jRemoveAllFiles.on("click", _removeAllTmpAttachments);
 		
@@ -336,7 +344,7 @@ var napkin = napkin || {};
 				var jSomeText = $("<p>Er is nog geen drukproef toegevoegd</p>");
 				var jChoseFile = $('<span class="btn-custom glyphicon glyphicon-plus-sign btn-custom fileinput-button" style="margin-right: 12px;">\
  							</span>'),
-					jImgInp = $('<input class="glyphicon glyphicon-plus-sign" type="file" name="files[]">');
+					jImgInp = $('<input class="glyphicon glyphicon-plus-sign" type="file" name="files[]" accept=".svg,image/*">');
 				var jImgPreview = $("<img style='max-height: 100px;' />");
 				var jDltPr = $('<i class="glyphicon glyphicon-remove btn-custom" style="position: absolute; left: 0; top: 0;"></i>');
 //				var jWrapImgPr = $("<div style='position:relative;  display: none;'></div>");
@@ -361,56 +369,63 @@ var napkin = napkin || {};
 //				jWrapImg.append(jDlt);
 				jPP.append(jWrapImg);
 				
-
+				
 				jImgInp.fileupload({
-						url: location.href + "/save-printproof-to-tmp/",
-				dropZone: undefined,
-				limitMultiFileUploads: 1,
-				acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-		        maxFileSize: 999000,
-				add: function (e, data) {
-
+					url: location.href + "/save-printproof-to-tmp/",
+					dropZone: undefined,
+					limitMultiFileUploads: 1,
+			        maxFileSize: 999000,
+					add: function (e, data) {
+						var fileName;
 						$.each(data.files, function (index, file) {
-								printproof.name = file.name;
-				            });
-
-
-				            data.submit()
+							printproof.name = file.name;
+							fileName = file.name;
+			            });
+						
+						if(!/(\.|\/)(gif|jpe?g|png|svg)$/i.test(fileName)) {
+							data.abort();
+							console.log("File extension is bad!");
+							jWrapImgPr.hide();
+							return;
+						} else {
+							console.log("File extension is ok!");
+						}
+						
+						data.submit()
 			            .success(function(result, textStatus, jqXHR) {
-				            	console.log("success");
-					        })
+			            	console.log("success");
+			            	jWrapImgPr.show();
+				        })
 				        .error(function (jqXHR, textStatus, errorThrown) {
-					        	console.log("error");
-					        })
+				        	console.log("error");
+				        })
 				        .complete(function (result, textStatus, jqXHR) {
-					        	console.log("completed");
-					        })
-		        	}
+				        	console.log("completed");
+				        })
+		        	}		        	
 				});
 
-					function readURL(input) {
-							jImgPreview.show();
-					        if (input.files && input.files[0]) {
-						            var reader = new FileReader();
-
-							            reader.onload = function (e) {
-								            	jImgPreview.attr('src', e.target.result);
-								            }
-
-							            reader.readAsDataURL(input.files[0]);
-						        }
-					    }
+				function readURL(input) {
+					console.log(input.files);
+					jImgPreview.show();
+			        if (input.files && input.files[0]) {
+			            var reader = new FileReader();
+			            reader.onload = function (e) {
+			            	jImgPreview.attr('src', e.target.result);
+			            }
+			            reader.readAsDataURL(input.files[0]);
+			        }
+			    }
 
 				jImgInp.change(function() {
-						jWrapImgPr.show();
-				        readURL(this);
-				    });
+			        readURL(this);
+			    });
 
 				jDltPr.on("click", removePPTemp);
 //				jDlt.on("click", removePrintProof);
 
 
-						printproof.showPrintProof = showPrintProof;
+				printproof.showPrintProof = showPrintProof;
 
 				showPrintProof();
 
@@ -494,7 +509,7 @@ var napkin = napkin || {};
 	
 
 	function approve() {
-			     $('.loading-spinner').show();
+			  $('.loading-spinner').show();
 			  var urltostatus=$(this).attr('foraction');
 			   var st=parseInt($(this).attr('st'));
 			   var ur=parseInt($(this).attr('ur'));
@@ -508,7 +523,8 @@ var napkin = napkin || {};
 				   return;
 				  } else
 				//when rejection comment required
-			  if (urltostatus.slice(-1)=="o"&&(parseInt($(this).attr('pi'))!=3||ur!=2)&&!commentText.length){
+			  if (urltostatus.slice(-1)=="o"&&(parseInt($(this).attr('pi'))!=3)&&!commentText.length){
+			  // if (urltostatus.slice(-1)=="o"&&(parseInt($(this).attr('pi'))!=3||ur!=2)&&!commentText.length){
                   $("#statuscahngecomment").addClass("custom-not-fielded");
 				  $('.loading-spinner').hide();
 				  console.log("rejection comment required");
@@ -519,7 +535,8 @@ var napkin = napkin || {};
 				   files.push(key);
 				  }
 			  if(!files.length&&!_bean.printproof.name) {
-				   if ((ur==4&&st==5)||(ur==2&&st==1)){
+				   // if ((ur==4&&st==5)||(ur==2&&st==1)){
+				   if ((ur==2&&st==1)){
 						console.info("No attachments to approve!");
                         $(".dropzone").addClass("custom-not-fielded");
 						$('.loading-spinner').hide();
@@ -561,6 +578,12 @@ var napkin = napkin || {};
 				  }
 			 }
 
+	function approveSimple() {
+		$('.loading-spinner').show();
+		changeStatusAndAddComment($(this).attr('foraction'),"");
+	}
+
+
 			 function changeStatusAndAddComment(urltostatus,commentText) {
 				 console.log("changeStatusAndAddComment");
 					  $.ajax({
@@ -575,7 +598,7 @@ var napkin = napkin || {};
 						   },
 					   error: function() {
 						    console.log("fail");
-						                $('.loading-spinner').hide();
+						    $('.loading-spinner').hide();
 						   }
 					  });
 					 }
@@ -585,9 +608,10 @@ var napkin = napkin || {};
 
 				var jApproveBtn = $(".approve-btn");
 				jApproveBtn.on("click", approve);
+				$(".approve-simple-btn").on("click", approveSimple);
 				if ($("#order-new-attachment")){
 				    napkin.buildFileAttachmentBlock();
-				   }
+				}
 				napkin.buildFileInfoList();
 			});
 })(napkin);
