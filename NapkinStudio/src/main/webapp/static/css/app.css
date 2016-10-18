@@ -121,8 +121,13 @@ body, #mainWrapper, .form-control{
 #orderstable th{
 	padding-left: 16px;
 	padding-right: 0px;
+	vertical-align: middle;
 }
 
+
+.clickable-cell {
+	cursor: pointer;
+}
 
 .back-btn {
     float: left;
@@ -371,8 +376,8 @@ ul.checkout-bar .prev-order-btn:hover:before {
 ul.checkout-bar li {
 	color: #ccc;
 	display: block;
-	font-size: 16px;
-	font-weight: 600;
+	font-size: 13px;
+	font-weight: 400;
 	padding: 14px 20px 14px 80px;
 	position: relative;
 }
@@ -734,6 +739,7 @@ remove-attachment:hover {
 
 .status-filter-bar li a{
 	display: block;
+	cursor: pointer;
 }
 
 .commentText{
@@ -873,5 +879,15 @@ remove-attachment:hover {
 .custom-not-fielded{
     border: 1px solid red;
     border-radius: 5px;
+}
+.comments-to-block {
+	display: inline-block;
+	max-width: 89%;
+	float: left;
+}
+.add-comments-block {
+	display: inline-block;
+	width: 10%;
+
 }
 

@@ -62,7 +62,7 @@
 <div class="loading-spinner" style="display:none">Loading&#8230;</div>
 <section class="col-md-12 logo-area" style="background-color: #f9f9f9; background-position-x: 10%">
     <a href="<c:url value="/logout"/>" style="float: right; margin: 20px 0">&nbsp;uitloggen </a>
-    <p style="float: right; margin: 20px 0">${user.role.name} - </p>
+    <p style="float: right; margin: 20px 0">${user.firstName} ${user.lastName} - </p>
 
 </section>
 <section class="subheader col-md-12" style="background-color: white">
@@ -77,7 +77,8 @@
                 <li class="prev-order-btn" onclick="document.getElementById('prev-btn-id').click()">
                     <a id="prev-btn-id" href="<spring:url value="/orders/{prevId}">
                           <spring:param name="prevId" value ="${prevId}"/>
-                </spring:url>">Previous</a>
+                </spring:url>">Vorige
+                        order</a>
                 </li>
             </c:if>
             <c:forEach items="${barFields}" var="barFields">
@@ -114,7 +115,8 @@
                 <li class="next-order-btn" onclick="document.getElementById('next-btn-id').click()"><a id="next-btn-id"
                                                                                                        href="<spring:url value="/orders/{nextId}">
                     <spring:param name="nextId" value ="${nextId}"/>
-                </spring:url>">Next</a></li>
+                </spring:url>">Volgende
+                    order</a></li>
             </c:if>
         </ul>
     </div>
@@ -131,10 +133,10 @@
                        st=${theOrder.SAPstatus.id} ur=${user.role.id}>
                     <tr class="table-title" valign="top">
                         <th width="50%">
-                            <b>Order Informatie</b>
+                            <b style="font-weight: 600">Order Informatie</b>
                         </th>
                         <th width="50%">
-                            <b>Artikel informatie</b>
+                            <b style="font-weight: 600">Artikel informatie</b>
                         </th>
                     </tr>
                     <tr>
@@ -142,34 +144,34 @@
                             <table width="100%" class="inner-info-table">
                                 <tr valign="top">
                                     <td width="34%">
-                                        debtor number
+                                        Debiteurnr.
                                     </td>
                                     <td width="66%">
                                         ${theOrder.debNum}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Debtor Order Number</td>
-                                    <td>${theOrder.debNum}</td>
+                                    <td>Debiteur Order nr</td>
+                                    <td>${theOrder.debOrderNum}</td>
                                 </tr>
                                 <tr>
-                                    <td>Quantity</td>
+                                    <td>Oplage</td>
                                     <td>${theOrder.quantity} stuks</td>
                                 </tr>
                                 <tr>
-                                    <td>Approval by</td>
+                                    <td>Goedkeuring</td>
                                     <td>${theOrder.approvalBy}</td>
                                 </tr>
                                 <tr>
-                                    <td>Debtor contact</td>
+                                    <td>Debiteur contact</td>
                                     <td>${theOrder.debCont}</td>
                                 </tr>
                                 <tr>
-                                    <td>Delivery address</td>
+                                    <td>Afleveradres</td>
                                     <td>${theOrder.delivAddr}</td>
                                 </tr>
                                 <tr>
-                                    <td>Delivery address contact</td>
+                                    <td>Contactpersoon</td>
                                     <td>${theOrder.delivAddrCont}</td>
                                 </tr>
                                 <tr>
@@ -177,7 +179,7 @@
                                     <td>${theOrder.unloadTimes}</td>
                                 </tr>
                                 <tr>
-                                    <td>Delivery instructions</td>
+                                    <td>Lostijden</td>
                                     <td>${theOrder.delivInstruct}</td>
                                 </tr>
                             </table>
@@ -186,7 +188,7 @@
                             <table width="100%" class="inner-info-table">
                                 <tr valign="top">
                                     <td width="34%">
-                                        Item number
+                                        Artikelnr.
                                     </td>
                                     <td width="66%">
                                         ${theOrder.itemNum}
@@ -197,42 +199,39 @@
                                     <td>${theOrder.debItemNum}</td>
                                 </tr>
                                 <tr>
-                                    <td>Size</td>
+                                    <td>Formaat</td>
                                     <td>${theOrder.size}</td>
                                 </tr>
                                 <tr>
-                                    <td>Material</td>
+                                    <td>Materiaal</td>
                                     <td>${theOrder.material}</td>
                                 </tr>
                                 <tr>
-                                    <td>folding method</td>
+                                    <td>Vouwwijze</td>
                                     <td>${theOrder.foldingMeth}</td>
                                 </tr>
                                 <tr>
-                                    <td>napkin colour</td>
+                                    <td>Kleur servet</td>
                                     <td>${theOrder.napkinCol}</td>
                                 </tr>
                                 <c:if test="${(theOrder.SAPstatus.id<=2)}">
                                     <tr>
-                                        <td>Print colour 1</td>
+                                        <td>Kleur 1</td>
                                         <td>${theOrder.color1}</td>
                                     </tr>
                                     <tr>
-                                        <td>Print colour 2</td>
+                                        <td>Kleur 2</td>
                                         <td>${theOrder.color2}</td>
                                     </tr>
                                     <tr>
-                                        <td>Print colour 3</td>
+                                        <td>Kleur 3</td>
                                         <td>${theOrder.color3}</td>
                                     </tr>
                                     <tr>
-                                        <td>Print colour 4</td>
+                                        <td>Kleur 4</td>
                                         <td>${theOrder.color4}</td>
                                     </tr>
-                                    <tr>
-                                        <td>Print colour 4</td>
-                                        <td>${theOrder.color4}</td>
-                                    </tr>
+
                                 </c:if>
                             </table>
                         </td>
@@ -256,8 +255,13 @@
                         <li width="100%" class="comments to-deptor-comments">
                             <table width="100%">
                                 <td width="17%" style="vertical-align: top">
+                                    <div class="comments-to-block">
                                     <b>Voor PVI</b>
+                                        </div>
+                                    <div class="add-comments-block">
+
                                     <a id="PVI-button" class="add-comment-btn" data-for-role="2">Add comment</a>
+                                    </div>
                                 </td>
                                 <%-- <td width="3%" style="vertical-align: top">
                                      <a id="PVI-button" class="add-comment-btn">Add comment</a>
@@ -348,9 +352,15 @@
                         <li width="100%" class="comments ">
                             <table width="100%">
                                 <td width="17%" style="vertical-align: top">
-                                    <b>Voor DTP</b>
-                                    <a id="DTP-button" data-for-role="4" class="add-comment-btn">Add comment</a>
-                                </td>
+                                    <div class="comments-to-block">
+                                        <b>Voor DTP</b>
+                                        </div>
+                                    <div class="add-comments-block">
+
+                                        <a id="DTP-button" data-for-role="4" class="add-comment-btn">Add comment</a>
+                                    </div>
+
+                                 </td>
 
                                 <td>
 
@@ -413,8 +423,13 @@
                         <li width="100%" class="comments to-deptor-comments to-customer-comments">
                             <table width="100%">
                                 <td width="17%" style="vertical-align: top">
+                                    <div class="comments-to-block">
                                     <b>Voor debiteur</b>
+                                        </div>
+                                    <div class="add-comments-block">
+
                                     <a id="debtor-button" class="add-comment-btn" data-for-role="1">Add comment</a>
+                                    </div>
                                 </td>
                                 <%--<td width="3%" style="vertical-align: top">
                                     <a class="btn add-comment-btn">Add comment</a>
@@ -463,8 +478,7 @@
                                                                 </div>
                                                             </div>
                                                         </li>
-                                                    </c:if>
-                                                </c:forEach>
+                                                    </c:if></c:forEach>
                                             </c:when>
                                             <c:otherwise>
                                                 <c:out value="No comments for deptor"/>
@@ -480,8 +494,12 @@
                         <li width="100%" class="comments to-deptor-comments to-customer-comments">
                             <table width="100%">
                                 <td width="17%" style="vertical-align: top">
-                                    <b>Voor eindafnemer</b>
-                                    <a class="add-comment-btn" data-for-role="5">Add comment</a>
+                                    <div class="comments-to-block">
+                                        <b>Voor eindafnemer</b>
+                                    </div>
+                                    <div class="add-comments-block">
+                                        <a class="add-comment-btn" data-for-role="5">Add comment</a>
+                                    </div>
                                 </td>
                                 <%--<td width="3%" style="vertical-align: top">
                                     <a class="btn add-comment-btn">Add comment</a>
@@ -545,8 +563,12 @@
                         <li width="100%" class="comments">
                             <table width="100%">
                                 <td width="17%" style="vertical-align: top">
-                                    <b>Voor stamp manufacturer</b>
-                                    <a class="add-comment-btn" data-for-role="6">Add comment</a>
+                                    <div class="comments-to-block">
+                                        <b>Voor stamp manufacturer</b>
+                                    </div>
+                                    <div class="add-comments-block">
+                                        <a class="add-comment-btn" data-for-role="6">Add comment</a>
+                                    </div>
                                 </td>
                                 <%--<td width="3%" style="vertical-align: top">
                                     <a class="btn add-comment-btn">Add comment</a>
@@ -610,8 +632,14 @@
                         <li width="100%" class="comments">
                             <table width="100%">
                                 <td width="17%" style="vertical-align: top">
+                                    <div class="comments-to-block">
+
                                     <b>Voor production</b>
+                                    </div>
+                                    <div class="add-comments-block">
+
                                     <a id="production-button" class="add-comment-btn" data-for-role="7">Add comment</a>
+                                    </div>
                                 </td>
                                 <%--<td width="3%" style="vertical-align: top">
                                     <a class="btn add-comment-btn" id="production-button">Add comment</a>
@@ -697,6 +725,7 @@
                     </c:if>
                         <%--Appove without comments and files adding--%>
                     <c:if test="${
+
                             (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
                             (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Deptor')||
                             (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
@@ -816,7 +845,7 @@
 
         $(".add-comment-btn").click(function () {
 
-            var excist = $(this).parent().next().find("form").length;
+            var excist = $(this).parent().parent().next().find("form").length;
             var formContainer = $("#form-container");
             var commentForm = formContainer.find("form");
 
@@ -826,15 +855,15 @@
                 commentForm.show(700);
             else if (!excist) {
                 var that = $(this);
-                commentForm.hide(350,function(){
+                commentForm.hide(350, function () {
 
-                var roleId = that.attr("data-for-role");
-                var commentsList = that.parent().next().find("ul");
+                    var roleId = that.attr("data-for-role");
+                    var commentsList = that.parent().parent().next().find("ul");
 
-                formContainer.find("textarea").val("");
-                formContainer.find("#for-role").val(roleId);
-                commentsList.append(formContainer);
-                commentForm.show(700);
+                    formContainer.find("textarea").val("");
+                    formContainer.find("#for-role").val(roleId);
+                    commentsList.append(formContainer);
+                    commentForm.show(700);
                 });
             }
 //

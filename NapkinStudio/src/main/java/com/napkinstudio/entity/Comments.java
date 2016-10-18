@@ -33,30 +33,34 @@ import javax.persistence.*;
 @Table(name = "comments")
 public class Comments extends AbstractEntity {
 
-	   
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue
 	private Integer Id;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE})
 	private User fromUser;
-    
-	@ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE})
+
+//	@ManyToOne(fetch = FetchType.LAZY,cascade = {MERGE})
+	@Transient
 	private User toUser;
-    
+
     @ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE})
 	private Order order;
-    
+
     @ManyToOne(fetch = FetchType.EAGER,cascade = {MERGE})
 	private Role forRole;
 
 	@Transient
 	private Boolean unread;
-    
-	@Column(name = "commText",columnDefinition="TEXT")	private String commText;
-	private Date dateTime;
+
+	@Column(name = "commText",columnDefinition="TEXT")
+	private String commText;
+
 	private Boolean deleted;
-	private static final long serialVersionUID = 1L;
+
+	private Date dateTime;
 
 	public Comments() {
 		super();	}   
@@ -90,12 +94,6 @@ public class Comments extends AbstractEntity {
 	public void setCommText(String commText) {
 		this.commText = commText;	}   
 
-	public Date getDateTime() {
-		return this.dateTime;
-	}
-	public void setDateTime(Date dateTime) {
-		this.dateTime = dateTime;
-	}
 
 	public Boolean getDeleted() {
 		return deleted;    }
@@ -108,5 +106,13 @@ public class Comments extends AbstractEntity {
 
 	public void setUnread(Boolean unread) {
 		this.unread = unread;
+	}
+
+	public Date getDateTime() {
+		return dateTime;
+	}
+
+	public void setDateTime(Date dateTime) {
+		this.dateTime = dateTime;
 	}
 }

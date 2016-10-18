@@ -22,6 +22,11 @@ public class AttachmentFormSAP {
     public void setRole(Integer roleId) {
         this.roleId = roleId;	}
 
+    public String getName() {
+        return this.name;	}
+    public void setName(String name) {
+        this.name = name;	}
+
     public Date getAppendDate() {
         return this.appendDate;    }
     public void setAppendDate(Date appendDate) {

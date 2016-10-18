@@ -1,6 +1,8 @@
 package com.napkinstudio.manager;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.LinkedList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.napkinstudio.dao.IUserDao;
 import com.napkinstudio.entity.User;
 import com.napkinstudio.util.FTPCommunicator;
+
 
 /**
  * Created by User1 on 20.07.2016.
@@ -23,6 +26,10 @@ public class UserManager {
 
     @Autowired
     private FTPCommunicator communicator;
+
+    @Autowired
+    private RoleManager roleManager;
+
 
     @Transactional
     public void save(User user) {
@@ -44,6 +51,16 @@ public class UserManager {
         return IUserDao.findByLogin(login);
     }
 
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public LinkedList<User> getUpdatedUsers(Date lastModifiedDate) {
+        LinkedList<User> userList=IUserDao.getUpdatedUsers(lastModifiedDate);
+        for (User user : userList){
+            user.setRole(roleManager.findByUserId(user.getUserId()));
+        }
+        return userList;
+    }
+
+
 
     public void upload(User user) throws IOException {
         communicator.convertToXMLAndUpload(user);
@@ -56,5 +73,5 @@ public class UserManager {
     public User findByEmail(String email) {
         return IUserDao.findByEmail(email);
     }
-   
+
 }

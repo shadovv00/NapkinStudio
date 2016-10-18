@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -24,7 +26,9 @@ public interface IUserDao extends JpaRepository<User,Integer> {
 
     public void deleteById(Integer userId);
 
-   public User findByEmail(@Param(value = "email")String email);
+    public User findByEmail(@Param(value = "email")String email);
+
+    public LinkedList<User> getUpdatedUsers(@Param("lastModifiedDate")Date lastModifiedDate);
 
 //    @Modifying
 //    public void deactivateById(Integer userId);
