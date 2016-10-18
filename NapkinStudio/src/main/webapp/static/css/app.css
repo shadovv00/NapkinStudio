@@ -874,4 +874,14 @@ remove-attachment:hover {
     border: 1px solid red;
     border-radius: 5px;
 }
+.comments-to-block {
+	display: inline-block;
+	max-width: 89%;
+	float: left;
+}
+.add-comments-block {
+	display: inline-block;
+	width: 10%;
+
+}
 

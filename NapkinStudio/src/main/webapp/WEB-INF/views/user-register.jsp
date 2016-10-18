@@ -150,7 +150,7 @@
 			messages : {
 				login : {
 					required: "This field is required!",
-					minlength: "min length is 3",
+					minlength: "min length is 4",
 					remote:"User with such login already exist"
 				},
 
