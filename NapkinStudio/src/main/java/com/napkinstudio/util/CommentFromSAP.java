@@ -27,8 +27,10 @@ public class CommentFromSAP extends AbstractEntity {
 
     @javax.persistence.Id
     @GeneratedValue
-    private Integer fromUserId;
-    private Integer toUserId;
+//    private Integer fromUserId;
+//    private Integer toUserId;
+    private String fromUserEmail;
+    private String toUserEmail;
     private Integer orderId;
     private Integer forRoleId;
     private String commText;
@@ -37,15 +39,25 @@ public class CommentFromSAP extends AbstractEntity {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getFromUser() {
-        return this.fromUserId;	}
-    public void setFromUser(Integer fromUserId) {
-        this.fromUserId = fromUserId;	}
+//    public Integer getFromUser() {
+//        return this.fromUserId;	}
+//    public void setFromUser(Integer fromUserId) {
+//        this.fromUserId = fromUserId;	}
+//
+//    public Integer getToUser() {
+//        return this.toUserId;	}
+//    public void setToUser(Integer toUserId) {
+//        this.toUserId = toUserId;	}
 
-    public Integer getToUser() {
-        return this.toUserId;	}
-    public void setToUser(Integer toUserId) {
-        this.toUserId = toUserId;	}
+    public String getFromUser() {
+        return this.fromUserEmail;	}
+    public void setFromUser(String fromUserEmail) {
+        this.fromUserEmail = fromUserEmail;	}
+
+    public String getToUser() {
+        return this.toUserEmail;	}
+    public void setToUser(String toUserEmail) {
+        this.toUserEmail = toUserEmail;	}
 
     public Integer getOrder() {
         return this.orderId;	}

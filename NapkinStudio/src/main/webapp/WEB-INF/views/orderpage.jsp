@@ -133,10 +133,10 @@
                        st=${theOrder.SAPstatus.id} ur=${user.role.id}>
                     <tr class="table-title" valign="top">
                         <th width="50%">
-                            <b>Order Informatie</b>
+                            <b style="font-weight: 600">Order Informatie</b>
                         </th>
                         <th width="50%">
-                            <b>Artikel informatie</b>
+                            <b style="font-weight: 600">Artikel informatie</b>
                         </th>
                     </tr>
                     <tr>
@@ -723,64 +723,95 @@
                                       style="margin-bottom: 15px; border-radius:5px; "></textarea>
                         </div>
                     </c:if>
-                    <%--Appove without comments and files adding--%>
+                        <%--Appove without comments and files adding--%>
                     <c:if test="${
-                                (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
-                                (theOrder.SAPstatus.id==6&&user.role.id==2)||
-                                (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Deptor')||
-                                (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
-                                (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==1)||
-                                (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==2)||
-                                (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.processId==3)||
-                                (theOrder.SAPstatus.id==5&&user.role.id==2&&theOrder.processId==4)||
-                                (theOrder.SAPstatus.id==7&&user.role.id==2)
-                     }">
-                        <%--<a href="<c:url value='/changestatus/${theOrder.orderId}/yes' />"--%>
-                        <%--class="btn btn-success">Goedkeuren</a>--%>
+
+                            (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
+                            (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Deptor')||
+                            (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
+                            (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==1)||
+                            (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==2)||
+                            (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.processId==3)||
+                            (theOrder.SAPstatus.id==5&&user.role.id==2&&theOrder.processId==4)||
+                            (theOrder.SAPstatus.id==6&&user.role.id==2)||
+                            (theOrder.SAPstatus.id==7&&user.role.id==2)
+                            }">
                         <button type="button" class="approve-simple-btn btn btn-success"
                                 foraction="/NapkinStudio/changestatus/${theOrder.orderId}/yes"
-                                st=${theOrder.SAPstatus.id} ur=${user.role.id} pi=${theOrder.processId}
-                        >Goedkeuren
+                                st=${theOrder.SAPstatus.id} ur=${user.role.id} pi=${theOrder.processId}>
+                            <c:choose>
+                                <c:when test="${theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck}">
+                                    Ter goedkeuring aanbieden
+                                </c:when>
+                                <c:when test="${(theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Deptor')||
+                                                (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
+                                                (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==1)||
+                                                (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==2)||
+                                                (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.processId==3)}">
+                                    Ter goedkeuring aanbieden
+                                </c:when>
+                                <c:otherwise>
+                                    Goedkeuren
+                                </c:otherwise>
+                            </c:choose>
                         </button>
                     </c:if>
-                    <%--Discard without comments and files adding--%>
+
+                        <%--Discard without comments and files adding--%>
                     <c:if test="${
-                                (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.processId==3)
-                     }">
+                            (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.processId==3)
+                            }">
                         <%--<a href="<c:url value='/changestatus/${theOrder.orderId}/no' />"--%>
                         <%--class="btn  btn-success" style="background-color: grey!important">Annuleren</a>--%>
                         <button type="button" class="approve-simple-btn btn "
                                 foraction="/NapkinStudio/changestatus/${theOrder.orderId}/no"
-                                st=${theOrder.SAPstatus.id} ur=${user.role.id} pi=${theOrder.processId}
-                        >Annuleren
+                                st=${theOrder.SAPstatus.id} ur=${user.role.id} pi=${theOrder.processId}>
+                                    Annuleren
                         </button>
                     </c:if>
-                    <%--Appove with comments and files adding--%>
+                        <%--Appove with comments and files adding--%>
                     <c:if test="${
-                                ((theOrder.SAPstatus.id==1)&&user.role.id==2)||
-                                (theOrder.SAPstatus.id==2&&user.role.id==4)||
-                                (theOrder.SAPstatus.id==5&&user.role.id==4&&theOrder.processId==5)
-                     }">
+                            ((theOrder.SAPstatus.id==1)&&user.role.id==2)||
+                            (theOrder.SAPstatus.id==2&&user.role.id==4)||
+                            (theOrder.SAPstatus.id==5&&user.role.id==4&&theOrder.processId==5)
+                             }">
                         <button type="button" class="approve-btn btn btn-success"
                                 foraction="/NapkinStudio/changestatus/${theOrder.orderId}/yes"
-                                st=${theOrder.SAPstatus.id} ur=${user.role.id} pi=${theOrder.processId}
-                        >Goedkeuren
+                                st=${theOrder.SAPstatus.id} ur=${user.role.id} pi=${theOrder.processId}>
+                            <c:choose>
+                                <c:when test="${(theOrder.SAPstatus.id==1)&&user.role.id==2}">
+                                    Drukproef aanvragen
+                                </c:when>
+                                <c:when test="${theOrder.SAPstatus.id==2&&user.role.id==4}">
+                                    Ter goedkeuring aanbieden
+                                </c:when>
+                                <c:otherwise>
+                                    Bestelling goedkeuren
+                                </c:otherwise>
+                            </c:choose>
                         </button>
                     </c:if>
-                    <%--Discard with comments and files adding--%>
+                        <%--Discard with comments and files adding--%>
                     <c:if test="${
-                                (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
-                                (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Deptor')||
-                                (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
-                                (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==1)||
-                                (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==2)||
-                                (theOrder.SAPstatus.id==6&&user.role.id==2)
-                     }">
-                        <button type="button" class="approve-btn btn "
-                                foraction="/NapkinStudio/changestatus/${theOrder.orderId}/no"
-                                st=${theOrder.SAPstatus.id} ur=${user.role.id} pi=${theOrder.processId}
-                        >Annuleren
-                        </button>
+                            (theOrder.SAPstatus.id==3&&user.role.id==2&&orderPviCheck)||
+                            (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Deptor')||
+                            (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&!theOrder.debCheckScen)||
+                            (theOrder.SAPstatus.id==4&&user.role.id==1&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==1)||
+                            (theOrder.SAPstatus.id==4&&user.role.id==5&&theOrder.approvalBy=='Customer'&&theOrder.debCheckScen&&theOrder.processId==2)||
+                            (theOrder.SAPstatus.id==6&&user.role.id==2)
+                             }">
+                            <button type="button" class="approve-btn btn "
+                                    foraction="/NapkinStudio/changestatus/${theOrder.orderId}/no"
+                                    st=${theOrder.SAPstatus.id} ur=${user.role.id} pi=${theOrder.processId}>
+                                <c:choose>
+                                    <c:when test="${theOrder.SAPstatus.id==6&&user.role.id==2}">
+                                        Annuleren
+                                    </c:when>
+                                    <c:otherwise>
+                                        Annuleren
+                                    </c:otherwise>
+                                </c:choose>
+                            </button>
                     </c:if>
                 </div>
 

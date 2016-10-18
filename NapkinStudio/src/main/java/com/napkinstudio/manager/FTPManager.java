@@ -13,6 +13,7 @@ import java.util.List;
 
 import com.napkinstudio.entity.*;
 import com.napkinstudio.util.*;
+import com.napkinstudio.util.Orders;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.net.ftp.FTPSClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -244,8 +245,14 @@ public class FTPManager {
 //									if (field.get()!=null){}
 //								}
 //								order.setUpdate(new Date());
-									if (thisOrder != null && order.getLastModifiedDate() != null && thisOrder.getLastModifiedDate().after(order.getLastModifiedDate())) {
-										order.setLastModifiedDate(thisOrder.getLastModifiedDate());
+									if (thisOrder != null ) {
+										order.setProcessId(thisOrder.getProcessId());
+										if (order.getLastModifiedDate() != null && thisOrder.getLastModifiedDate().after(order.getLastModifiedDate())){
+											order.setLastModifiedDate(thisOrder.getLastModifiedDate());
+										}
+										if (order.getSapStatus().getId()!=6){
+											order.setRejected(false);
+										}
 									}
 									orderManager.save(order);
 								}
@@ -254,11 +261,21 @@ public class FTPManager {
 								LinkedList<User> users = dtfs.getSapUsers().getUsers();
 								System.out.println("users.size=" + users.size());
 								for (User userSAP : users) {
-									User thisUser = userManager.findById(userSAP.getUserId());
-									if (thisUser != null && userSAP.getLastModifiedDate() != null && thisUser.getLastModifiedDate().after(userSAP.getLastModifiedDate())) {
-										userSAP.setLastModifiedDate(thisUser.getLastModifiedDate());
+									User thisUser = userManager.findByEmail(userSAP.getEmail());
+									if (thisUser != null) {
+										thisUser.setLastName(userSAP.getLastName());
+										thisUser.setFirstName(userSAP.getFirstName());
+										thisUser.setLogin(userSAP.getLogin());
+										if (userSAP.getPassword()!=null){
+											thisUser.setPassword(userSAP.getPassword());
+										}
+										thisUser.setEmail(userSAP.getEmail());
+										thisUser.setEnabled(userSAP.getEnabled());
+										thisUser.setRole(userSAP.getRole());
+										userManager.save(thisUser);
+									}else{
+										userManager.save(userSAP);
 									}
-									userManager.save(userSAP);
 								}
 							}
 							if(dtfs.getSapComments()!=null&&dtfs.getSapComments().getComments()!=null) {
@@ -267,11 +284,11 @@ public class FTPManager {
 								for (CommentFromSAP commentSAP : comments) {
 									Comments newComment = new Comments();
 									newComment.setCommText(commentSAP.getCommText());
-									newComment.setToUser(userManager.findById(commentSAP.getToUser()));
-									newComment.setFromUser(userManager.findById(commentSAP.getFromUser()));
+									newComment.setToUser(userManager.findByEmail(commentSAP.getToUser()));
+									newComment.setFromUser(userManager.findByEmail(commentSAP.getFromUser()));
 									newComment.setForRole(roleManager.findById(commentSAP.getForRole()));
 									newComment.setOrder(orderManager.findById(commentSAP.getOrder()));
-									newComment.setDateTime(commentSAP.getDateTime());
+									newComment.setLastModifiedDate(commentSAP.getDateTime());
 									newComment.setDeleted(commentSAP.getDeleted());
 									commentsManager.save(newComment);
 								}
@@ -280,9 +297,17 @@ public class FTPManager {
 								LinkedList<UserOrderFromSAP> userOrders = dtfs.getSapUserOrders().getUserOrders();
 								System.out.println("userOrders.size=" + userOrders.size());
 								for (UserOrderFromSAP userOrdersSAP : userOrders) {
+//									if (userOrderManager.findOrdersByUserAndOrderId(userManager.findByEmail(userOrdersSAP.getUser()).getUserId(),userOrdersSAP.getOrder())!=null){
+//										continue;
+//									}
 									UserOrder newUserOrder = new UserOrder();
-									newUserOrder.setUser(userManager.findById(userOrdersSAP.getUser()));
-									newUserOrder.setOrder(orderManager.findById(userOrdersSAP.getOrder()));
+									User ordersUser = userManager.findByEmail(userOrdersSAP.getUser());
+									if(userOrderManager.findUserforOrdedByRole(userOrdersSAP.getOrder(), roleManager.findByUserId(ordersUser.getUserId()).getId()).size()>0){
+										newUserOrder =userOrderManager.findOrdersByUserAndOrderId(ordersUser.getUserId(),userOrdersSAP.getOrder());
+									}else{
+										newUserOrder.setOrder(orderManager.findById(userOrdersSAP.getOrder()));
+									}
+									newUserOrder.setUser(ordersUser);
 									newUserOrder.setLastLook(new Date(1411419600000L));
 									userOrderManager.save(newUserOrder);
 								}
@@ -307,6 +332,7 @@ public class FTPManager {
 									newAttachment.setRole(roleManager.findById(attachmentsSAP.getRole()));
 									newAttachment.setOrder(orderManager.findById(attachmentsSAP.getOrder()));
 									newAttachment.setAppendDate(attachmentsSAP.getAppendDate());
+									newAttachment.setName(attachmentsSAP.getName());
 									newAttachmentList.add(newAttachment);
 								}
 								attachmentManager.save(newAttachmentList);
@@ -339,13 +365,65 @@ public class FTPManager {
 //			                dtts.setUser(us);
 			                //read from db
 							System.out.print("/////////////////////////orderManager///////////////////////////");
-
+//							Orders ordersToSAP =new Orders();
+//							LinkedList<Order> outOrders = orderManager.getUpdatedOrders(synchroData.getDateToSAP());
+//							if (outOrders!=null){
+//								for (Order outOrder : outOrders) {
+//									outOrder.setItsUsers(null);
+//									outOrder.setComments(null);
+//									outOrder.setStatusChanges(null);
+//								}
+//								System.out.print(outOrders.size());
+//								ordersToSAP.setOrders(outOrders);
+//								dtts.setSapOrders(ordersToSAP);
+//							}
+//							TODO: Get from DB already formed OrderToSAP
 							LinkedList<Order> outOrders = orderManager.getUpdatedOrders(synchroData.getDateToSAP());
-//                            LinkedList<Order> outOrders = new LinkedList<Order>();
-							System.out.print(outOrders);
 							if (outOrders!=null){
 								System.out.print(outOrders.size());
+								OrdersToSAP ordersToSAP =new OrdersToSAP();
+								LinkedList<OrderToSAP> outOrderList = new LinkedList<OrderToSAP>();
+								for (Order outOrder : outOrders) {
+									OrderToSAP newOrderToSAP = new OrderToSAP();
+									newOrderToSAP.setOrderId(outOrder.getOrderId());
+									newOrderToSAP.setSAPstatus(outOrder.getSapStatus().getId());
+									newOrderToSAP.setLastModifiedDate(outOrder.getLastModifiedDate());
+									newOrderToSAP.setDeleted(outOrder.getDeleted());
+									newOrderToSAP.setRepeated(outOrder.getRepeated());
+									newOrderToSAP.setVersion(outOrder.getVersion());
+									outOrderList.add(newOrderToSAP);
+								}
+								ordersToSAP.setOrders(outOrderList);
+								dtts.setSapOrders(ordersToSAP);
 							}
+//							TODO: Get from DB already formed UserToSAP
+							LinkedList<User> outUsers = userManager.getUpdatedUsers(synchroData.getDateToSAP());
+							if (outUsers!=null){
+								System.out.print(outUsers.size());
+								UsersToSAP usersToSAP =new UsersToSAP();
+								LinkedList<UserToSAP> outUserList = new LinkedList<UserToSAP>();
+								for (User outUser : outUsers) {
+									UserToSAP newUserToSAP = new UserToSAP();
+									newUserToSAP.setLastModifiedDate(outUser.getLastModifiedDate());
+									newUserToSAP.setDateTime(outUser.getDateTime());
+									newUserToSAP.setEmail(outUser.getEmail());
+									newUserToSAP.setEnabled(outUser.getEnabled());
+									newUserToSAP.setFirstName(outUser.getFirstName());
+									newUserToSAP.setLastName(outUser.getLastName());
+									newUserToSAP.setLogin(outUser.getLogin());
+//									TODO: decode pass?
+									newUserToSAP.setPassword(outUser.getPassword());
+									newUserToSAP.setRole(outUser.getRole().getId());
+//									TODO: correct lazy connection
+//									newUserToSAP.setRole(roleManager.findByUserId(outUser.getUserId()).getId());
+									outUserList.add(newUserToSAP);
+								}
+								usersToSAP.setUsers(outUserList);
+								dtts.setSapUsers(usersToSAP);
+							}
+
+							//                            LinkedList<Order> outOrders = new LinkedList<Order>();
+//							System.out.print(outOrders);
 
 //                            Order s_order = new Order();
 //                            s_order.setOrderId(123);
@@ -361,8 +439,11 @@ public class FTPManager {
 //                            s_order1.setDebItemNum("890");
 //                            s_order1.setApprovalBy("890");
 //                            outOrders.add(s_order1);
-			                dtts.setOrders(outOrders);
-                            xstream.processAnnotations(DataTransferToSAP.class);
+
+//							dtts.setOrders(outOrders);
+
+
+							xstream.processAnnotations(DataTransferToSAP.class);
 			                xstream.toXML(dtts, os2);
 			                
 			                fileToSAPStatus = "delivered";
