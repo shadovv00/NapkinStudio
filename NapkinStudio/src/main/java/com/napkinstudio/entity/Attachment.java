@@ -15,7 +15,7 @@ import java.util.Date;
 @NamedQueries({
 	@NamedQuery(name = "Attachment.findAttachmentsbyRoleId", query = "select a from Attachment a join a.role r where r.id =:id"),
 	@NamedQuery(name = "Attachment.findAttachmentMapByOrderIdRoleId", query = "select a from Attachment a join a.role r join a.order o where o.orderId =:orderId and r.id =:roleId"),
-	@NamedQuery(name = "Attachment.findAttachmentMapByOrderId", query = "select a from Attachment a join a.order o where o.orderId =:orderId"),
+	@NamedQuery(name = "Attachment.findAttachmentMapByOrderId", query = "select a from Attachment a join a.order o where o.orderId =:orderId order by a.appendDate desc, a.name asc"),
 	@NamedQuery(name = "Attachment.deleteByName", query = "delete from Attachment a where a.name = :name")
 })
 
