@@ -56,12 +56,12 @@
 <body>
 
 <%--<c:if test="${--%>
-                            <%--(theOrder.SAPstatus.id==7&&user.roles[0].id==2)--%>
-                 <%--}">--%>
-    <%--ChanwfwefgeStatus--%>
+<%--(theOrder.SAPstatus.id==7&&user.roles[0].id==2)--%>
+<%--}">--%>
+<%--ChanwfwefgeStatus--%>
 <%--</c:if>--%>
 <%--<c:if test="true">--%>
-    <%--ChangeStatus--%>
+<%--ChangeStatus--%>
 <%--</c:if>--%>
 
 <section class="col-xs-12 logo-area" style="background-color: #f9f9f9; background-position-x: 10%">
@@ -76,20 +76,20 @@
     <div class="col-xs-2 order-status-wrapper">
         <ul class="status-filter-bar">
             <li>
-                <a id="all" class="ordersFilter" >Alle orders (${fn:length(userOrders)})</a>
+                <a id="all" class="ordersFilter">Alle orders (${fn:length(userOrders)})</a>
                 <ul class="status-filter-bar">
                     <li>
-                        <a id="in-progress" class="ordersFilter"  data-filter-column="3"
+                        <a id="in-progress" class="ordersFilter" data-filter-column="3"
                            data-filter-text="in progress">In progress</a>
                         <ul class="status-filter-bar">
                             <c:if test="${user.role.id == 2}">
                                 <li>
-                                    <a class="ordersFilter"  data-filter-column="3"
+                                    <a class="ordersFilter" data-filter-column="3"
                                        data-filter-text="1">Klaargezet</a>
                                 </li>
                             </c:if>
                             <li>
-                                <a class="ordersFilter"  data-filter-column="3"
+                                <a class="ordersFilter" data-filter-column="3"
                                    data-filter-text="2">Aangevraagd</a>
                             </li>
                             <c:if test="${user.role.id == 2 || user.role.id == 4}">
@@ -103,22 +103,22 @@
 
                             <li>
 
-                                <a class="ordersFilter"  data-filter-column="3"
+                                <a class="ordersFilter" data-filter-column="3"
                                    data-filter-text="4">Drukproef ter goedkeuring aangeboden</a>
                             </li>
 
                             <li>
-                                <a class="ordersFilter"  data-filter-column="3"
+                                <a class="ordersFilter" data-filter-column="3"
                                    data-filter-text="5">Afgekeurd</a>
 
                             </li>
                             <li>
-                                <a class="ordersFilter"  data-filter-column="3"
+                                <a class="ordersFilter" data-filter-column="3"
                                    data-filter-text="6">Goedgekeurd</a>
                             </li>
                             <c:if test="${user.role.id == 2}">
                                 <li>
-                                    <a class="ordersFilter"  data-filter-column="3"
+                                    <a class="ordersFilter" data-filter-column="3"
                                        data-filter-text="7">Clichés besteld</a>
                                 </li>
                             </c:if>
@@ -126,15 +126,15 @@
                     </li>
                     <c:if test="${user.role.id == 2 || user.role.id == 1}">
                         <li>
-                            <a id="planned" class="ordersFilter"  data-filter-column="3"
+                            <a id="planned" class="ordersFilter" data-filter-column="3"
                                data-filter-text="planned">Planned</a>
                             <ul class="planned">
                                 <li>
-                                    <a class="ordersFilter"  data-filter-column="3"
+                                    <a class="ordersFilter" data-filter-column="3"
                                        data-filter-text="8">Nieuwe orders</a>
                                 </li>
                                 <li>
-                                    <a class="ordersFilter"  data-filter-column="3"
+                                    <a class="ordersFilter" data-filter-column="3"
                                        data-filter-text="11">Uitgeleverd</a>
                                 </li>
                             </ul>
@@ -147,18 +147,18 @@
             <c:if test="${user.role.id == 2 || user.role.id == 1}">
                 <%--<br>--%>
                 <li>
-                    <a id="delivered" class="ordersFilter"  data-filter-column="3"
+                    <a id="delivered" class="ordersFilter" data-filter-column="3"
                        data-filter-text="10">Geproduceerd</a>
                 </li>
             </c:if>
             <c:if test="${user.role.id == 4}">
                 <li>
-                    <a id="stamps-ordered" class="ordersFilter"  data-filter-column="3"
+                    <a id="stamps-ordered" class="ordersFilter" data-filter-column="3"
                        data-filter-text="7">Ontvangen</a>
                 </li>
             </c:if>
             <li>
-                <a id="on-hold" class="ordersFilter"  data-filter-column="3"
+                <a id="on-hold" class="ordersFilter" data-filter-column="3"
                    data-filter-text="9">On
                     hold</a>
             </li>
@@ -196,18 +196,18 @@
                 <tr class='clickable-row' data-href="<c:url value='/orders/${userOrder.order.orderId}' />">
                     <td class='clickable-cell orderId'>${userOrder.order.orderId}
                         <c:if test="${userOrder.order.unreadCommentsCount != 0}">
-                            <img src="<c:url value='/static/image/new_comments.png' />"  width="15" height="12">
+                            <img src="<c:url value='/static/image/new_comments.png' />" width="15" height="12">
                             <b style="color: #29abe2">
                                     ${userOrder.order.unreadCommentsCount}
                             </b>
                         </c:if>
                     </td>
-                    <%--<td class='clickable-cell'>--%>
+                        <%--<td class='clickable-cell'>--%>
                         <%--<c:if test="${userOrder.order.unreadCommentsCount != 0}">--%>
-                            <%--${userOrder.order.unreadCommentsCount}--%>
+                        <%--${userOrder.order.unreadCommentsCount}--%>
                         <%--</c:if>--%>
-                    <%--</td>--%>
-                    <td class='clickable-cell' >${userOrder.order.debItemNum}
+                        <%--</td>--%>
+                    <td class='clickable-cell'>${userOrder.order.debItemNum}
                     </td>
                     <td class='clickable-cell'>${userOrder.order.itemNum}</td>
                     <td class="status clickable-cell"
@@ -270,6 +270,7 @@
 </body>
 </html>
 <script>
+    var roleId = +"${user.role.id}";
     var statuses = [];
     var obj = {};
     <c:forEach items="${userOrders}" var="userOrder">
@@ -286,11 +287,30 @@
     }
 
     $(".ordersFilter").each(function () {
+      debugger;
+        var groupedCount = 0;
+        switch ($(this).attr('id')) {
+            case "in-progress":
+//                var one = (+obj[1]);
+//                    var two = obj[2] || 0;
+                groupedCount = (obj[1] || 0) + (+obj[2] || 0) + (+obj[3] || 0) + (+obj[4] || 0) + (+obj[5] || 0) + (+obj[6]|| 0);
+                if(roleId !== 4 )
+                    groupedCount += (+obj[7] || 0);
+                if (groupedCount > 0)
+                    $(this).append(" (" + groupedCount + ")");
+                break;
+            case "planned" :
+                groupedCount = (obj[8] || 0) + (obj[11] || 0);
+                if (groupedCount > 0)
+                    $(this).append(" (" + groupedCount + ")");
+                break;
+            default :
+                if (obj[$(this).attr("data-filter-text")] > 0)
+                   $(this).append(" (" + obj[$(this).attr("data-filter-text")] + ")");
 
-        if (obj[$(this).attr("data-filter-text")] > 0) {
-            console.log($(this).attr("data-filter-text"));
-            $(this).append(" (" + obj[$(this).attr("data-filter-text")] + ")");
         }
+//        debugger;
+
     });
 
     $(".ordersFilter").click(function () {
@@ -298,7 +318,7 @@
         var that = $(this);
         var selection;
         var result;
-        var roleId = "${user.role.id}";
+
 
         $(".clickable-row").show();
 //        if ($(this).attr('id') != "all") {
@@ -334,55 +354,53 @@
 //        }
 //        debugger;
 
-            switch ($(this).attr('id')) {
+        switch ($(this).attr('id')) {
 
-                case "all":{
-                    selection =null;
-                    break;
-                }
-
-                case "in-progress":
-                    if (roleId === "1" || roleId === "2")
-                        selection = "[data-status='1'], [data-status='2'], [data-status='3'], [data-status='4'], [data-status='5'], [data-status='6'], [data-status='7']";
-                    else if (roleId === "4")
-                        selection = "[data-status='2'], [data-status='3'], [data-status='4'], [data-status='5'], [data-status='6']";
-                    break;
-                case "planned":
-                    selection = "[data-status='8'], [data-status='11']";
-                    break;
-                case "delivered" :
-                    selection = "[data-status='10']";
-                    break;
-                case "on-hold":
-                    selection = "[data-status='9']";
-                    break;
-                case "stamps-ordered":
-                    selection = "[data-status='7'], [data-status='8'], [data-status='10']";
-                    break;
-
-                default:
-                    console.log($(this));
-                    var filterStatus = $(this).attr("data-filter-text");
-                    console.log(filterStatus);
-                    $(".status").each(function () {
-                        var status = $(this).attr("data-status");
-                        console.log(filterStatus + " " + status);
-                        if (status !== filterStatus) {
-                            $(this).parent().hide();
-                        }
-                    });
-
-
+            case "all": {
+                selection = null;
+                break;
             }
 
-                if (selection != undefined || selection != null) {
-                    result = $(".clickable-row .status").not(selection);
-                    result.each(function () {
+            case "in-progress":
+                if (roleId <= 2)
+                    selection = "[data-status='1'], [data-status='2'], [data-status='3'], [data-status='4'], [data-status='5'], [data-status='6'], [data-status='7']";
+                else if (roleId === 4)
+                    selection = "[data-status='2'], [data-status='3'], [data-status='4'], [data-status='5'], [data-status='6']";
+                break;
+            case "planned":
+                selection = "[data-status='8'], [data-status='11']";
+                break;
+            case "delivered" :
+                selection = "[data-status='10']";
+                break;
+            case "on-hold":
+                selection = "[data-status='9']";
+                break;
+            case "stamps-ordered":
+                selection = "[data-status='7'], [data-status='8'], [data-status='10']";
+                break;
+
+            default:
+                console.log($(this));
+                var filterStatus = $(this).attr("data-filter-text");
+                console.log(filterStatus);
+                $(".status").each(function () {
+                    var status = $(this).attr("data-status");
+                    console.log(filterStatus + " " + status);
+                    if (status !== filterStatus) {
                         $(this).parent().hide();
-                    });
-                }
+                    }
+                });
 
 
+        }
+
+        if (selection != undefined || selection != null) {
+            result = $(".clickable-row .status").not(selection);
+            result.each(function () {
+                $(this).parent().hide();
+            });
+        }
 
 
     });
