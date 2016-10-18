@@ -131,10 +131,10 @@
                        st=${theOrder.SAPstatus.id} ur=${user.role.id}>
                     <tr class="table-title" valign="top">
                         <th width="50%">
-                            <b>Order Informatie</b>
+                            <b style="font-weight: 600">Order Informatie</b>
                         </th>
                         <th width="50%">
-                            <b>Artikel informatie</b>
+                            <b style="font-weight: 600">Artikel informatie</b>
                         </th>
                     </tr>
                     <tr>
