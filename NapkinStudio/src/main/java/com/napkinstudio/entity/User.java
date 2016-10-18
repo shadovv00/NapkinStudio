@@ -27,6 +27,8 @@ import java.util.Date;
 
 
         @NamedQuery(name = "User.deleteById", query = "DELETE FROM User u WHERE u.userId = ?1"),
+        @NamedQuery(name = "User.getUpdatedUsers", query = "SELECT u FROM  User  u  WHERE u.lastModifiedDate >=:lastModifiedDate")
+
         /*@NamedQuery(name = "User.deactivateById", query = "update User as u set u.enabled =0  where u.userId = ?1"),
         @NamedQuery(name = "User.activateById", query = "update User as u set u.enabled =1  where u.userId = ?1"),*/ })
 

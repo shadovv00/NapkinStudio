@@ -56,8 +56,8 @@ public class Order extends  AbstractEntity{
     private Boolean debCheckScen;
     private Boolean repeated;
     private byte processId;
-    private Boolean toDeptor;
-    private Boolean toDtp;
+//    private Boolean toDeptor;
+//    private Boolean toDtp;
     private Boolean deleted;
 
     @Transient
@@ -251,15 +251,15 @@ public class Order extends  AbstractEntity{
     public void setDebCheckScen(Boolean debCheckScen) {
         this.debCheckScen = debCheckScen;    }
 
-    public Boolean getToDeptor() {
-        return toDeptor;    }
-    public void setToDeptor(Boolean toDeptor) {
-        this.toDeptor = toDeptor;    }
-
-    public Boolean getToDtp() {
-        return toDtp;    }
-    public void setToDtp(Boolean toDtp) {
-        this.toDtp = toDtp;    }
+//    public Boolean getToDeptor() {
+//        return toDeptor;    }
+//    public void setToDeptor(Boolean toDeptor) {
+//        this.toDeptor = toDeptor;    }
+//
+//    public Boolean getToDtp() {
+//        return toDtp;    }
+//    public void setToDtp(Boolean toDtp) {
+//        this.toDtp = toDtp;    }
 
     public byte getProcessId() {
         return processId;    }
