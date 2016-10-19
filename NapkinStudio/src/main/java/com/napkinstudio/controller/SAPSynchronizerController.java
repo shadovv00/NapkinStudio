@@ -2,6 +2,8 @@ package com.napkinstudio.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -9,17 +11,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.napkinstudio.manager.FTPManager;
 
+import hello.Greeting;
+
 @RestController
 @RequestMapping(value = "/sapsynchronizerservice")
-public class SAPSynchrinizerController {
+public class SAPSynchronizerController {
+	
+	private final SimpMessagingTemplate messagingTemplate;
+	
+	public SAPSynchronizerController(SimpMessagingTemplate messagingTemplate) {
+		this.messagingTemplate = messagingTemplate;
+	}
 	
 	@Autowired
 	FTPManager ftpManager;
 	
-	@RequestMapping(method = RequestMethod.HEAD)
+//	@SendTo("/topic/napkin-notifications")
+	@RequestMapping(method = RequestMethod.GET)
     public String trigger(@RequestParam(value = "user", defaultValue = "") String user) {
 		System.out.println("user = " + user);
 		System.out.println("herehereherehereherehere");
+		this.messagingTemplate.convertAndSend("/topic/napkin-notifications", new Greeting("имхо"));
         return "BRBRBRBRBRBBRBR " + user + "]";
     }
 	
@@ -29,6 +41,7 @@ public class SAPSynchrinizerController {
 		System.out.println("token = " + token);
 		if(token.equals("LJDFGHUYOI*$(**(GSLSJGHJSFHIOIGUHIYHGEOIJFHDSGUIJERHOIUFSGHSIOUDGRHGIUSHFGUDSFH")) {
 			System.out.println("next actions!");
+			this.messagingTemplate.convertAndSend("/topic/napkin-notifications", new Greeting("имхо"));
 			return ftpManager.handle();
 		} else {
 			System.out.println("nope!");
