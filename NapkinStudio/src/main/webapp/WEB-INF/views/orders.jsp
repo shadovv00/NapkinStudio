@@ -194,7 +194,7 @@
                 <%--<spring:param name="orderId" value ="${userOrder.order.orderId}"/>--%>
                 <%--</spring:url>">--%>
                 <tr class='clickable-row' data-href="<c:url value='/orders/${userOrder.order.orderId}' />">
-                    <td class='clickable-cell orderId'>${userOrder.order.orderId}
+                    <td data-order-id="${userOrder.order.orderId}" class='clickable-cell orderId'>${userOrder.order.orderId}
                         <c:if test="${userOrder.order.unreadCommentsCount != 0}">
                             <img src="<c:url value='/static/image/new_comments.png' />" width="15" height="12">
                             <b style="color: #29abe2">
@@ -417,7 +417,7 @@
             var that = $(this);
             var IDList = [];
             $("tr:visible").children(".orderId").each(function () {
-                var orderId = $(this).text().trim();
+                var orderId = $(this).attr("data-order-id");
                 console.log(orderId);
                 IDList.push(orderId);
 
