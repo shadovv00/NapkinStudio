@@ -603,16 +603,16 @@ var napkin = napkin || {};
 					  });
 					 }
 
-		$(document).ready(function () {
-				initPrintProof();
+	$(document).ready(function () {
+		initPrintProof();
 
-				var jApproveBtn = $(".approve-btn");
-				jApproveBtn.on("click", approve);
-				$(".approve-simple-btn").on("click", approveSimple);
-				if ($("#order-new-attachment")){
-				    napkin.buildFileAttachmentBlock();
-				}
-				napkin.buildFileInfoList();
-			});
+		var jApproveBtn = $(".approve-btn");
+		jApproveBtn.on("click", approve);
+		$(".approve-simple-btn").on("click", approveSimple);
+		if ($("#order-new-attachment")){
+		    napkin.buildFileAttachmentBlock();
+		}
+		napkin.buildFileInfoList();
+	});
 })(napkin);
 
