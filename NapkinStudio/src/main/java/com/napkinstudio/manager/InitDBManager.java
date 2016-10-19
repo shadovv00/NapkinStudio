@@ -550,7 +550,7 @@ public class InitDBManager {
         order1.setDebOrderNum("A5682345");
         order1.setDebCont("Jan de Wit");
         order1.setDelivAddr("Amerikalaan 3/n" +
-                "5202 CA ‘s- Hertogenbosch");
+                "5202 CA вЂ�s- Hertogenbosch");
         order1.setDelivAddrCont("Saskia Jansen");
         order1.setUnloadTimes("2");
         order1.setDelivInstruct("Telefoon: 06 12 34 56 78; ma t/m vr 8:00 - 17:00");
@@ -711,7 +711,7 @@ public class InitDBManager {
         order3.setDebOrderNum("A5682345");
         order3.setDebCont("Jan de Wit");
         order3.setDelivAddr("Amerikalaan 3/n" +
-                "5202 CA ‘s- Hertogenbosch");
+                "5202 CA вЂ�s- Hertogenbosch");
         order3.setDelivAddrCont("Saskia Jansen");
         order3.setUnloadTimes("2");
         order3.setDelivInstruct("Telefoon: 06 12 34 56 78; ma t/m vr 8:00 - 17:00");
@@ -769,7 +769,7 @@ public class InitDBManager {
         order2.setDebOrderNum("A5682345");
         order2.setDebCont("Jan de Wit");
         order2.setDelivAddr("Amerikalaan 3/n" +
-                "5202 CA ‘s- Hertogenbosch");
+                "5202 CA вЂ�s- Hertogenbosch");
         order2.setDelivAddrCont("Saskia Jansen");
         order2.setUnloadTimes("2");
         order2.setDelivInstruct("Telefoon: 06 12 34 56 78; ma t/m vr 8:00 - 17:00");
