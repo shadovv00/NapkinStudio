@@ -549,8 +549,7 @@ public class InitDBManager {
         order1.setDebNum("1234567");
         order1.setDebOrderNum("A5682345");
         order1.setDebCont("Jan de Wit");
-        order1.setDelivAddr("Amerikalaan 3/n" +
-                "5202 CA вЂ�s- Hertogenbosch");
+        order1.setDelivAddr("Amerikalaan 3/n 5202 CA 's- Hertogenbosch");
         order1.setDelivAddrCont("Saskia Jansen");
         order1.setUnloadTimes("2");
         order1.setDelivInstruct("Telefoon: 06 12 34 56 78; ma t/m vr 8:00 - 17:00");

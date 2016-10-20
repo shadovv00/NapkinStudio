@@ -790,6 +790,13 @@ public class OrderPageController {
     
     
     
+    @RequestMapping(value = "/orders/{orderId}/order_attachments/download_all", method = RequestMethod.GET)
+    public void downloadAllAttachments(HttpServletResponse response, @PathVariable String orderId) {
+    	orderPageManager.downloadAllAttachments(response, orderId);
+    }
+    
+    
+    
     @RequestMapping(value = "/orders/{orderId}/order_attachments/remove/{fileName:.*}", method = RequestMethod.DELETE)
     @ResponseBody
     public ResponseEntity<String> removeOrderAttachment(@PathVariable String orderId, @PathVariable String fileName) {

@@ -330,7 +330,7 @@ var napkin = napkin || {};
 		}
 		
 		function _downloadAll() {
-			$(".order-attachment ._download_attachment p").trigger("click");
+			location.href = location.href + "/order_attachments/download_all";
 		}
 		
 	};
