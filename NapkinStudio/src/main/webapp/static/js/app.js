@@ -580,7 +580,11 @@ var napkin = napkin || {};
 
 	function approveSimple() {
 		$('.loading-spinner').show();
-		changeStatusAndAddComment($(this).attr('foraction'),"");
+		var commentText="";
+		if ($("#statuscahngecomment").length){
+			commentText=$("#statuscahngecomment").val();
+		}
+		changeStatusAndAddComment($(this).attr('foraction'),commentText);
 	}
 
 
