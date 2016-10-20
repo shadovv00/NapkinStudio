@@ -232,6 +232,9 @@ public class OrderPageController {
                     iterator.remove();
                 }
             }
+            if (object[0].equals("Waiting for approval")&&object[1] == null&&theOrder.getSAPstatus().getId()==6){
+                iterator.remove();
+            }
         }
 //
         String prevId = "", nextId = "";
@@ -661,6 +664,7 @@ public class OrderPageController {
     public String changeOrderStatusAndUpload(@Valid MultiFileBucket multiFileBucket,
                                              BindingResult result, Model model, @PathVariable int orderId, @PathVariable String answer, @ModelAttribute("user") User user, @ModelAttribute("comment") Comments comment) throws IOException {
         Order theOrder = orderManager.findById(orderId);
+
         Role role = user.getRole();
 
         statusChanginLogic(theOrder, role, answer);
@@ -786,6 +790,13 @@ public class OrderPageController {
 			System.out.println("Sth somewhere went wrong!");
 			e.printStackTrace();
 		}
+    }
+    
+    
+    
+    @RequestMapping(value = "/orders/{orderId}/order_attachments/download_all", method = RequestMethod.GET)
+    public void downloadAllAttachments(HttpServletResponse response, @PathVariable String orderId) {
+    	orderPageManager.downloadAllAttachments(response, orderId);
     }
     
     

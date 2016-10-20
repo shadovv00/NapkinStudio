@@ -222,12 +222,14 @@ var napkin = napkin || {};
 					//TODO: Better role check
 					if (allowDelete) {
 						jAtUiLi.append(jRemBtn = $("<span class='_removeAttachment remove-icon-align remove-attachment glyphicon glyphicon-remove' fileName='" + name + "' data-toggle='confirmation'></span>"));
+						jRemBtn.on("click", _removeFileItem);
 					}
 					jAtUiLi.append("<a href='" + location.href + "/order_attachments/" + name + "' download='" + name + "' title='download' class='_download_attachment download-attachment'>" +
 									"<i class='icon-align material-icons'>attach_file</i>" + name + "" +
 									"<p class='file-info'> - " + size + " - " + _getDateFormatForAttachment(lastModified) + "</p>" +
 								"</a>");
 					jAtUi.append(jAtUiLi);
+					
 				}
 				
 			} else {
@@ -240,9 +242,7 @@ var napkin = napkin || {};
 				$(this).find(".remove-attachment").hide();
 			});
 			$(".order-attachment li ._attachmentPreview").on("click", _previewAttachment);
-			if(jRemBtn) {
-				jRemBtn.on("click", _removeFileItem);
-			}
+			
 			jDwldAll.on("click", _downloadAll);
 			
 			function _previewAttachment() {
@@ -330,7 +330,7 @@ var napkin = napkin || {};
 		}
 		
 		function _downloadAll() {
-			$(".order-attachment ._download_attachment p").trigger("click");
+			location.href = location.href + "/order_attachments/download_all";
 		}
 		
 	};
@@ -580,7 +580,11 @@ var napkin = napkin || {};
 
 	function approveSimple() {
 		$('.loading-spinner').show();
-		changeStatusAndAddComment($(this).attr('foraction'),"");
+		var commentText="";
+		if ($("#statuscahngecomment").length){
+			commentText=$("#statuscahngecomment").val();
+		}
+		changeStatusAndAddComment($(this).attr('foraction'),commentText);
 	}
 
 
@@ -603,16 +607,16 @@ var napkin = napkin || {};
 					  });
 					 }
 
-		$(document).ready(function () {
-				initPrintProof();
+	$(document).ready(function () {
+		initPrintProof();
 
-				var jApproveBtn = $(".approve-btn");
-				jApproveBtn.on("click", approve);
-				$(".approve-simple-btn").on("click", approveSimple);
-				if ($("#order-new-attachment")){
-				    napkin.buildFileAttachmentBlock();
-				}
-				napkin.buildFileInfoList();
-			});
+		var jApproveBtn = $(".approve-btn");
+		jApproveBtn.on("click", approve);
+		$(".approve-simple-btn").on("click", approveSimple);
+		if ($("#order-new-attachment")){
+		    napkin.buildFileAttachmentBlock();
+		}
+		napkin.buildFileInfoList();
+	});
 })(napkin);
 

@@ -31,6 +31,9 @@
     <script src="<c:url value='/static/js/jquery.ui.widget.js' />"></script>
     <script src="<c:url value='/static/js/jquery.iframe-transport.js' />"></script>
     <script src="<c:url value='/static/js/jquery.fileupload.js' />"></script>
+    <script src="<c:url value='/static/js/plugins/websocket/sockjs-0.3.4.min.js' />"></script>
+    <script src="<c:url value='/static/js/plugins/websocket/stomp.min.js' />"></script>
+    <script src="<c:url value='/static/js/plugins/websocket/websocket-app.js' />"></script>
     <%--<nav display="inline">
         <a href="<c:url value="/orders"/>" class="btn btn-primary custom-width"> to orders </a>
         <span style="margin-left: 100px">  order id ${theOrder.orderId}</span>
@@ -283,19 +286,19 @@
                                                                     <p>
                                                                             <%--${PVIComment.fromUser.lastModifiedDate}--%>
                                                                         <c:choose>
-                                                                            <c:when test="${DateUtils.isSameDay(PVIComment.fromUser.lastModifiedDate, today)}">
+                                                                            <c:when test="${DateUtils.isSameDay(PVIComment.lastModifiedDate, today)}">
                                                                                 Today <fmt:formatDate
-                                                                                    value="${PVIComment.fromUser.lastModifiedDate}"
+                                                                                    value="${PVIComment.lastModifiedDate}"
                                                                                     pattern=" HH:mm"/>
                                                                             </c:when>
-                                                                            <c:when test="${DateUtils.isSameDay(PVIComment.fromUser.lastModifiedDate, yesterday)}">
+                                                                            <c:when test="${DateUtils.isSameDay(PVIComment.lastModifiedDate, yesterday)}">
                                                                                 Yesterday <fmt:formatDate
-                                                                                    value="${PVIComment.fromUser.lastModifiedDate}"
+                                                                                    value="${PVIComment.lastModifiedDate}"
                                                                                     pattern=" HH:mm"/>
                                                                             </c:when>
                                                                             <c:otherwise>
                                                                                 <fmt:formatDate
-                                                                                        value="${PVIComment.fromUser.lastModifiedDate}"
+                                                                                        value="${PVIComment.lastModifiedDate}"
                                                                                         pattern=" EEEE d/MM/yyyy HH:mm"/>
                                                                             </c:otherwise>
                                                                         </c:choose>
@@ -318,11 +321,11 @@
                                                 <c:out value="No comments for PVI"/>
                                             </c:otherwise>
                                         </c:choose>
-                                        <li id="form-container">
+                                        <li id="form-container" >
 
                                             <form:form commandName="comment" method="post"
                                                        action="/NapkinStudio/addComment"
-                                                       cssClass="form-horizontal addCommentForm">
+                                                       cssClass="form-horizontal addCommentForm " cssStyle="display: none">
                                                 <div class="form-group">
                                                     <div class="col-sm-5">
                                                         <form:textarea path="commText"
@@ -379,19 +382,19 @@
                                                                 <p>
                                                                         <%--${DTPComment.fromUser.lastModifiedDate} --%>
                                                                     <c:choose>
-                                                                        <c:when test="${DateUtils.isSameDay(DTPComment.fromUser.lastModifiedDate, today)}">
+                                                                        <c:when test="${DateUtils.isSameDay(DTPComment.lastModifiedDate, today)}">
                                                                             Today <fmt:formatDate
-                                                                                value="${DTPComment.fromUser.lastModifiedDate}"
+                                                                                value="${DTPComment.lastModifiedDate}"
                                                                                 pattern=" HH:mm"/>
                                                                         </c:when>
                                                                         <c:when test="${DateUtils.isSameDay(DTPComment.fromUser.lastModifiedDate, yesterday)}">
                                                                             Yesterday <fmt:formatDate
-                                                                                value="${DTPComment.fromUser.lastModifiedDate}"
+                                                                                value="${DTPComment.lastModifiedDate}"
                                                                                 pattern=" HH:mm"/>
                                                                         </c:when>
                                                                         <c:otherwise>
                                                                             <fmt:formatDate
-                                                                                    value="${DTPComment.fromUser.lastModifiedDate}"
+                                                                                    value="${DTPComment.lastModifiedDate}"
                                                                                     pattern=" EEEE d/MM/yyyy HH:mm"/>
                                                                         </c:otherwise>
                                                                     </c:choose>
@@ -450,19 +453,19 @@
                                                                     <p>
                                                                             <%--${DeptorComment.fromUser.lastModifiedDate}--%>
                                                                         <c:choose>
-                                                                            <c:when test="${DateUtils.isSameDay(DeptorComment.fromUser.lastModifiedDate, today)}">
+                                                                            <c:when test="${DateUtils.isSameDay(DeptorComment.lastModifiedDate, today)}">
                                                                                 Today <fmt:formatDate
-                                                                                    value="${DeptorComment.fromUser.lastModifiedDate}"
+                                                                                    value="${DeptorComment.lastModifiedDate}"
                                                                                     pattern=" HH:mm"/>
                                                                             </c:when>
-                                                                            <c:when test="${DateUtils.isSameDay(DeptorComment.fromUser.lastModifiedDate, yesterday)}">
+                                                                            <c:when test="${DateUtils.isSameDay(DeptorComment.lastModifiedDate, yesterday)}">
                                                                                 Yesterday <fmt:formatDate
-                                                                                    value="${DeptorComment.fromUser.lastModifiedDate}"
+                                                                                    value="${DeptorComment.lastModifiedDate}"
                                                                                     pattern=" HH:mm"/>
                                                                             </c:when>
                                                                             <c:otherwise>
                                                                                 <fmt:formatDate
-                                                                                        value="${DeptorComment.fromUser.lastModifiedDate}"
+                                                                                        value="${DeptorComment.lastModifiedDate}"
                                                                                         pattern=" EEEE d/MM/yyyy HH:mm"/>
                                                                             </c:otherwise>
                                                                         </c:choose>
@@ -519,19 +522,19 @@
                                                                 <p>
                                                                         <%--${CustomerComment.fromUser.lastModifiedDate}--%>
                                                                     <c:choose>
-                                                                        <c:when test="${DateUtils.isSameDay(CustomerComment.fromUser.lastModifiedDate, today)}">
+                                                                        <c:when test="${DateUtils.isSameDay(CustomerComment.lastModifiedDate, today)}">
                                                                             Today <fmt:formatDate
-                                                                                value="${CustomerComment.fromUser.lastModifiedDate}"
+                                                                                value="${CustomerComment.lastModifiedDate}"
                                                                                 pattern=" HH:mm"/>
                                                                         </c:when>
-                                                                        <c:when test="${DateUtils.isSameDay(CustomerComment.fromUser.lastModifiedDate, yesterday)}">
+                                                                        <c:when test="${DateUtils.isSameDay(CustomerComment.lastModifiedDate, yesterday)}">
                                                                             Yesterday <fmt:formatDate
-                                                                                value="${CustomerComment.fromUser.lastModifiedDate}"
+                                                                                value="${CustomerComment.lastModifiedDate}"
                                                                                 pattern=" HH:mm"/>
                                                                         </c:when>
                                                                         <c:otherwise>
                                                                             <fmt:formatDate
-                                                                                    value="${CustomerComment.fromUser.lastModifiedDate}"
+                                                                                    value="${CustomerComment.lastModifiedDate}"
                                                                                     pattern=" EEEE d/MM/yyyy HH:mm"/>
                                                                         </c:otherwise>
                                                                     </c:choose>
@@ -588,19 +591,19 @@
                                                                 <p>
                                                                         <%--${StampsManufacComment.fromUser.lastModifiedDate} --%>
                                                                     <c:choose>
-                                                                        <c:when test="${DateUtils.isSameDay(StampsManufacComment.fromUser.lastModifiedDate, today)}">
+                                                                        <c:when test="${DateUtils.isSameDay(StampsManufacComment.lastModifiedDate, today)}">
                                                                             Today <fmt:formatDate
-                                                                                value="${StampsManufacComment.fromUser.lastModifiedDate}"
+                                                                                value="${StampsManufacComment.lastModifiedDate}"
                                                                                 pattern=" HH:mm"/>
                                                                         </c:when>
-                                                                        <c:when test="${DateUtils.isSameDay(StampsManufacComment.fromUser.lastModifiedDate, yesterday)}">
+                                                                        <c:when test="${DateUtils.isSameDay(StampsManufacComment.lastModifiedDate, yesterday)}">
                                                                             Yesterday <fmt:formatDate
-                                                                                value="${StampsManufacComment.fromUser.lastModifiedDate}"
+                                                                                value="${StampsManufacComment.lastModifiedDate}"
                                                                                 pattern=" HH:mm"/>
                                                                         </c:when>
                                                                         <c:otherwise>
                                                                             <fmt:formatDate
-                                                                                    value="${StampsManufacComment.fromUser.lastModifiedDate}"
+                                                                                    value="${StampsManufacComment.lastModifiedDate}"
                                                                                     pattern=" EEEE d/MM/yyyy HH:mm"/>
                                                                         </c:otherwise>
                                                                     </c:choose>
@@ -658,19 +661,19 @@
                                                                 </p>
                                                                 <p>
                                                                     <c:choose>
-                                                                        <c:when test="${DateUtils.isSameDay(ProductionComment.fromUser.lastModifiedDate, today)}">
+                                                                        <c:when test="${DateUtils.isSameDay(ProductionComment.lastModifiedDate, today)}">
                                                                             Today <fmt:formatDate
-                                                                                value="${ProductionComment.fromUser.lastModifiedDate}"
+                                                                                value="${ProductionComment.lastModifiedDate}"
                                                                                 pattern=" HH:mm"/>
                                                                         </c:when>
-                                                                        <c:when test="${DateUtils.isSameDay(ProductionComment.fromUser.lastModifiedDate, yesterday)}">
+                                                                        <c:when test="${DateUtils.isSameDay(ProductionComment.lastModifiedDate, yesterday)}">
                                                                             Yesterday <fmt:formatDate
-                                                                                value="${ProductionComment.fromUser.lastModifiedDate}"
+                                                                                value="${ProductionComment.lastModifiedDate}"
                                                                                 pattern=" HH:mm"/>
                                                                         </c:when>
                                                                         <c:otherwise>
                                                                             <fmt:formatDate
-                                                                                    value="${ProductionComment.fromUser.lastModifiedDate}"
+                                                                                    value="${ProductionComment.lastModifiedDate}"
                                                                                     pattern=" EEEE d/MM/yyyy HH:mm"/>
                                                                         </c:otherwise>
                                                                     </c:choose>
@@ -823,6 +826,7 @@
     </table>
 </section>
 <script src="<c:url value='/static/js/app.js' />"></script>
+<div id="websocket" style="display: none; position: fixed; top: 0; right: 0; width: 200px; height: 90px; background-color: red; font-size: -webkit-xxx-large;">SAP</div>>
 </body>
 </html>
 <script>
@@ -835,7 +839,7 @@
     $(document).ready(function () {
 
 
-        $(".addCommentForm").hide();
+//        $(".addCommentForm").hide();
         $(".add-comment-btn").hide();
         $(".editCommentForm").hide();
         $(".edit-comment").hide();

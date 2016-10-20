@@ -1,10 +1,7 @@
 package com.napkinstudio.config;
 
-import com.napkinstudio.config.security.SecurityConfig;
-import com.napkinstudio.sapcommunicationmodels.DataTransferFromSAP;
-import com.napkinstudio.sapcommunicationmodels.DataTransferToSAP;
-import com.napkinstudio.util.FTPCommunicator;
-import com.thoughtworks.xstream.XStream;
+import java.util.Properties;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -15,22 +12,25 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.oxm.castor.CastorMarshaller;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
-import org.springframework.web.multipart.support.StandardServletMultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import java.util.Properties;
+import com.napkinstudio.config.security.SecurityConfig;
+import com.napkinstudio.sapcommunicationmodels.DataTransferFromSAP;
+import com.napkinstudio.sapcommunicationmodels.DataTransferToSAP;
+import com.napkinstudio.util.FTPCommunicator;
+import com.thoughtworks.xstream.XStream;
 /**
  * Created by User1 on 18.07.2016.
  */
 @EnableWebMvc
 @Configuration
 @ComponentScan( { "com.napkinstudio.*" })
-@Import(value = { SecurityConfig.class })
+@Import(value = { WebSocketConfig.class, SecurityConfig.class })
 public class AppConfig extends WebMvcConfigurerAdapter{
 
     @Bean

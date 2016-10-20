@@ -2,6 +2,7 @@ package com.napkinstudio.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,15 +12,30 @@ import com.napkinstudio.manager.FTPManager;
 
 @RestController
 @RequestMapping(value = "/sapsynchronizerservice")
-public class SAPSynchrinizerController {
+public class SAPSynchronizerController {
+	
+	private final SimpMessagingTemplate messagingTemplate;
+	
+	public SAPSynchronizerController(SimpMessagingTemplate messagingTemplate) {
+		this.messagingTemplate = messagingTemplate;
+	}
 	
 	@Autowired
 	FTPManager ftpManager;
 	
-	@RequestMapping(method = RequestMethod.HEAD)
+//	@SendTo("/topic/napkin-notifications")
+	@RequestMapping(method = RequestMethod.GET)
     public String trigger(@RequestParam(value = "user", defaultValue = "") String user) {
 		System.out.println("user = " + user);
 		System.out.println("herehereherehereherehere");
+		
+		
+		
+		this.messagingTemplate.convertAndSend("/topic/napkin-notifications", "имхо");
+		
+		
+		
+		
         return "BRBRBRBRBRBBRBR " + user + "]";
     }
 	
