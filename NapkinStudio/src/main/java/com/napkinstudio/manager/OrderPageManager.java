@@ -23,8 +23,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
@@ -77,6 +79,7 @@ public class OrderPageManager {
 	
 	@Autowired
 	private AttachmentManager attachmentManager;
+	
 	
 	
 //	public static void main(String[] args) {
@@ -594,4 +597,44 @@ public class OrderPageManager {
         }
         return new ResponseEntity<>(respMap, HttpStatus.OK);
     }
+
+
+
+	public void downloadAllAttachments(HttpServletResponse response, String orderId) {
+		System.out.println("!! DOWNLOAD ALL ATTACHMENTS !!");
+		
+		String fnlDirPath = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderId + SEP + ORDERS_FINAL_DIRECTORY;
+        File folder = new File(fnlDirPath);
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", String.format("inline; filename=\"attachments.zip\""));
+
+        int fileLength = 0;
+		ZipEntry entry = null;
+		InputStream fis = null;
+		try(ServletOutputStream baos = response.getOutputStream();
+				ZipOutputStream zos = new ZipOutputStream(baos)) {
+			
+			File[] files = folder.listFiles();
+			for (File file : files) {
+				fileLength += file.length();
+				System.out.println("Writing '" + file.getName() + "' to zip file");
+				entry = new ZipEntry(file.getName());
+				zos.putNextEntry(entry);
+				byte[] bytes = new byte[1024];
+				int length;
+				fis = new FileInputStream(file);
+				while ((length = fis.read(bytes)) >= 0) {
+					zos.write(bytes, 0, length);
+				}
+				zos.closeEntry();
+			}
+			
+		} catch(IOException ioe) {
+			ioe.printStackTrace();
+		}
+		
+		response.setContentLength(fileLength);
+	}
+	
+	
 }
