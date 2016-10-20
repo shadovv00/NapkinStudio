@@ -20,7 +20,7 @@ public interface IUserDao extends JpaRepository<User,Integer> {
 
     public List<User> findAllByLastName(@Param(value = "lastName")String lastName);
 
-    public User findByLogin(@Param("login")String login);
+    public User findByLogin(@Param("login")String login, @Param(value = "email")String email);
 
     public void deleteByLogin(String login);
 

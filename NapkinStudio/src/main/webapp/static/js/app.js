@@ -179,7 +179,8 @@ var napkin = napkin || {};
 		
 		$.get(location.href + "/order_attachments", function(response) {
 			jAt.html("");
-			jAt.append("<b>Opmerkingen</b>");
+			// jAt.append("<b>Opmerkingen</b>");
+			jAt.append("<b>Attachments</b>");
 			jDwldAll = $("<button type='button' class='btn btn-link'>Download all</button>");
 			jAtUi = $("<ul></ul>");
 			if(Array.isArray(response["attachmentList"])) {

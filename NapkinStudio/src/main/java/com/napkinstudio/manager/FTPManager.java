@@ -19,6 +19,7 @@ import org.apache.commons.net.ftp.FTPSClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.napkinstudio.sapcommunicationmodels.DataTransferFromSAP;
@@ -70,12 +71,15 @@ public class FTPManager {
 	@Autowired
 	private FileTransfer fileTransfer;
 
+	private BCryptPasswordEncoder encoder;
+
 
 //	@Autowired
 	FTPSClient ftpClient;
 	
 	public String handle() {
 		System.out.println("FTPManager start");
+		encoder = new BCryptPasswordEncoder();
 
 		String message = "ok";
 		
@@ -266,8 +270,8 @@ public class FTPManager {
 										thisUser.setLastName(userSAP.getLastName());
 										thisUser.setFirstName(userSAP.getFirstName());
 										thisUser.setLogin(userSAP.getLogin());
-										if (userSAP.getPassword()!=null){
-											thisUser.setPassword(userSAP.getPassword());
+										if (userSAP.getPassword()!=null&&userSAP.getPassword()!=""){
+											thisUser.setPassword(encoder.encode(userSAP.getPassword()));
 										}
 										thisUser.setEmail(userSAP.getEmail());
 										thisUser.setEnabled(userSAP.getEnabled());
@@ -396,6 +400,7 @@ public class FTPManager {
 								ordersToSAP.setOrders(outOrderList);
 								dtts.setSapOrders(ordersToSAP);
 							}
+//			USERS to SAP
 //							TODO: Get from DB already formed UserToSAP
 							LinkedList<User> outUsers = userManager.getUpdatedUsers(synchroData.getDateToSAP());
 							if (outUsers!=null){
@@ -411,8 +416,8 @@ public class FTPManager {
 									newUserToSAP.setFirstName(outUser.getFirstName());
 									newUserToSAP.setLastName(outUser.getLastName());
 									newUserToSAP.setLogin(outUser.getLogin());
-//									TODO: decode pass?
-									newUserToSAP.setPassword(outUser.getPassword());
+//									TODO: decode pass? - not neccecary any more
+//									newUserToSAP.setPassword(outUser.getPassword());
 									newUserToSAP.setRole(outUser.getRole().getId());
 //									TODO: correct lazy connection
 //									newUserToSAP.setRole(roleManager.findByUserId(outUser.getUserId()).getId());
@@ -421,27 +426,6 @@ public class FTPManager {
 								usersToSAP.setUsers(outUserList);
 								dtts.setSapUsers(usersToSAP);
 							}
-
-							//                            LinkedList<Order> outOrders = new LinkedList<Order>();
-//							System.out.print(outOrders);
-
-//                            Order s_order = new Order();
-//                            s_order.setOrderId(123);
-//                            s_order.setDebItemNum("123");
-//                            s_order.setApprovalBy("123");
-//							SAPstatus s_sapstatus= new SAPstatus();
-//							s_sapstatus.setId(1);
-//							s_sapstatus.setName("test status name");
-//							s_order.setSAPstatus(s_sapstatus);
-//                            outOrders.add(s_order);
-//                            Order s_order1 = new Order();
-//                            s_order1.setOrderId(890);
-//                            s_order1.setDebItemNum("890");
-//                            s_order1.setApprovalBy("890");
-//                            outOrders.add(s_order1);
-
-//							dtts.setOrders(outOrders);
-
 
 							xstream.processAnnotations(DataTransferToSAP.class);
 			                xstream.toXML(dtts, os2);
