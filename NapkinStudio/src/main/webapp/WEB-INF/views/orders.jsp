@@ -287,7 +287,7 @@
     }
 
     $(".ordersFilter").each(function () {
-      debugger;
+//      debugger;
         var groupedCount = 0;
         switch ($(this).attr('id')) {
             case "in-progress":
