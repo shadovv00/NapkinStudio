@@ -65,7 +65,8 @@ var napkin = napkin || {};
 	                console.info('Added file: ' + file.name);
 	                jIconDeleteFile.attr("fileName", file.name);
 	                jfileInfo.append(jIconDeleteFile);
-	                jfileInfo.append("<p class='file-info-text'>" + file.name + "  " + _formatFileSize(file.size) + "  " + _getDateFormatForAttachment(file.lastModifiedDate) + "</p>");
+	                console.log(file);
+	                jfileInfo.append("<p class='file-info-text'>" + file.name + "  " + _formatFileSize(file.size) + "  " + _getDateFormatForAttachment(file.lastModified) + "</p>");
 	                jfileInfo.append(jIconFileStatus);
 	                mjUpLi[file.name] = jUpLi;
 	            });
@@ -473,6 +474,7 @@ var napkin = napkin || {};
 	}
 	
 	function _getDateFormatForAttachment(date) {
+		date = new Date(date);
 		var monthNames = [
 			              "Jan", "Feb", "Mar",
 			              "Apr", "May", "Jun", "Jul",
