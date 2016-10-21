@@ -322,24 +322,23 @@
 
                                             <form:form commandName="comment" method="post"
                                                        action="/NapkinStudio/addComment"
-                                                       cssClass="form-horizontal addCommentForm " cssStyle="display: none">
+                                                       cssClass="form-horizontal addCommentForm" cssStyle="display: none">
                                                 <div class="form-group">
                                                     <div class="col-sm-5">
                                                         <form:textarea path="commText"
-                                                                       cssClass="form-control"></form:textarea>
+                                                                      cssClass="edit-comment-area"></form:textarea>
                                                         <form:hidden id="for-role" path="forRole.id"
                                                                      value="2"/>
                                                         <form:hidden path="order.orderId"
                                                                      value="${theOrder.orderId}"/>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-5">
+                                                <div>
                                                     <input type="submit"
                                                            value="Save"
-                                                           class="btn btn-large btn-primary send-comment-btn"
-                                                           style="float: left;">
+                                                           class="btn btn-large btn-primary send-comment-btn">
                                                     <a class="btn cancel-button btn-danger "
-                                                       style="float:right;">Cancel</a>
+                                                       >Cancel</a>
                                                 </div>
                                             </form:form>
                                         </li>
@@ -720,7 +719,7 @@
                         <div id="order-new-attachment" style="padding-top: 15px; padding-bottom: 15px"></div>
                         <div>
                             <textarea id="statuscahngecomment" path="commText" placeholder="Enter comment"
-                                      style="margin-bottom: 15px; border-radius:5px; "></textarea>
+                                      class="edit-comment-area"></textarea>
                         </div>
                     </c:if>
                         <%--Appove without comments and files adding--%>
@@ -838,8 +837,8 @@
 //        $(".addCommentForm").hide();
         $(".add-comment-btn").hide();
         $(".editCommentForm").hide();
-        $(".edit-comment").hide();
-        $(".delete-comment").hide();
+        $(".edit-comment").css("visibility", "hidden");
+        $(".delete-comment").css("visibility", "hidden");
         $(".loading-spinner").hide();
 
 
@@ -890,7 +889,7 @@
             var comment = $(this).parent().find(".commentText").text().trim();
             console.log(comment);
 
-            var $editCommentArea = $("<textarea class='edit-comment'/>");
+            var $editCommentArea = $("<textarea id='edit-comment' class='edit-comment-area' />");
             var $buttonArea = $("<div><a class='btn btn-primary'>Edit</a> <a class='btn btn-danger'>Cancel</a> </div>");
             var commentDiv = $(this).parent().parent();
 
@@ -1035,11 +1034,11 @@
 
         $(".comment-container").hover(function () {
 
-            $(this).find(".edit-comment").show();
-            $(this).find(".delete-comment").show();
+            $(this).find(".edit-comment").css('visibility', 'visible');
+            $(this).find(".delete-comment").css('visibility', 'visible');
         }, function () {
-            $(this).find(".edit-comment").hide();
-            $(this).find(".delete-comment").hide();
+            $(this).find(".edit-comment").css('visibility', 'hidden');
+            $(this).find(".delete-comment").css('visibility', 'hidden');
         });
 
         $(".commentText").each(function () {
