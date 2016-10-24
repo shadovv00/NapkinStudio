@@ -88,7 +88,7 @@ public class FTPManager {
 //				username = "ftpuser",
 //				password = "123";
 
-		int 	port = 21;
+		int 	port = Integer.parseInt(env.getProperty("ftp.port"));
 		
 		String 	pathToIsBusyFile = "checkisbusy.txt",
 				pathToKeepInSyncFile = "keepinsync.txt",
