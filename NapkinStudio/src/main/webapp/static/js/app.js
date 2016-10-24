@@ -8,7 +8,7 @@ var napkin = napkin || {};
 	var mjUpLi = {};
 	var jWrapImgPr = $("<div id='proofprevdiv'style='position:relative;  display: none;'></div>");
 	var jShowAtBlock = $("<div></div>"),
-		jRemoveAllFiles = $('<span class="btn btn-link fileinput-button">\
+		jRemoveAllFiles = $('<span class="btn btn-link fileinput-button" style="float: right;">\
  								<i class="glyphicon glyphicon-remove"></i>\
  								<span>Remove all</span>\
  								<input type="button">\
@@ -32,8 +32,8 @@ var napkin = napkin || {};
 		
 		jAddAtBlock.append(jDDZone);
 		jDDZone.append(jChoseFiles);
-		jDDZone.append(jRemoveAllFiles);
 		jDDZone.append("<p class='drag-n-drop-file-text'>Voeg bijlagen toe...</p>");
+		jDDZone.append(jRemoveAllFiles);
 		
 		jAddAtBlock.append(jUpList);
 		
@@ -52,7 +52,7 @@ var napkin = napkin || {};
 				jUpLi.append(jPb);
 				
 				var fileName;
-				var jIconDeleteFile = $("<span class='remove-icon-align remove-attachment glyphicon glyphicon-remove'></span>"),
+				var jIconDeleteFile = $("<span class='remove-icon-align remove-attachment glyphicon glyphicon-remove' style='float: right;'></span>"),
 					jIconFileStatus = $('<i class="file-upload-status fa fa-refresh fa-spin-custom"></i>');
 				
 	            $.each(data.files, function (index, file) {
@@ -60,22 +60,21 @@ var napkin = napkin || {};
 	            	if(!/(\.|\/)(gif|jpe?g|png|svg|txt|docx?)$/i.test(fileName)){
 	            		console.log("It's not apropriate file!");
 	            	} else {
-	            		console.log("File has right extension!");
+//	            		console.log("File has right extension!");
 	            	}
 	                console.info('Added file: ' + file.name);
 	                jIconDeleteFile.attr("fileName", file.name);
 	                jfileInfo.append(jIconDeleteFile);
-	                console.log(file);
 	                jfileInfo.append("<p class='file-info-text'>" + file.name + "  " + _formatFileSize(file.size) + "  " + _getDateFormatForAttachment(file.lastModified) + "</p>");
 	                jfileInfo.append(jIconFileStatus);
 	                mjUpLi[file.name] = jUpLi;
 	            });
 	            
-	            jUpLi.hover(function(e) {
-					$(this).find(".remove-attachment").show();
-				}, function(e) {
-					$(this).find(".remove-attachment").hide();
-				});
+//	            jUpLi.hover(function(e) {
+//					$(this).find(".remove-attachment").show();
+//				}, function(e) {
+//					$(this).find(".remove-attachment").hide();
+//				});
 	            jIconDeleteFile.on("click", _removeTmpFileItem);
 	            
 	            jPb.css("width", "0%");

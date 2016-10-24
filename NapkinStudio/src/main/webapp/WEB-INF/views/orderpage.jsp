@@ -31,9 +31,9 @@
     <script src="<c:url value='/static/js/jquery.ui.widget.js' />"></script>
     <script src="<c:url value='/static/js/jquery.iframe-transport.js' />"></script>
     <script src="<c:url value='/static/js/jquery.fileupload.js' />"></script>
-    <script src="<c:url value='/static/js/plugins/websocket/sockjs-0.3.4.min.js' />"></script>
-    <script src="<c:url value='/static/js/plugins/websocket/stomp.min.js' />"></script>
-    <script src="<c:url value='/static/js/plugins/websocket/websocket-app.js' />"></script>
+<%--     <script src="<c:url value='/static/js/plugins/websocket/sockjs-0.3.4.min.js' />"></script> --%>
+<%--     <script src="<c:url value='/static/js/plugins/websocket/stomp.min.js' />"></script> --%>
+<%--     <script src="<c:url value='/static/js/plugins/websocket/websocket-app.js' />"></script> --%>
     <%--<nav display="inline">
         <a href="<c:url value="/orders"/>" class="btn btn-primary custom-width"> to orders </a>
         <span style="margin-left: 100px">  order id ${theOrder.orderId}</span>
