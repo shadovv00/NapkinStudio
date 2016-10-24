@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.napkinstudio.manager.FTPManager;
+import com.napkinstudio.manager.SFTPManager;
 
 @RestController
 @RequestMapping(value = "/sapsynchronizerservice")
@@ -23,6 +24,11 @@ public class SAPSynchronizerController {
 	@Autowired
 	FTPManager ftpManager;
 	
+	
+	@Autowired
+	SFTPManager sftpManager;
+	
+	
 //	@SendTo("/topic/napkin-notifications")
 	@RequestMapping(method = RequestMethod.GET)
     public String trigger(@RequestParam(value = "user", defaultValue = "") String user) {
@@ -31,12 +37,11 @@ public class SAPSynchronizerController {
 		
 		
 		
-		this.messagingTemplate.convertAndSend("/topic/napkin-notifications", "имхо");
+//		this.messagingTemplate.convertAndSend("/topic/napkin-notifications", "имхо");
 		
 		
 		
-		
-        return "BRBRBRBRBRBBRBR " + user + "]";
+        return sftpManager.handle();
     }
 	
 	@RequestMapping(method = RequestMethod.POST)
