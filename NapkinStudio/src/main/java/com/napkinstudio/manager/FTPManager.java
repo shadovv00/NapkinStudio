@@ -271,10 +271,11 @@ public class FTPManager {
 										thisUser.setFirstName(userSAP.getFirstName());
 										thisUser.setLogin(userSAP.getLogin());
 										if (userSAP.getPassword()!=null&&userSAP.getPassword()!=""){
-											thisUser.setPassword(encoder.encode(userSAP.getPassword()));
+											thisUser.setPassword(userSAP.getPassword());
 										}
 										thisUser.setEmail(userSAP.getEmail());
 										thisUser.setEnabled(userSAP.getEnabled());
+//										thisUser.setEnabled(true);
 										thisUser.setRole(userSAP.getRole());
 										userManager.save(thisUser);
 									}else{
@@ -306,8 +307,10 @@ public class FTPManager {
 //									}
 									UserOrder newUserOrder = new UserOrder();
 									User ordersUser = userManager.findByEmail(userOrdersSAP.getUser());
-									if(userOrderManager.findUserforOrdedByRole(userOrdersSAP.getOrder(), roleManager.findByUserId(ordersUser.getUserId()).getId()).size()>0){
-										newUserOrder =userOrderManager.findOrdersByUserAndOrderId(ordersUser.getUserId(),userOrdersSAP.getOrder());
+									List<UserOrder> oldUserOrders = userOrderManager.findUserforOrdedByRole(userOrdersSAP.getOrder(), roleManager.findByUserId(ordersUser.getUserId()).getId());
+									if(oldUserOrders.size()>0){
+										newUserOrder =oldUserOrders.get(0);
+//										newUserOrder =userOrderManager.findOrdersByUserAndOrderId(ordersUser.getUserId(),userOrdersSAP.getOrder());
 									}else{
 										newUserOrder.setOrder(orderManager.findById(userOrdersSAP.getOrder()));
 									}
