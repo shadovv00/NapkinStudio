@@ -8,7 +8,7 @@ var napkin = napkin || {};
 	var mjUpLi = {};
 	var jWrapImgPr = $("<div id='proofprevdiv'style='position:relative;  display: none;'></div>");
 	var jShowAtBlock = $("<div></div>"),
-		jRemoveAllFiles = $('<span class="btn btn-link fileinput-button" style="float: right;">\
+		jRemoveAllFiles = $('<span class="btn btn-link fileinput-button" style="float: right; margin-top: 0.3rem;">\
  								<i class="glyphicon glyphicon-remove"></i>\
  								<span>Remove all</span>\
  								<input type="button">\
@@ -20,7 +20,7 @@ var napkin = napkin || {};
 		var jAt = $("#order-new-attachment");
 		
 		var jAddAtBlock = $("<div></div>"),
-			jChoseFiles = $('<span class="glyphicon glyphicon-plus-sign btn-custom fileinput-button">\
+			jChoseFiles = $('<span class="glyphicon glyphicon-plus-sign btn-custom fileinput-button" style="top: 0.3rem;">\
 								<input class="glyphicon glyphicon-plus-sign" type="file" name="files[]" multiple="">\
                 			</span>'),
 			jDDZone = $("<div class='drag-n-drop-zone dropzone'></div>");
@@ -32,7 +32,7 @@ var napkin = napkin || {};
 		
 		jAddAtBlock.append(jDDZone);
 		jDDZone.append(jChoseFiles);
-		jDDZone.append("<p class='drag-n-drop-file-text'>Voeg bijlagen toe...</p>");
+		jDDZone.append("<p class='drag-n-drop-file-text' style='margin-top: 1rem;'>Voeg bijlagen toe...</p>");
 		jDDZone.append(jRemoveAllFiles);
 		
 		jAddAtBlock.append(jUpList);
@@ -190,7 +190,7 @@ var napkin = napkin || {};
 					jAt.append(jAtUi);
 				} else {
 					jAt.append(jAtUi);
-					jAtUi.append("<li>Any attachment is not available!</li>");
+					jAtUi.append("<li style='margin-top: 1rem'>Any attachment is not available!</li>");
 				}
 				for(let x = 0; x < attachmentList.length; ++x) {
 					name = attachmentList[x].name;
