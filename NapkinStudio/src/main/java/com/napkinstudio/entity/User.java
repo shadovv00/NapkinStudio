@@ -19,15 +19,16 @@ import java.util.Date;
 
 
 
-        @NamedQuery(name = "User.findAllByFirstName", query = "SELECT u FROM  User  u  WHERE u.firstName =:firstName"),
-        @NamedQuery(name = "User.findAllByLastName", query = "SELECT u FROM  User  u  WHERE u.lastName  =:lastName"),
+        @NamedQuery(name = "User.findAllByFirstName", query = "SELECT u FROM  User  u  WHERE u.firstName =:firstName and u.enabled=true"),
+        @NamedQuery(name = "User.findAllByLastName", query = "SELECT u FROM  User  u  WHERE u.lastName  =:lastName and u.enabled=true"),
 
-        @NamedQuery(name = "User.findByLogin", query = "SELECT u FROM  User  u  WHERE u.login =:login"),
-        @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM  User  u  WHERE u.email =:email"),
+        @NamedQuery(name = "User.findByLogin", query = "SELECT u FROM  User  u  WHERE (u.login =:login or u.email =:email) and u.enabled=true"),
+//        @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM  User  u  WHERE u.email =:email"),
+        @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM  User  u  WHERE u.email =:email and u.enabled=true"),
 
 
         @NamedQuery(name = "User.deleteById", query = "DELETE FROM User u WHERE u.userId = ?1"),
-        @NamedQuery(name = "User.getUpdatedUsers", query = "SELECT u FROM  User  u  WHERE u.lastModifiedDate >=:lastModifiedDate")
+        @NamedQuery(name = "User.getUpdatedUsers", query = "SELECT u FROM  User  u  WHERE u.lastModifiedDate >=:lastModifiedDate and u.enabled=true")
 
         /*@NamedQuery(name = "User.deactivateById", query = "update User as u set u.enabled =0  where u.userId = ?1"),
         @NamedQuery(name = "User.activateById", query = "update User as u set u.enabled =1  where u.userId = ?1"),*/ })
