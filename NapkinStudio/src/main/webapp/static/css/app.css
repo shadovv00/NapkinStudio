@@ -292,7 +292,6 @@ h1 {
 	color: #444;
 	font-family: 'PT Sans Caption', sans-serif;
 	margin: 40px auto;
-	max-width: 1200px;
 	position: relative;
 }
 
@@ -320,15 +319,15 @@ h1 {
 
 
 .prev-order-btn {
-    position: absolute!important;
-    left: -160px;
+    position: absolute;
+    top: -17px;
 }
 .planned{
 	padding-left: 15px;
 }
 
 
-ul.checkout-bar .prev-order-btn:before {
+.prev-order-btn:before {
     content: "";
     background: url("../image/next_inactive.png") no-repeat ! important;
 	-webkit-transform: rotate(180deg);
@@ -345,7 +344,7 @@ ul.checkout-bar .prev-order-btn:before {
 	cursor: pointer;
 }
 
-ul.checkout-bar .next-order-btn:before {
+.next-order-btn:before {
     content: "";
     background: url("../image/next_inactive.png") no-repeat ! important;
     display: block;
@@ -357,11 +356,11 @@ ul.checkout-bar .next-order-btn:before {
 	cursor: pointer;
 }
 
-ul.checkout-bar .next-order-btn:hover:before {
+.next-order-btn:hover:before {
 	background: url("../image/img__Next.png") no-repeat ! important;
 }
 
-ul.checkout-bar .prev-order-btn:hover:before {
+.prev-order-btn:hover:before {
 	background: url("../image/img__Next.png") no-repeat ! important;
 	-webkit-transform: rotate(180deg);
 	-moz-transform: rotate(180deg);
@@ -371,8 +370,9 @@ ul.checkout-bar .prev-order-btn:hover:before {
 }
 
 .next-order-btn {
-    position: absolute!important;
-    right: -160px;
+    position: absolute;
+    right: 0;
+	top: -17px;
 }
 ul.checkout-bar li {
 	color: #ccc;
@@ -463,8 +463,17 @@ ul.checkout-bar a {
 	}
 
 	.checkout-wrap {
-        top: 24px;
-		margin: 80px auto;
+        top: 49px;
+		margin: 0;
+	}
+
+	.order-wrapper {
+		padding-top: 30px;
+	}
+
+	.bar-wrap {
+		width: 85%;
+		margin: 0 auto;
 	}
 
 	ul.checkout-bar {
@@ -496,7 +505,7 @@ ul.checkout-bar a {
 		margin: 7px 0 0;
 		padding: 0;
 		text-align: center;
-		width: 12%;
+		width: 11%;
         top: 40px;
         vertical-align: top;
 	}
