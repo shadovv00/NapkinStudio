@@ -355,7 +355,7 @@ public class FTPManager {
 		            	}
 
 						//here I download attachments from ftp and save them to local storage
-						fileTransfer.transferOrdersFromFtpToLocalStorage(ftpClient);
+//						fileTransfer.transferOrdersFromFtpToLocalStorage(ftpClient);
 		            	
 		            }
 		            if(fileToSAPStatus.equals("accepted")) {

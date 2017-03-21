@@ -30,19 +30,19 @@ public class SAPSynchronizerController {
 	
 	
 //	@SendTo("/topic/napkin-notifications")
-	@RequestMapping(method = RequestMethod.GET)
-    public String trigger(@RequestParam(value = "user", defaultValue = "") String user) {
-		System.out.println("user = " + user);
-		System.out.println("herehereherehereherehere");
-		
-		
-		
-//		this.messagingTemplate.convertAndSend("/topic/napkin-notifications", "имхо");
-		
-		
-		
-        return sftpManager.handle();
-    }
+//	@RequestMapping(method = RequestMethod.GET)
+//    public String trigger(@RequestParam(value = "user", defaultValue = "") String user) {
+//		System.out.println("user = " + user);
+//		System.out.println("herehereherehereherehere");
+//		
+//		
+//		
+////		this.messagingTemplate.convertAndSend("/topic/napkin-notifications", "имхо");
+//		
+//		
+//		
+//        return sftpManager.handle();
+//    }
 	
 	@RequestMapping(method = RequestMethod.POST)
     public String postTrigger(@RequestParam(value = "token", defaultValue = "") String token) {
@@ -50,7 +50,7 @@ public class SAPSynchronizerController {
 		System.out.println("token = " + token);
 		if(token.equals("LJDFGHUYOI*$(**(GSLSJGHJSFHIOIGUHIYHGEOIJFHDSGUIJERHOIUFSGHSIOUDGRHGIUSHFGUDSFH")) {
 			System.out.println("next actions!");
-			return ftpManager.handle();
+			return sftpManager.handle();
 		} else {
 			System.out.println("nope!");
 			return "trigger failed";

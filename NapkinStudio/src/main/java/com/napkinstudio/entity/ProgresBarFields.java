@@ -25,7 +25,7 @@ import javax.persistence.Table;
 //                            ") tm ON ss.id = tm.reid " +
 //                        "WHERE r.id = :roleId AND pbf.pVIcheckScen =:pVIcheckScen AND pbf.rejected =:rejected " +
 //                        "GROUP BY s.name order by pbf.id "
-query = "SELECT s.name as name, MAX(tm.lastdate) as date " +
+query = "SELECT s.name as name, MAX(tm.lastdate) as date, MAX(pbf.id) as id " +
         "FROM progresbar_fields AS pbf " +
         "INNER JOIN Role AS r ON pbf.ROLE_ID = r.id " +
         "INNER JOIN Status AS s ON s.id = pbf.STATUS_ID " +
@@ -37,7 +37,8 @@ query = "SELECT s.name as name, MAX(tm.lastdate) as date " +
             "WHERE o.orderId =:orderId " +
             ") tm ON ss.id = tm.reid " +
         "WHERE r.id = :roleId AND pbf.pVIcheckScen =:pVIcheckScen AND pbf.rejected =:rejected AND pbf.repeated =:repeated " +
-        "GROUP BY s.name order by pbf.id "
+        "GROUP BY s.name order by id"
+//        "GROUP BY s.name, pbf.id order by pbf.id "
 
 //        , resultClass = Object[].class
 
