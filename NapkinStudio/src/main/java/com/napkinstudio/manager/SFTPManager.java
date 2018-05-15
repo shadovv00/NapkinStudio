@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.LinkedList;
 
 import org.apache.commons.net.ftp.FTPSClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -43,6 +45,8 @@ import com.thoughtworks.xstream.XStream;
 @Service("sftpService")
 @PropertySource({ "classpath:project.properties" })
 public class SFTPManager {
+	
+	public static final Logger logger = LoggerFactory.getLogger("nl.napkin");
 
 	@Autowired
     Environment env;
@@ -79,32 +83,30 @@ public class SFTPManager {
 
 	@Autowired
 	private FileTransfer fileTransfer;
+	
+	private final static String rootFolder = "/home/napkin/";
 
 
 //	@Autowired
 	FTPSClient ftpClient;
 	
 	public String handle() {
-		System.out.println("FTPManager start");
+		logger.info("SFTPManager started!");
+		System.out.println("SFTPManager start");
 
 		String message = "ok";
 		
 		String
 				host = env.getProperty("ftp.host"),//"localhost",//"10.4.0.129",//194.44.213.118:44808
-//				host = "10.4.0.129",
-//				host = "194.44.213.118:44",
 				username = env.getProperty("ftp.user"),//"catdogcat",
 				password = env.getProperty("ftp.pass");//"2cats1dog";
-//				username = "ftpuser",
-//				password = "123";
 
 		int 	port = Integer.parseInt(env.getProperty("ftp.port"));
-		
-		String 	pathToIsBusyFile = "dir/checkisbusy.txt",
-				pathToKeepInSyncFile = "dir/keepinsync.txt",
-				pathToFileToSAP = "dir/DataTransferToSAP.xml",
-				pathToFileFromSAP = "dir/DataTransferFromSAP.xml",
-				sPathToOrdersDirectory = "dir/orders";
+		String 	pathToIsBusyFile = rootFolder + "sftp/checkisbusy.txt",
+				pathToKeepInSyncFile = rootFolder + "sftp/keepinsync.txt",
+				pathToFileToSAP = rootFolder + "sftp/DataTransferToSAP.xml",
+				pathToFileFromSAP = rootFolder + "sftp/DataTransferFromSAP.xml",
+				sPathToOrdersDirectory = rootFolder + "sftp/orders";
 		
         InputStream
         		is_ = null,
@@ -130,61 +132,74 @@ public class SFTPManager {
         JSch jsch = new JSch();
 
         Session session = null;
-        Channel channel = null;
+        Channel channel = null;//, sftpChannel = null;
         ChannelSftp sftpChannel = null;
-
+        
+        String 	known_hosts = env.getProperty("known_hosts");//,
+//        		prvkey = env.getProperty("prvkey"),
+//        		passphrase = env.getProperty("passphrase");
+//        System.out.println("\nprvkey=" + prvkey + "\npassphrase=" + passphrase + "\n");
+        
 		try {
+			logger.info("open channel");
+			jsch.setKnownHosts(known_hosts);
+//			jsch.addIdentity(prvkey, passphrase);
 			session = jsch.getSession(username, host, port);
 			session.setPassword(password);
 			session.connect();
-			channel = session.openChannel( "sftp" );
+			channel = session.openChannel("sftp");
 			channel.connect();
+//			sftpChannel = channel;
 			sftpChannel = (ChannelSftp) channel;
+			
 			SynchronizationDate synchroData= synchro_dateManager.findById(1);
 //			System.out.println(synchroData);
 			if (synchroData==null){synchroData=new SynchronizationDate();}
             synchroData.setId(1);
-
 			is_ = sftpChannel.get(pathToIsBusyFile);
 			if(is_ != null) {
 				reader = new BufferedReader(new InputStreamReader(is_));
 				if((str = reader.readLine()) != null) {
 					if(str.equals("busy")) {
 						System.out.println("Wait your turn!");
+						logger.warn("Wait your turn!");
 						return "Wait your turn!";
 					} else {
 						System.out.println("It's your turn!");
+						logger.warn("It's your turn!");
 						isBusyChanged = true;
 						reader.close();
 						is_.close();
-						System.out.println("is_ is closed? Answer: " + ftpClient.completePendingCommand());
+						System.out.println("is_ is closed");
 						os_ = sftpChannel.put(pathToIsBusyFile);
 						if(os_ != null) {
 							os_.write("busy".getBytes());
 							os_.flush();
 							os_.close();
-							System.out.println("2)os_ is closed? Answer: " + ftpClient.completePendingCommand());
+							System.out.println("2)os_ is closed");
 						} else {
 							System.out.println("Can't open outputstream <os_> to checkisbusy.txt!");
-		            		System.out.println(ftpClient.getReplyString());
+							logger.error("2) Can't connect to checkisbusy.txt!");
 		            		return "2) Can't connect to checkisbusy.txt!";
 						}
 					}
 				} else {
 					reader.close();
 					System.out.println("Wait your turn!");
+					logger.warn("Wait your turn!");
 					return "Wait your turn!";
 				}
 			} else {
 				System.out.println("Can't open inputstream <is_> to checkisbusy.txt!");
-        		System.out.println(ftpClient.getReplyString());
+				logger.error("1) Can't connect to checkisbusy.txt!");
         		return "1) Can't connect to checkisbusy.txt!";
 			}
 			
 			
-			
+			logger.info("Connecting to keepinsync.txt!");
 			is0 = sftpChannel.get(pathToKeepInSyncFile);	
 			if (is0 != null) {
+				logger.info("connected!");
 				reader = new BufferedReader(new InputStreamReader(is0));
                 while ((str = reader.readLine()) != null) {
                 	strArr = str.split(":");
@@ -219,15 +234,16 @@ public class SFTPManager {
                 }
                 reader.close();
                 is0.close();
-                System.out.println("is0 is closed? Answer: " + ftpClient.completePendingCommand());
+                System.out.println("is0 is closed");
             } else {
             	System.out.println("Can't open inputstream <is0> to keepinsyck.txt!");
-        		System.out.println(ftpClient.getReplyString());
+            	logger.error("Can't connect to keepinsync.txt!");
         		return "Can't connect to keepinsync.txt!";
             }
 			
 			
             if(fileFromSAPStatus.equals("accepted")) {
+            	logger.warn("File from SAP has been already accepted!");
             	System.out.println("File from SAP has been already accepted!");
             } else if(fileFromSAPStatus.equals("delivered")) {
             	//SAP file was delivered by SAP, so Portal must accept it
@@ -307,6 +323,7 @@ public class SFTPManager {
 //							}
 							UserOrder newUserOrder = new UserOrder();
 							User ordersUser = userManager.findByEmail(userOrdersSAP.getUser());
+							System.out.println("ordersUser = " + ordersUser);
 							if(userOrderManager.findUserforOrdedByRole(userOrdersSAP.getOrder(), roleManager.findByUserId(ordersUser.getUserId()).getId()).size()>0){
 								newUserOrder =userOrderManager.findOrdersByUserAndOrderId(ordersUser.getUserId(),userOrdersSAP.getOrder());
 							}else{
@@ -349,11 +366,12 @@ public class SFTPManager {
                     synchroData.setErrorFromSAP(false);
 	                fileFromSAPStatus = "accepted";
 	                is1.close();
-	                System.out.println("is1 is closed? Answer: " + ftpClient.completePendingCommand());
+	                System.out.println("is1 is closed");
             	}
 
 				//here I download attachments from ftp and save them to local storage
-//				fileTransfer.transferOrdersFromFtpToLocalStorage(ftpClient);
+//				fileTransfer.transferOrdersFromFtpToLocalStorage(sftpChannel);
+            	fileTransfer.transferOrdersFromFtpToLocalStorage(rootFolder, sftpChannel);
             	
             }
             if(fileToSAPStatus.equals("accepted")) {
@@ -417,7 +435,7 @@ public class SFTPManager {
 							newUserToSAP.setLastName(outUser.getLastName());
 							newUserToSAP.setLogin(outUser.getLogin());
 //							TODO: decode pass?
-							newUserToSAP.setPassword(outUser.getPassword());
+//							newUserToSAP.setPassword(outUser.getPassword());
 							newUserToSAP.setRole(outUser.getRole().getId());
 //							TODO: correct lazy connection
 //							newUserToSAP.setRole(roleManager.findByUserId(outUser.getUserId()).getId());
@@ -454,7 +472,7 @@ public class SFTPManager {
 	                fileToSAPStatus = "delivered";
 	                os2.flush();
 	                os2.close();
-	                System.out.println("os2 is closed? Answer: " + ftpClient.completePendingCommand());
+	                System.out.println("os2 is closed");
                     //set date of the "toSAP" file write
                     synchroData.setDateToSAP(new Date());
                     synchroData.setErrorToSAP(false);
@@ -465,31 +483,32 @@ public class SFTPManager {
             } else if(fileToSAPStatus.equals("delivered")) {
             	//Portal file has not been accepted by SAP yet, so new portal file must not be uploaded
             	System.out.println("Portal file has not been accepted by SAP yet, so new portal file must not be uploaded!");
+            	logger.error("Portal file has not been accepted by SAP yet, so new portal file must not be uploaded!");
             }
             //save date of the last synchronization to DB
             synchro_dateManager.save(synchroData);
             bytes = ("fileFromSAPStatus:\t" + fileFromSAPStatus + "\r\n"
             		+ "fileToSAPStatus:\t" + fileToSAPStatus + "\r\n").getBytes();
-            os0 = sftpChannel.put("keepinsync.txt");
+            os0 = sftpChannel.put(pathToKeepInSyncFile);
             if(os0 != null) {
             	os0.write(bytes);
             	os0.flush();
             	os0.close();
-            	System.out.println("os0 is closed? Answer: " + ftpClient.completePendingCommand());
+            	System.out.println("os0 is closed");
             } else {
             	System.out.println("Can't open outputstream <os0> to FileToSAP!");
-        		System.out.println(ftpClient.getReplyString());
             }
             
             //change status in checkisbusy.txt file from "busy" to "opened"
             if(isBusyChanged) {
             	os_.close();
+            	System.out.println(sftpChannel.pwd());
             	os_ = sftpChannel.put(pathToIsBusyFile);
     			if(os_ != null) {
     				os_.write("opened".getBytes());
     				os_.flush();
     				os_.close();
-    				System.out.println("os_ is closed? Answer: " + ftpClient.completePendingCommand());
+    				System.out.println("os_ is closed");
     				isBusyChanged = false;
     			} else {
 					System.out.println("checkisbusy.txt must be opened again!");
@@ -501,29 +520,40 @@ public class SFTPManager {
 			System.out.println("FTP client received network error");
 			message = "FTP client received network error";
 			ioe.printStackTrace();
+			logger.error(ioe.getMessage());
 		} catch (JSchException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+			logger.error(e1.getMessage());
 		} catch (SftpException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error(e.getMessage());
 		} finally {
+			boolean is_IsClosed = false;
 			try {
 				if(reader != null) reader.close();
 				
-				if(is_ != null) is_.close();
+				if(is_ != null) {
+					is_.close();
+					is_IsClosed = true;
+				}
         		if(is0 != null) is0.close();
         		if(is1 != null) is1.close();
         		
         		if(isBusyChanged) {
-        			if(os_ == null) {
-        				is_ = ftpClient.retrieveFileStream(pathToIsBusyFile);
-        			}
-        			if(os_ != null) {
+        			if(is_IsClosed) {
+//        				is_ = ftpClient.retrieveFileStream(pathToIsBusyFile);
+        				os_ = sftpChannel.put(pathToIsBusyFile);
         				os_.write("opened".getBytes());
         				os_.flush();
         				os_.close();
-        				System.out.println("os_ is closed? Answer: " + ftpClient.completePendingCommand());
+        				System.out.println("os_ is closed");
+        			} else if(os_ != null && !is_IsClosed) {
+        				os_.write("opened".getBytes());
+        				os_.flush();
+        				os_.close();
+        				System.out.println("os_ is closed");
         			} else {
 						System.out.println("checkisbusy.txt must be opened again!");
 					}
@@ -533,23 +563,29 @@ public class SFTPManager {
         		if(os2 != null) os2.close();
         	} catch (IOException ex) {
                 ex.printStackTrace();
-            } finally {
-            	if(os_ != null)
+            } catch (SftpException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+            	if(os_ != null && !is_IsClosed)
 					try {
 						os_.close();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+            	if(sftpChannel != null)
+            		sftpChannel.disconnect();
+            	// Disconnect
+    			if(session != null) {
+    		        if(sftpChannel != null) {
+    		        	sftpChannel.exit();
+    		        }
+    		        session.disconnect();
+    			}
             }
-			// Disconnect
-			if(session != null) {
-		        if(sftpChannel != null) {
-		        	sftpChannel.exit();
-		        }
-		        session.disconnect();
-			}
 		}
+		logger.info("SFTPManager is over!");
 		return message;
 	}
 	

@@ -1,28 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <!-- Log message format -->
-    <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-    </encoder>
-  </appender>
-  <!-- Ned appender to write to file -->
-  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-    <!-- Name of the file where the log messages are written -->
-    <file>myApp.log</file>
-    <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-    </encoder>
-  </appender>
-  <logger name="net.javabeat.service" level="WARN">
-    <appender-ref ref="FILE" />
-  </logger>
-  <logger name="net.javabeat.model" level="INFO">
-    <appender-ref ref="FILE" />
-  </logger>
+	<include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <logger name="org.springframework.web" level="ERROR"/>
 
-  <!-- Setting the root level of logging to INFO -->
-  <root level="info">
-    <appender-ref ref="FILE" />
-  </root>
+	<property name="temp" value="/temp" />
+	
+	<!-- Send debug messages to System.out -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<!-- By default, encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="hourRollingFileAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- rollover every minute -->
+			<FileNamePattern>${user.home}${temp}/logs/%d{yyyy-MM-dd_HH}.log
+			</FileNamePattern>
+			<maxHistory>30</maxHistory>
+			<totalSizeCap>10MB</totalSizeCap>
+		</rollingPolicy>
+
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>%date %-5level %logger{35} - %message%n</pattern>
+		</layout>
+	</appender>
+	<appender name="Async-hourRollingFileAppender" class="ch.qos.logback.classic.AsyncAppender">
+		<appender-ref ref="hourRollingFileAppender" />
+	</appender>
+	
+	<appender name="RootHourRollingFileAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- rollover every minute -->
+			<FileNamePattern>${user.home}${temp}/rootlogs/%d{yyyy-MM-dd_HH}.log
+			</FileNamePattern>
+			<maxHistory>30</maxHistory>
+			<totalSizeCap>10MB</totalSizeCap>
+		</rollingPolicy>
+
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>%date %-5level %logger{35} - %message%n</pattern>
+		</layout>
+	</appender>
+	<appender name="Async-RootHourRollingFileAppender" class="ch.qos.logback.classic.AsyncAppender">
+		<appender-ref ref="RootHourRollingFileAppender" />
+	</appender>
+	<logger name="nl.napkin" additivity="false">
+		<level value="all"/>
+		<appender-ref ref="Async-hourRollingFileAppender" />
+	</logger>
+	
+	<appender name="HibernateInfoHourRollingFileAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- rollover every minute -->
+			<FileNamePattern>${user.home}${temp}/hibernate-logs/info/%d{yyyy-MM-dd_HH}.log
+			</FileNamePattern>
+			<maxHistory>30</maxHistory>
+			<totalSizeCap>10MB</totalSizeCap>
+		</rollingPolicy>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>%date %-5level %logger{35} - %message%n</pattern>
+		</layout>
+	</appender>
+	<appender name="Async-HibernateInfoHourRollingFileAppender" class="ch.qos.logback.classic.AsyncAppender">
+		<appender-ref ref="HibernateInfoHourRollingFileAppender" />
+	</appender>
+	<appender name="HibernateErrorHourRollingFileAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- rollover every minute -->
+			<FileNamePattern>${user.home}${temp}/hibernate-logs/error/%d{yyyy-MM-dd_HH}.log
+			</FileNamePattern>
+			<maxHistory>30</maxHistory>
+			<totalSizeCap>10MB</totalSizeCap>
+		</rollingPolicy>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>%date %-5level %logger{35} - %message%n</pattern>
+		</layout>
+	</appender>
+	<appender name="Async-HibernateErrorHourRollingFileAppender" class="ch.qos.logback.classic.AsyncAppender">
+		<appender-ref ref="HibernateErrorHourRollingFileAppender" />
+	</appender>
+	<logger name="org.hibernate" level="debug" additivity="false">
+		<appender-ref ref="Async-HibernateInfoHourRollingFileAppender" />
+		<appender-ref ref="Async-HibernateErrorHourRollingFileAppender" />
+	</logger>
+	
+	<!-- By default, nope -->
+	<root level="error">
+		<appender-ref ref="Async-RootHourRollingFileAppender" />
+	</root>
 </configuration>

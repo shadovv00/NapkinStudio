@@ -18,7 +18,7 @@ public class UserToSAP extends AbstractEntity {
         private String login;
         private String firstName;
         private String lastName;
-        private String password;
+//        private String password;
         private String email;
         private Boolean enabled;
         private Date lastSession;
@@ -32,14 +32,14 @@ public class UserToSAP extends AbstractEntity {
             this.roleId = roleId;
         }
 
-        public String getPassword() {
-            return password;
-        }
-        public void setPassword(String password) {
-//            encoder = new BCryptPasswordEncoder();
-//            this.password = encoder.encode(password);
-            this.password = password;
-        }
+//        public String getPassword() {
+//            return password;
+//        }
+//        public void setPassword(String password) {
+////            encoder = new BCryptPasswordEncoder();
+////            this.password = encoder.encode(password);
+//            this.password = password;
+//        }
 
         public Boolean getEnabled() {
             return enabled;

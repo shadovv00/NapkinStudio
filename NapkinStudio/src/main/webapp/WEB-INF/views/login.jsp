@@ -57,7 +57,8 @@
                                 <p>Log in om bestellingen te kunnen plaatsen
                                     en drukproeven te kunnen beoorelen.</p>
                                 <div class="input-group input-sm">
-                                    <input type="text" class="form-control" id="username" name="username" placeholder="login" required>
+                                    <%--<input type="text" class="form-control" id="username" name="username" placeholder="User name or e-mail address" required>--%>
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="User name or e-mail address" required>
                                 </div>
                                 <div class="input-group input-sm">
                                     <input type="password" class="form-control" id="password" name="password" placeholder="Wachtwoord" required>
@@ -70,11 +71,11 @@
                                 <input type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}" />
 
                                 <div class="form-actions">
-                                    <input type="submit"
-                                           class="btn btn-block btn-primary btn-default" value="Inloggen"/>
-
-                                    <a href="<spring:url value="/register"/>" class="btn btn-block btn-primary btn-default">Registreren</a>
-                                    <p>Problemen met inloggen?</p>
+                                    <input type="submit"  class="btn btn-block btn-primary btn-default" value="Inloggen"/>
+                                    <%--<a href="<spring:url value="/register"/>" class="btn btn-block btn-primary btn-default">Registreren</a>--%>
+                                    <br>
+                                    <a href="<spring:url value="/loginproblem"/>" >Problemen met inloggen?</a>
+                                    <%--<p>Problemen met inloggen?</p>--%>
                                 </div>
 
                             </form>

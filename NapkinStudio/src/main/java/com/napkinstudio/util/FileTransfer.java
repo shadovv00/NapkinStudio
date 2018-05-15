@@ -5,10 +5,13 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Vector;
 
-import org.apache.commons.net.ftp.FTPFile;
-import org.apache.commons.net.ftp.FTPSClient;
 import org.springframework.stereotype.Component;
+
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.ChannelSftp.LsEntry;
+import com.jcraft.jsch.SftpException;
 
 /**
  * Created by User1 on 05.08.2016.
@@ -36,50 +39,137 @@ public class FileTransfer {
     
     
     
-    public void transferOrdersFromFtpToLocalStorage(FTPSClient ftpClient) throws IOException {
-
-        FTPFile[] orderDirrectories = ftpClient.listDirectories("/orders");
-        FTPFile[] attachments = null;
-        FTPFile[] printproofs = null;
+    public void transferOrdersFromFtpToLocalStorage(String rootFolder, ChannelSftp sftpChannel) throws IOException {
+    	Vector attachments = null;
+    	Vector printproofs = null;
         String sPathToLocalFile = null;
         String sPathToFtpFile = null;
-        
-        
-        for(FTPFile orderDir : orderDirrectories) {
-        	System.out.println("attachments");
-        	attachments = ftpClient.listFiles("/orders/" + orderDir.getName() + "/final");
-        	ftpClient.enterLocalPassiveMode();
-        	for(FTPFile attachment : attachments) {
-        		sPathToLocalFile = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderDir.getName() + SEP + ORDERS_FINAL_DIRECTORY + SEP + attachment.getName();
-        		sPathToFtpFile = "/orders/" + orderDir.getName() + "/final/" + attachment.getName();
-        		try(OutputStream os = saveFileToLocalDirrectory(sPathToLocalFile)) {
-        			ftpClient.retrieveFile(sPathToFtpFile, os);
-        			System.out.println(attachment.getName() + " : " + ftpClient.deleteFile(sPathToFtpFile));
-        		}
-        	}
-        	ftpClient.enterLocalActiveMode();
-        	System.out.println("\nremove dirrectory \"" + orderDir.getName() + "/final\": " + ftpClient.removeDirectory("/orders/" + orderDir.getName() + "/final"));
-        	
-        	printproofs = ftpClient.listFiles("/orders/" + orderDir.getName() + "/ppfinal");            	
-        	System.out.println("printproof");
-        	ftpClient.enterLocalPassiveMode();
-        	for(FTPFile printproof: printproofs) {
-        		sPathToLocalFile = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + orderDir.getName() + SEP + ORDERS_PPFINAL_DIRECTORY + SEP + printproof.getName();
-        		sPathToFtpFile = "/orders/" + orderDir.getName() + "/ppfinal/" + printproof.getName();
-        		try(OutputStream os = saveFileToLocalDirrectory(sPathToLocalFile)) {
-        			
-        			ftpClient.retrieveFile(sPathToFtpFile, os);
-        			
-        			System.out.println(printproof.getName() + " : " + ftpClient.deleteFile(sPathToFtpFile));
-        			break;
-        		}
-        	}
-        	ftpClient.enterLocalActiveMode();
-        	System.out.println("\nremove dirrectory \"" + orderDir.getName() + "/ppfinal\": " + ftpClient.removeDirectory("/orders/" + orderDir.getName() + "/ppfinal"));
-        	System.out.println("\nremove dirrectory \"" + orderDir.getName() + "\": " + ftpClient.removeDirectory("/orders/" + orderDir.getName()));
-        }
+        String dirName = null, attachName = null, prproofName = null;
+        try {
+        	System.out.println();
+        	System.out.println("Get orders files from \"orders\"");
+			Vector orderDirrectories = sftpChannel.ls(rootFolder + "sftp/orders");
+	        for (Object entry : orderDirrectories) {
+	            ChannelSftp.LsEntry e = (ChannelSftp.LsEntry) entry;
+	            dirName = e.getFilename();
+	            if(".".equals(dirName) || "..".equals(dirName)) {
+	            	continue;
+	            }
+	            
+	            System.out.println("\nAttachments: " + dirName + "/final");
+	            try {
+	            	System.out.print("Get file list within: sftp/orders/" + dirName + "/final");
+	            	attachments = sftpChannel.ls(rootFolder + "sftp/orders/" + dirName + "/final");
+	            	System.out.println(" success!");
+	            } catch(SftpException s1) {
+	            	attachments = null;
+	            	System.out.println(" fail! " + s1.getMessage());
+	            }
+	            if(attachments != null) {
+	            	for (Object entry2 : attachments) {
+	            		ChannelSftp.LsEntry e2 = (ChannelSftp.LsEntry) entry2;
+	            		attachName = e2.getFilename();
+	            		if(".".equals(attachName) || "..".equals(attachName)) {
+	            			continue;
+	            		}
+	            		sPathToLocalFile = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + dirName + SEP + ORDERS_FINAL_DIRECTORY + SEP + attachName;
+	            		sPathToFtpFile = rootFolder + "sftp/orders/" + dirName + "/final/" + attachName;
+	            		try(OutputStream os = saveFileToLocalDirectory(sPathToLocalFile)) {
+	            			try {
+	            				System.out.print("Copy \"" + attachName + "\":");
+	            				sftpChannel.get(sPathToFtpFile, os);
+	            				System.out.println(" success! ");
+	            			} catch(SftpException s1) {
+	            				System.out.println(" fail! " + s1.getMessage());
+	            			}
+	            			try {
+	            				System.out.print("Remove file \"" + attachName + "\":");
+	            				sftpChannel.rm(sPathToFtpFile);
+	            				System.out.println(" success!");
+	            			} catch(SftpException s1) {
+	            				System.out.println(" fail! " + s1.getMessage());
+	            			}
+	            		}
+	            		
+	            	}
+	            	try{
+	            		this.count = 200;
+	            		System.out.println("No more vital items within \"" + dirName + "/final\"");
+	            		System.out.print("Remove directory \"" + dirName + "/final\":");
+	            		deleteDirectory(sftpChannel, rootFolder + "sftp/orders/" + dirName + "/final");
+	            		System.out.println(" success!");
+	            	} catch(SftpException s1) {
+	            		System.out.println(" fail! " + s1.getMessage());
+	            	}
+	            }
+	        	
+	        	System.out.println("\nPrintproof: " + dirName + "/ppfinal");
+	        	try {
+	            	System.out.print("Get file list within: sftp/orders/" + dirName + "/ppfinal");
+	            	printproofs = sftpChannel.ls(rootFolder + "sftp/orders/" + dirName + "/ppfinal");
+	            	System.out.println(" success!");
+	            } catch(SftpException s1) {
+	            	printproofs = null;
+	            	System.out.println(" fail! " + s1.getMessage());
+	            }
+	        	if(printproofs != null) {
+	        		for(Object entry3: printproofs) {
+	        			ChannelSftp.LsEntry e3 = (ChannelSftp.LsEntry) entry3;
+	        			prproofName = e3.getFilename();
+	        			if(".".equals(prproofName) || "..".equals(prproofName)) {
+	        				continue;
+	        			}
+	        			sPathToLocalFile = USER_HOME + SEP + UPLOAD_DIRECTORY + SEP + ORDERS_DIRECTORY + SEP + dirName + SEP + ORDERS_PPFINAL_DIRECTORY + SEP + prproofName;
+	        			sPathToFtpFile = rootFolder + "sftp/orders/" + dirName + "/ppfinal/" + prproofName;
+	        			try(OutputStream os = saveFileToLocalDirectory(sPathToLocalFile)) {
+	        				try{
+	        					System.out.print("Copy file \"" + prproofName + "\":");
+	        					sftpChannel.get(sPathToFtpFile, os);
+	        					System.out.println(" success! ");
+	        				} catch(SftpException s1) {
+	        					System.out.println(" fail! " + s1.getMessage());
+	        				}
+	        				try {
+	        					System.out.print("Remove directory \"" + prproofName + "\":");
+	        					sftpChannel.rm(sPathToFtpFile);
+	        					System.out.println(" success!");
+	        				} catch(SftpException s1) {
+	        					System.out.println(" fail! " + s1.getMessage());
+	        				}
+	        				//must be one file max only!
+	        				break;
+	        			}
+	        		}
+	        		try {
+	        			this.count = 200;
+	        			System.out.println("No more vital items within \"" + dirName + "/ppfinal\"");
+	        			System.out.print("Remove directory \"" + dirName + "/ppfinal\": ");
+	        			deleteDirectory(sftpChannel, rootFolder + "sftp/orders/" + dirName + "/ppfinal");
+	        			System.out.println(" success!");
+	        		} catch(SftpException s1) {
+	        			System.out.println(" fail! " + s1.getMessage());
+	        		}
+	        	}
+	        	
+	        	try {
+	        		this.count = 200;
+	        		System.out.println();
+	        		System.out.println("No more vital items within \"" + dirName + "\"");
+	        		System.out.print("Remove directory \"" + dirName + "\": ");
+	        		deleteDirectory(sftpChannel, rootFolder + "sftp/orders/" + dirName);
+	        		System.out.println(" success!");
+	        	} catch(SftpException s1) {
+	        		System.out.println(" fail! " + s1.getMessage());
+	        		s1.printStackTrace();
+	        	}
+	        	
+	        }
+		} catch (SftpException e) {
+			System.out.println("Fail! Directory \"orders\" " + e.getMessage());
+		}
+        System.out.println();
     }
-    private OutputStream saveFileToLocalDirrectory(String sPathToLocalFile) throws IOException {
+    private OutputStream saveFileToLocalDirectory(String sPathToLocalFile) throws IOException {
         
     	Path pathToLocalFile = Paths.get(sPathToLocalFile);
     	
@@ -89,5 +179,28 @@ public class FileTransfer {
     	}
     	OutputStream os = Files.newOutputStream(pathToLocalFile);
     	return os;
+    }
+    private static int count;
+    private static void deleteDirectory(ChannelSftp sftp, String oldestBackup) throws SftpException {
+    	if(count-- <= 0) return;
+        if (isDir(sftp, oldestBackup)) {
+            sftp.cd(oldestBackup);
+            @SuppressWarnings("unchecked")
+			Vector < LsEntry > entries = sftp.ls(".");
+            for (LsEntry entry: entries) {
+            	if(".".equals(entry.getFilename()) || "..".equals(entry.getFilename())) {
+            		continue;
+            	}
+                deleteDirectory(sftp, entry.getFilename());
+            }
+            sftp.cd("..");
+            sftp.rmdir(oldestBackup);
+        } else {
+            sftp.rm(oldestBackup);
+        }
+    }
+
+    private static boolean isDir(ChannelSftp sftp, String entry) throws SftpException {
+        return sftp.stat(entry).isDir();
     }
 }

@@ -73,55 +73,70 @@
         <a href="<c:url value="/orders"/>" class="back-btn"> Overzicht </a>
     </c:if>
     <h2> ${theOrder.orderId} ${theOrder.itemNum} - ${theOrder.printName}</h2>
-    <div class="checkout-wrap">
-        <div class="progress-bar-line"></div>
-        <ul class="checkout-bar">
-            <c:if test="${prevId.length() > 0 &&user.role.id!=5}">
-                <li class="prev-order-btn" onclick="document.getElementById('prev-btn-id').click()">
-                    <a id="prev-btn-id" href="<spring:url value="/orders/{prevId}">
+     <div class="checkout-wrap">
+        <div class="prev-order-btn" onclick="document.getElementById('prev-btn-id').click()">
+            <a id="prev-btn-id" href="<spring:url value="/orders/{prevId}">
                           <spring:param name="prevId" value ="${prevId}"/>
                 </spring:url>">Vorige
-                        order</a>
-                </li>
-            </c:if>
-            <c:forEach items="${barFields}" var="barFields">
-                <c:if test="${barFields[1]!=null}">
-                    <li class="previous visited">
-                        <c:out value="${barFields[0]}"/>
-                        <br>
-                        <c:choose>
-                            <c:when test="${DateUtils.isSameDay(barFields[1], today)}">
-                                Today <fmt:formatDate value="${barFields[1]}" pattern=" HH:mm"/>
-                            </c:when>
-                            <c:when test="${DateUtils.isSameDay(barFields[1], yesterday)}">
-                                Yesterday <fmt:formatDate value="${barFields[1]}" pattern=" HH:mm"/>
-                            </c:when>
-                            <c:otherwise>
-                                <fmt:formatDate value="${barFields[1]}" pattern=" EEEE d/MM/yyyy HH:mm"/>
-                            </c:otherwise>
-                        </c:choose>
-                    </li>
-                </c:if>
-                <c:if test="${barFields[1]==null}">
-                    <c:if test="${!thisstage}">
-                        <li class="next">
-                    </c:if>
-                    <c:if test="${thisstage}">
-                        <li class="active">
-                        <c:set var="thisstage" scope="session" value="false"/>
-                    </c:if>
-                    <c:out value="${barFields[0]}"/><c:out value="${barFields[1]}"/>
-                    </li>
-                </c:if>
-            </c:forEach>
-            <c:if test="${nextId.length() > 0  &&user.role.id!=5}">
-                <li class="next-order-btn" onclick="document.getElementById('next-btn-id').click()"><a id="next-btn-id"
-                                                                                                       href="<spring:url value="/orders/{nextId}">
+                order</a>
+        </div>
+        <div class="next-order-btn" onclick="document.getElementById('next-btn-id').click()"><a id="next-btn-id"
+                                                                                                href="<spring:url value="/orders/{nextId}">
                     <spring:param name="nextId" value ="${nextId}"/>
                 </spring:url>">Volgende
-                    order</a></li>
-            </c:if>
-        </ul>
+            order</a>
+        </div>
+        <div class="bar-wrap">
+            <ul class="checkout-bar">
+                <c:if test="${prevId.length() > 0 &&user.role.id!=5}">
+                    <%-- <li class="prev-order-btn" onclick="document.getElementById('prev-btn-id').click()">
+                         <a id="prev-btn-id" href="<spring:url value="/orders/{prevId}">
+                               <spring:param name="prevId" value ="${prevId}"/>
+                     </spring:url>">Vorige
+                             order</a>
+                     </li>--%>
+                </c:if>
+                <c:forEach items="${barFields}" var="barFields">
+                    <c:if test="${barFields[1]!=null}">
+                        <li class="previous visited">
+                            <c:out value="${barFields[0]}"/>
+                            <br>
+                            <c:choose>
+                                <c:when test="${DateUtils.isSameDay(barFields[1], today)}">
+                                    Today <fmt:formatDate value="${barFields[1]}" pattern=" HH:mm"/>
+                                </c:when>
+                                <c:when test="${DateUtils.isSameDay(barFields[1], yesterday)}">
+                                    Yesterday <fmt:formatDate value="${barFields[1]}" pattern=" HH:mm"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <fmt:formatDate value="${barFields[1]}" pattern=" EEEE d/MM/yyyy HH:mm"/>
+                                </c:otherwise>
+                            </c:choose>
+                        </li>
+                    </c:if>
+                    <c:if test="${barFields[1]==null}">
+                        <c:if test="${!thisstage}">
+                            <li class="next">
+                        </c:if>
+                        <c:if test="${thisstage}">
+                            <li class="active">
+                            <c:set var="thisstage" scope="session" value="false"/>
+                        </c:if>
+                        <c:out value="${barFields[0]}"/><c:out value="${barFields[1]}"/>
+                        </li>
+                    </c:if>
+                </c:forEach>
+                <c:if test="${nextId.length() > 0  &&user.role.id!=5}">
+                    <%--<li class="next-order-btn" onclick="document.getElementById('next-btn-id').click()"><a id="next-btn-id"
+                                                                                                           href="<spring:url value="/orders/{nextId}">
+                        <spring:param name="nextId" value ="${nextId}"/>
+                    </spring:url>">Volgende
+                        order</a>
+                    </li>--%>
+                </c:if>
+            </ul>
+        </div>
+
     </div>
 </section>
 <section class="order-wrapper" style="background-color: #f9f9f9">
@@ -325,24 +340,23 @@
 
                                             <form:form commandName="comment" method="post"
                                                        action="/NapkinStudio/addComment"
-                                                       cssClass="form-horizontal addCommentForm " cssStyle="display: none">
+                                                       cssClass="form-horizontal addCommentForm" cssStyle="display: none">
                                                 <div class="form-group">
                                                     <div class="col-sm-5">
                                                         <form:textarea path="commText"
-                                                                       cssClass="form-control"></form:textarea>
+                                                                      cssClass="edit-comment-area"></form:textarea>
                                                         <form:hidden id="for-role" path="forRole.id"
                                                                      value="2"/>
                                                         <form:hidden path="order.orderId"
                                                                      value="${theOrder.orderId}"/>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-5">
+                                                <div>
                                                     <input type="submit"
                                                            value="Save"
-                                                           class="btn btn-large btn-primary send-comment-btn"
-                                                           style="float: left;">
+                                                           class="btn btn-large btn-primary send-comment-btn">
                                                     <a class="btn cancel-button btn-danger "
-                                                       style="float:right;">Cancel</a>
+                                                       >Cancel</a>
                                                 </div>
                                             </form:form>
                                         </li>
@@ -723,7 +737,7 @@
                         <div id="order-new-attachment" style="padding-top: 15px; padding-bottom: 15px"></div>
                         <div>
                             <textarea id="statuscahngecomment" path="commText" placeholder="Enter comment"
-                                      style="margin-bottom: 15px; border-radius:5px; "></textarea>
+                                      class="edit-comment-area"></textarea>
                         </div>
                     </c:if>
                         <%--Appove without comments and files adding--%>
@@ -842,8 +856,8 @@
 //        $(".addCommentForm").hide();
         $(".add-comment-btn").hide();
         $(".editCommentForm").hide();
-        $(".edit-comment").hide();
-        $(".delete-comment").hide();
+        $(".edit-comment").css("visibility", "hidden");
+        $(".delete-comment").css("visibility", "hidden");
         $(".loading-spinner").hide();
 
 
@@ -894,7 +908,7 @@
             var comment = $(this).parent().find(".commentText").text().trim();
             console.log(comment);
 
-            var $editCommentArea = $("<textarea class='edit-comment'/>");
+            var $editCommentArea = $("<textarea id='edit-comment' class='edit-comment-area' />");
             var $buttonArea = $("<div><a class='btn btn-primary'>Edit</a> <a class='btn btn-danger'>Cancel</a> </div>");
             var commentDiv = $(this).parent().parent();
 
@@ -1039,11 +1053,11 @@
 
         $(".comment-container").hover(function () {
 
-            $(this).find(".edit-comment").show();
-            $(this).find(".delete-comment").show();
+            $(this).find(".edit-comment").css('visibility', 'visible');
+            $(this).find(".delete-comment").css('visibility', 'visible');
         }, function () {
-            $(this).find(".edit-comment").hide();
-            $(this).find(".delete-comment").hide();
+            $(this).find(".edit-comment").css('visibility', 'hidden');
+            $(this).find(".delete-comment").css('visibility', 'hidden');
         });
 
         $(".commentText").each(function () {

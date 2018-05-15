@@ -21,6 +21,11 @@ public class UserController {
         return new User();
     }
 
+    @RequestMapping("/loginproblem")
+    public String showLogiinProblem() {
+        return "loginproblem";
+    }
+
     @RequestMapping("/register")
     public String showRegister() {
         return "user-register";

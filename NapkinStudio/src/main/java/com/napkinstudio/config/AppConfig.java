@@ -58,7 +58,9 @@ public class AppConfig extends WebMvcConfigurerAdapter{
         //Using gmail
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
-        mailSender.setUsername("khomenkotest1");
+//        mailSender.setUsername("khomenkotest1");
+//        mailSender.setPassword("napkinstudio2016");
+        mailSender.setUsername("napkinportal");
         mailSender.setPassword("napkinstudio2016");
 
         Properties javaMailProperties = new Properties();

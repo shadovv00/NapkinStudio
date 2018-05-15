@@ -48,7 +48,7 @@ public class UserManager {
 
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public User findByLogin(String login) {
-        return IUserDao.findByLogin(login);
+        return IUserDao.findByLogin(login, login);
     }
 
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)

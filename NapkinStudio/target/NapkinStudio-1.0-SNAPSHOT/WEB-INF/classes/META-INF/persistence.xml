@@ -17,6 +17,7 @@
 		<class>com.napkinstudio.entity.StatusSAPStatusRole</class>
 		<class>com.napkinstudio.entity.SynchronizationDate</class>
 		<class>com.napkinstudio.entity.UserOrder</class>
+		<class>com.napkinstudio.entity.Attachment</class>
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
 			<property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
